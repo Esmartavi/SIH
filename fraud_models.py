@@ -336,7 +336,7 @@ def _build_vendor_alias_map(vendor_names_series: pd.Series) -> dict:
             if i != j and d <= euc_threshold:
                 union(i, j)
 
-    # Step 4: Build canonical name per cluster (shortest name = cleanest)
+    # Step 4: Build canonical name per cluster (longest name = full legal name, not abbreviation)
     clusters = defaultdict(list)
     for idx, vendor in enumerate(unique_vendors):
         clusters[find(idx)].append(vendor)
@@ -721,6 +721,7 @@ def model5_ensemble(m1: pd.DataFrame, m2: tuple, m3: pd.DataFrame,
     p_medium   = base["risk_score"].quantile(0.70)
 
     def risk_label_dynamic(score):
+        if score == 0.0: return "LOW"       # Guard: perfectly clean works remain LOW risk
         if score >= p_critical: return "CRITICAL"
         elif score >= p_high:   return "HIGH"
         elif score >= p_medium: return "MEDIUM"

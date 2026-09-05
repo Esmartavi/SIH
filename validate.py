@@ -66,8 +66,10 @@ def check_objective_violations(work_id, mp_name, sanction_amount, sanction_date,
     if str(work_status).strip() == "Work Completed":
         if "work_id" in com.columns and "has_image" in com.columns:
             com_row = com[com["work_id"] == work_id]
-            if not com_row.empty and com_row.iloc[0].get("has_image") == False:
-                violations.append("Missing photo: work completed but no photo evidence uploaded")
+            if not com_row.empty:
+                has_image_val = com_row.iloc[0].get("has_image")
+                if has_image_val == False or str(has_image_val).upper() == "FALSE":
+                    violations.append("Missing photo: work completed but no photo evidence uploaded")
 
     # Check 4: Implausible sanction amount
     if sanction_amount < 1000:
