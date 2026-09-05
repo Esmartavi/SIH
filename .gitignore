@@ -4,3 +4,5 @@ __pycache__/
 .DS_Store
 fraud_flags.csv
 fraud_summary.txt
+audit_log.db
+*.json
