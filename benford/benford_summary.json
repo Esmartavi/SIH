@@ -1,0 +1,4190 @@
+{
+  "metadata": {
+    "timestamp": "2026-09-06T07:25:49Z",
+    "execution_time_seconds": 29.307,
+    "sanctions_sample_size": 98649,
+    "expenditures_sample_size": 109125
+  },
+  "sanctions_audit": {
+    "first_digit": {
+      "test_type": "first_digit",
+      "sample_size": 98649,
+      "mad": 0.02506,
+      "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+      "chi_square": 7961.04,
+      "p_value": 0.0,
+      "degrees_of_freedom": 8,
+      "anomaly_score": 81.8,
+      "critical_digits": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "distributions": [
+        {
+          "digit": 1,
+          "observed_count": 27529,
+          "observed_pct": 27.91,
+          "expected_count": 29696.3,
+          "expected_pct": 30.1,
+          "diff_pct": -2.2,
+          "z_score": -15.04,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 2,
+          "observed_count": 22721,
+          "observed_pct": 23.03,
+          "expected_count": 17371.2,
+          "expected_pct": 17.61,
+          "diff_pct": 5.42,
+          "z_score": 44.71,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 3,
+          "observed_count": 10206,
+          "observed_pct": 10.35,
+          "expected_count": 12325.1,
+          "expected_pct": 12.49,
+          "diff_pct": -2.15,
+          "z_score": -20.4,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 4,
+          "observed_count": 10534,
+          "observed_pct": 10.68,
+          "expected_count": 9560.1,
+          "expected_pct": 9.69,
+          "diff_pct": 0.99,
+          "z_score": 10.48,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 5,
+          "observed_count": 12593,
+          "observed_pct": 12.77,
+          "expected_count": 7811.2,
+          "expected_pct": 7.92,
+          "diff_pct": 4.85,
+          "z_score": 56.38,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 6,
+          "observed_count": 3572,
+          "observed_pct": 3.62,
+          "expected_count": 6604.2,
+          "expected_pct": 6.69,
+          "diff_pct": -3.07,
+          "z_score": -38.62,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 7,
+          "observed_count": 3958,
+          "observed_pct": 4.01,
+          "expected_count": 5720.8,
+          "expected_pct": 5.8,
+          "diff_pct": -1.79,
+          "z_score": -24.01,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 8,
+          "observed_count": 3001,
+          "observed_pct": 3.04,
+          "expected_count": 5046.1,
+          "expected_pct": 5.12,
+          "diff_pct": -2.07,
+          "z_score": -29.55,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 9,
+          "observed_count": 4535,
+          "observed_pct": 4.6,
+          "expected_count": 4513.9,
+          "expected_pct": 4.58,
+          "diff_pct": 0.02,
+          "z_score": 0.31,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        }
+      ]
+    },
+    "second_digit": {
+      "test_type": "second_digit",
+      "sample_size": 98649,
+      "mad": 0.07096,
+      "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+      "chi_square": 91459.69,
+      "p_value": 0.0,
+      "degrees_of_freedom": 9,
+      "anomaly_score": 100.0,
+      "critical_digits": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "distributions": [
+        {
+          "digit": 0,
+          "observed_count": 40583,
+          "observed_pct": 41.14,
+          "expected_count": 11806.2,
+          "expected_pct": 11.97,
+          "diff_pct": 29.17,
+          "z_score": 282.27,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 1,
+          "observed_count": 3917,
+          "observed_pct": 3.97,
+          "expected_count": 11235.1,
+          "expected_pct": 11.39,
+          "diff_pct": -7.42,
+          "z_score": -73.34,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 2,
+          "observed_count": 5095,
+          "observed_pct": 5.16,
+          "expected_count": 10735.1,
+          "expected_pct": 10.88,
+          "diff_pct": -5.72,
+          "z_score": -57.66,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 3,
+          "observed_count": 4124,
+          "observed_pct": 4.18,
+          "expected_count": 10292.0,
+          "expected_pct": 10.43,
+          "diff_pct": -6.25,
+          "z_score": -64.24,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 4,
+          "observed_count": 8019,
+          "observed_pct": 8.13,
+          "expected_count": 9895.3,
+          "expected_pct": 10.03,
+          "diff_pct": -1.9,
+          "z_score": -19.88,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 5,
+          "observed_count": 12445,
+          "observed_pct": 12.62,
+          "expected_count": 9537.1,
+          "expected_pct": 9.67,
+          "diff_pct": 2.95,
+          "z_score": 31.32,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 6,
+          "observed_count": 4543,
+          "observed_pct": 4.61,
+          "expected_count": 9211.3,
+          "expected_pct": 9.34,
+          "diff_pct": -4.73,
+          "z_score": -51.08,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 7,
+          "observed_count": 4447,
+          "observed_pct": 4.51,
+          "expected_count": 8913.1,
+          "expected_pct": 9.04,
+          "diff_pct": -4.53,
+          "z_score": -49.59,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 8,
+          "observed_count": 3777,
+          "observed_pct": 3.83,
+          "expected_count": 8638.7,
+          "expected_pct": 8.76,
+          "diff_pct": -4.93,
+          "z_score": -54.75,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 9,
+          "observed_count": 11699,
+          "observed_pct": 11.86,
+          "expected_count": 8384.9,
+          "expected_pct": 8.5,
+          "diff_pct": 3.36,
+          "z_score": 37.83,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        }
+      ]
+    },
+    "first_two_digits": {
+      "test_type": "first_two_digits",
+      "sample_size": 98649,
+      "mad": 0.00883,
+      "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+      "chi_square": 197156.94,
+      "p_value": 0.0,
+      "degrees_of_freedom": 89,
+      "anomaly_score": 100.0,
+      "critical_digits": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99
+      ],
+      "distributions": [
+        {
+          "digit": 10,
+          "observed_count": 9204,
+          "observed_pct": 9.33,
+          "expected_count": 4083.3,
+          "expected_pct": 4.14,
+          "diff_pct": 5.19,
+          "z_score": 81.84,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 11,
+          "observed_count": 1554,
+          "observed_pct": 1.58,
+          "expected_count": 3727.8,
+          "expected_pct": 3.78,
+          "diff_pct": -2.2,
+          "z_score": -36.29,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 12,
+          "observed_count": 1808,
+          "observed_pct": 1.83,
+          "expected_count": 3429.2,
+          "expected_pct": 3.48,
+          "diff_pct": -1.64,
+          "z_score": -28.17,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 13,
+          "observed_count": 1088,
+          "observed_pct": 1.1,
+          "expected_count": 3175.0,
+          "expected_pct": 3.22,
+          "diff_pct": -2.12,
+          "z_score": -37.64,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 14,
+          "observed_count": 2593,
+          "observed_pct": 2.63,
+          "expected_count": 2955.8,
+          "expected_pct": 3.0,
+          "diff_pct": -0.37,
+          "z_score": -6.77,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 15,
+          "observed_count": 4167,
+          "observed_pct": 4.22,
+          "expected_count": 2765.0,
+          "expected_pct": 2.8,
+          "diff_pct": 1.42,
+          "z_score": 27.03,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 16,
+          "observed_count": 1761,
+          "observed_pct": 1.79,
+          "expected_count": 2597.3,
+          "expected_pct": 2.63,
+          "diff_pct": -0.85,
+          "z_score": -16.62,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 17,
+          "observed_count": 1999,
+          "observed_pct": 2.03,
+          "expected_count": 2448.8,
+          "expected_pct": 2.48,
+          "diff_pct": -0.46,
+          "z_score": -9.19,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 18,
+          "observed_count": 764,
+          "observed_pct": 0.77,
+          "expected_count": 2316.4,
+          "expected_pct": 2.35,
+          "diff_pct": -1.57,
+          "z_score": -32.63,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 19,
+          "observed_count": 2591,
+          "observed_pct": 2.63,
+          "expected_count": 2197.5,
+          "expected_pct": 2.23,
+          "diff_pct": 0.4,
+          "z_score": 8.48,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 20,
+          "observed_count": 7634,
+          "observed_pct": 7.74,
+          "expected_count": 2090.3,
+          "expected_pct": 2.12,
+          "diff_pct": 5.62,
+          "z_score": 122.55,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 21,
+          "observed_count": 1026,
+          "observed_pct": 1.04,
+          "expected_count": 1993.0,
+          "expected_pct": 2.02,
+          "diff_pct": -0.98,
+          "z_score": -21.87,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 22,
+          "observed_count": 1411,
+          "observed_pct": 1.43,
+          "expected_count": 1904.4,
+          "expected_pct": 1.93,
+          "diff_pct": -0.5,
+          "z_score": -11.41,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 23,
+          "observed_count": 1123,
+          "observed_pct": 1.14,
+          "expected_count": 1823.4,
+          "expected_pct": 1.85,
+          "diff_pct": -0.71,
+          "z_score": -16.54,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 24,
+          "observed_count": 2787,
+          "observed_pct": 2.83,
+          "expected_count": 1748.9,
+          "expected_pct": 1.77,
+          "diff_pct": 1.05,
+          "z_score": 25.03,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 25,
+          "observed_count": 4753,
+          "observed_pct": 4.82,
+          "expected_count": 1680.3,
+          "expected_pct": 1.7,
+          "diff_pct": 3.11,
+          "z_score": 75.59,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 26,
+          "observed_count": 1312,
+          "observed_pct": 1.33,
+          "expected_count": 1616.9,
+          "expected_pct": 1.64,
+          "diff_pct": -0.31,
+          "z_score": -7.63,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 27,
+          "observed_count": 662,
+          "observed_pct": 0.67,
+          "expected_count": 1558.1,
+          "expected_pct": 1.58,
+          "diff_pct": -0.91,
+          "z_score": -22.87,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 28,
+          "observed_count": 936,
+          "observed_pct": 0.95,
+          "expected_count": 1503.4,
+          "expected_pct": 1.52,
+          "diff_pct": -0.58,
+          "z_score": -14.73,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 29,
+          "observed_count": 1077,
+          "observed_pct": 1.09,
+          "expected_count": 1452.4,
+          "expected_pct": 1.47,
+          "diff_pct": -0.38,
+          "z_score": -9.91,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 30,
+          "observed_count": 5414,
+          "observed_pct": 5.49,
+          "expected_count": 1404.8,
+          "expected_pct": 1.42,
+          "diff_pct": 4.06,
+          "z_score": 107.72,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 31,
+          "observed_count": 228,
+          "observed_pct": 0.23,
+          "expected_count": 1360.2,
+          "expected_pct": 1.38,
+          "diff_pct": -1.15,
+          "z_score": -30.9,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 32,
+          "observed_count": 438,
+          "observed_pct": 0.44,
+          "expected_count": 1318.3,
+          "expected_pct": 1.34,
+          "diff_pct": -0.89,
+          "z_score": -24.4,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 33,
+          "observed_count": 388,
+          "observed_pct": 0.39,
+          "expected_count": 1279.0,
+          "expected_pct": 1.3,
+          "diff_pct": -0.9,
+          "z_score": -25.06,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 34,
+          "observed_count": 772,
+          "observed_pct": 0.78,
+          "expected_count": 1241.9,
+          "expected_pct": 1.26,
+          "diff_pct": -0.48,
+          "z_score": -13.4,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 35,
+          "observed_count": 1056,
+          "observed_pct": 1.07,
+          "expected_count": 1206.9,
+          "expected_pct": 1.22,
+          "diff_pct": -0.15,
+          "z_score": -4.36,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 36,
+          "observed_count": 484,
+          "observed_pct": 0.49,
+          "expected_count": 1173.8,
+          "expected_pct": 1.19,
+          "diff_pct": -0.7,
+          "z_score": -20.24,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 37,
+          "observed_count": 492,
+          "observed_pct": 0.5,
+          "expected_count": 1142.5,
+          "expected_pct": 1.16,
+          "diff_pct": -0.66,
+          "z_score": -19.34,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 38,
+          "observed_count": 272,
+          "observed_pct": 0.28,
+          "expected_count": 1112.9,
+          "expected_pct": 1.13,
+          "diff_pct": -0.85,
+          "z_score": -25.33,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 39,
+          "observed_count": 662,
+          "observed_pct": 0.67,
+          "expected_count": 1084.7,
+          "expected_pct": 1.1,
+          "diff_pct": -0.43,
+          "z_score": -12.89,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 40,
+          "observed_count": 3605,
+          "observed_pct": 3.65,
+          "expected_count": 1057.9,
+          "expected_pct": 1.07,
+          "diff_pct": 2.58,
+          "z_score": 78.72,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 41,
+          "observed_count": 416,
+          "observed_pct": 0.42,
+          "expected_count": 1032.4,
+          "expected_pct": 1.05,
+          "diff_pct": -0.62,
+          "z_score": -19.27,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 42,
+          "observed_count": 251,
+          "observed_pct": 0.25,
+          "expected_count": 1008.1,
+          "expected_pct": 1.02,
+          "diff_pct": -0.77,
+          "z_score": -23.95,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 43,
+          "observed_count": 306,
+          "observed_pct": 0.31,
+          "expected_count": 984.9,
+          "expected_pct": 1.0,
+          "diff_pct": -0.69,
+          "z_score": -21.73,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 44,
+          "observed_count": 456,
+          "observed_pct": 0.46,
+          "expected_count": 962.8,
+          "expected_pct": 0.98,
+          "diff_pct": -0.51,
+          "z_score": -16.4,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 45,
+          "observed_count": 667,
+          "observed_pct": 0.68,
+          "expected_count": 941.6,
+          "expected_pct": 0.95,
+          "diff_pct": -0.28,
+          "z_score": -8.98,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 46,
+          "observed_count": 289,
+          "observed_pct": 0.29,
+          "expected_count": 921.4,
+          "expected_pct": 0.93,
+          "diff_pct": -0.64,
+          "z_score": -20.91,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 47,
+          "observed_count": 329,
+          "observed_pct": 0.33,
+          "expected_count": 902.0,
+          "expected_pct": 0.91,
+          "diff_pct": -0.58,
+          "z_score": -19.15,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 48,
+          "observed_count": 684,
+          "observed_pct": 0.69,
+          "expected_count": 883.4,
+          "expected_pct": 0.9,
+          "diff_pct": -0.2,
+          "z_score": -6.72,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 49,
+          "observed_count": 3531,
+          "observed_pct": 3.58,
+          "expected_count": 865.5,
+          "expected_pct": 0.88,
+          "diff_pct": 2.7,
+          "z_score": 90.98,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 50,
+          "observed_count": 10565,
+          "observed_pct": 10.71,
+          "expected_count": 848.4,
+          "expected_pct": 0.86,
+          "diff_pct": 9.85,
+          "z_score": 335.02,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 51,
+          "observed_count": 154,
+          "observed_pct": 0.16,
+          "expected_count": 831.9,
+          "expected_pct": 0.84,
+          "diff_pct": -0.69,
+          "z_score": -23.59,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 52,
+          "observed_count": 231,
+          "observed_pct": 0.23,
+          "expected_count": 816.1,
+          "expected_pct": 0.83,
+          "diff_pct": -0.59,
+          "z_score": -20.55,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 53,
+          "observed_count": 153,
+          "observed_pct": 0.16,
+          "expected_count": 800.8,
+          "expected_pct": 0.81,
+          "diff_pct": -0.66,
+          "z_score": -22.97,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 54,
+          "observed_count": 231,
+          "observed_pct": 0.23,
+          "expected_count": 786.1,
+          "expected_pct": 0.8,
+          "diff_pct": -0.56,
+          "z_score": -19.86,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 55,
+          "observed_count": 232,
+          "observed_pct": 0.24,
+          "expected_count": 772.0,
+          "expected_pct": 0.78,
+          "diff_pct": -0.55,
+          "z_score": -19.49,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 56,
+          "observed_count": 151,
+          "observed_pct": 0.15,
+          "expected_count": 758.3,
+          "expected_pct": 0.77,
+          "diff_pct": -0.62,
+          "z_score": -22.12,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 57,
+          "observed_count": 212,
+          "observed_pct": 0.21,
+          "expected_count": 745.1,
+          "expected_pct": 0.76,
+          "diff_pct": -0.54,
+          "z_score": -19.59,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 58,
+          "observed_count": 214,
+          "observed_pct": 0.22,
+          "expected_count": 732.4,
+          "expected_pct": 0.74,
+          "diff_pct": -0.53,
+          "z_score": -19.21,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 59,
+          "observed_count": 450,
+          "observed_pct": 0.46,
+          "expected_count": 720.1,
+          "expected_pct": 0.73,
+          "diff_pct": -0.27,
+          "z_score": -10.08,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 60,
+          "observed_count": 1227,
+          "observed_pct": 1.24,
+          "expected_count": 708.2,
+          "expected_pct": 0.72,
+          "diff_pct": 0.53,
+          "z_score": 19.55,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 61,
+          "observed_count": 130,
+          "observed_pct": 0.13,
+          "expected_count": 696.6,
+          "expected_pct": 0.71,
+          "diff_pct": -0.57,
+          "z_score": -21.53,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 62,
+          "observed_count": 394,
+          "observed_pct": 0.4,
+          "expected_count": 685.5,
+          "expected_pct": 0.69,
+          "diff_pct": -0.3,
+          "z_score": -11.15,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 63,
+          "observed_count": 147,
+          "observed_pct": 0.15,
+          "expected_count": 674.7,
+          "expected_pct": 0.68,
+          "diff_pct": -0.53,
+          "z_score": -20.37,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 64,
+          "observed_count": 380,
+          "observed_pct": 0.39,
+          "expected_count": 664.2,
+          "expected_pct": 0.67,
+          "diff_pct": -0.29,
+          "z_score": -11.05,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 65,
+          "observed_count": 293,
+          "observed_pct": 0.3,
+          "expected_count": 654.1,
+          "expected_pct": 0.66,
+          "diff_pct": -0.37,
+          "z_score": -14.15,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 66,
+          "observed_count": 97,
+          "observed_pct": 0.1,
+          "expected_count": 644.3,
+          "expected_pct": 0.65,
+          "diff_pct": -0.55,
+          "z_score": -21.61,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 67,
+          "observed_count": 164,
+          "observed_pct": 0.17,
+          "expected_count": 634.7,
+          "expected_pct": 0.64,
+          "diff_pct": -0.48,
+          "z_score": -18.72,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 68,
+          "observed_count": 193,
+          "observed_pct": 0.2,
+          "expected_count": 625.5,
+          "expected_pct": 0.63,
+          "diff_pct": -0.44,
+          "z_score": -17.33,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 69,
+          "observed_count": 547,
+          "observed_pct": 0.55,
+          "expected_count": 616.5,
+          "expected_pct": 0.62,
+          "diff_pct": -0.07,
+          "z_score": -2.79,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 70,
+          "observed_count": 1244,
+          "observed_pct": 1.26,
+          "expected_count": 607.7,
+          "expected_pct": 0.62,
+          "diff_pct": 0.65,
+          "z_score": 25.87,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 71,
+          "observed_count": 88,
+          "observed_pct": 0.09,
+          "expected_count": 599.2,
+          "expected_pct": 0.61,
+          "diff_pct": -0.52,
+          "z_score": -20.93,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 72,
+          "observed_count": 118,
+          "observed_pct": 0.12,
+          "expected_count": 590.9,
+          "expected_pct": 0.6,
+          "diff_pct": -0.48,
+          "z_score": -19.49,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 73,
+          "observed_count": 707,
+          "observed_pct": 0.72,
+          "expected_count": 582.9,
+          "expected_pct": 0.59,
+          "diff_pct": 0.13,
+          "z_score": 5.13,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 74,
+          "observed_count": 396,
+          "observed_pct": 0.4,
+          "expected_count": 575.1,
+          "expected_pct": 0.58,
+          "diff_pct": -0.18,
+          "z_score": -7.47,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 75,
+          "observed_count": 529,
+          "observed_pct": 0.54,
+          "expected_count": 567.5,
+          "expected_pct": 0.58,
+          "diff_pct": -0.04,
+          "z_score": -1.6,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        },
+        {
+          "digit": 76,
+          "observed_count": 102,
+          "observed_pct": 0.1,
+          "expected_count": 560.0,
+          "expected_pct": 0.57,
+          "diff_pct": -0.46,
+          "z_score": -19.39,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 77,
+          "observed_count": 192,
+          "observed_pct": 0.19,
+          "expected_count": 552.8,
+          "expected_pct": 0.56,
+          "diff_pct": -0.37,
+          "z_score": -15.37,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 78,
+          "observed_count": 136,
+          "observed_pct": 0.14,
+          "expected_count": 545.8,
+          "expected_pct": 0.55,
+          "diff_pct": -0.42,
+          "z_score": -17.57,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 79,
+          "observed_count": 446,
+          "observed_pct": 0.45,
+          "expected_count": 538.9,
+          "expected_pct": 0.55,
+          "diff_pct": -0.09,
+          "z_score": -3.99,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 80,
+          "observed_count": 1137,
+          "observed_pct": 1.15,
+          "expected_count": 532.2,
+          "expected_pct": 0.54,
+          "diff_pct": 0.61,
+          "z_score": 26.26,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 81,
+          "observed_count": 216,
+          "observed_pct": 0.22,
+          "expected_count": 525.7,
+          "expected_pct": 0.53,
+          "diff_pct": -0.31,
+          "z_score": -13.52,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 82,
+          "observed_count": 236,
+          "observed_pct": 0.24,
+          "expected_count": 519.3,
+          "expected_pct": 0.53,
+          "diff_pct": -0.29,
+          "z_score": -12.44,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 83,
+          "observed_count": 131,
+          "observed_pct": 0.13,
+          "expected_count": 513.1,
+          "expected_pct": 0.52,
+          "diff_pct": -0.39,
+          "z_score": -16.89,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 84,
+          "observed_count": 195,
+          "observed_pct": 0.2,
+          "expected_count": 507.0,
+          "expected_pct": 0.51,
+          "diff_pct": -0.32,
+          "z_score": -13.87,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 85,
+          "observed_count": 395,
+          "observed_pct": 0.4,
+          "expected_count": 501.1,
+          "expected_pct": 0.51,
+          "diff_pct": -0.11,
+          "z_score": -4.73,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 86,
+          "observed_count": 117,
+          "observed_pct": 0.12,
+          "expected_count": 495.3,
+          "expected_pct": 0.5,
+          "diff_pct": -0.38,
+          "z_score": -17.02,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 87,
+          "observed_count": 182,
+          "observed_pct": 0.18,
+          "expected_count": 489.6,
+          "expected_pct": 0.5,
+          "diff_pct": -0.31,
+          "z_score": -13.91,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 88,
+          "observed_count": 88,
+          "observed_pct": 0.09,
+          "expected_count": 484.1,
+          "expected_pct": 0.49,
+          "diff_pct": -0.4,
+          "z_score": -18.02,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 89,
+          "observed_count": 304,
+          "observed_pct": 0.31,
+          "expected_count": 478.7,
+          "expected_pct": 0.49,
+          "diff_pct": -0.18,
+          "z_score": -7.98,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 90,
+          "observed_count": 553,
+          "observed_pct": 0.56,
+          "expected_count": 473.4,
+          "expected_pct": 0.48,
+          "diff_pct": 0.08,
+          "z_score": 3.64,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 91,
+          "observed_count": 105,
+          "observed_pct": 0.11,
+          "expected_count": 468.2,
+          "expected_pct": 0.47,
+          "diff_pct": -0.37,
+          "z_score": -16.8,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 92,
+          "observed_count": 208,
+          "observed_pct": 0.21,
+          "expected_count": 463.2,
+          "expected_pct": 0.47,
+          "diff_pct": -0.26,
+          "z_score": -11.86,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 93,
+          "observed_count": 81,
+          "observed_pct": 0.08,
+          "expected_count": 458.2,
+          "expected_pct": 0.46,
+          "diff_pct": -0.38,
+          "z_score": -17.64,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 94,
+          "observed_count": 209,
+          "observed_pct": 0.21,
+          "expected_count": 453.4,
+          "expected_pct": 0.46,
+          "diff_pct": -0.25,
+          "z_score": -11.48,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 95,
+          "observed_count": 353,
+          "observed_pct": 0.36,
+          "expected_count": 448.6,
+          "expected_pct": 0.45,
+          "diff_pct": -0.1,
+          "z_score": -4.5,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 96,
+          "observed_count": 230,
+          "observed_pct": 0.23,
+          "expected_count": 444.0,
+          "expected_pct": 0.45,
+          "diff_pct": -0.22,
+          "z_score": -10.15,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 97,
+          "observed_count": 215,
+          "observed_pct": 0.22,
+          "expected_count": 439.4,
+          "expected_pct": 0.45,
+          "diff_pct": -0.23,
+          "z_score": -10.71,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 98,
+          "observed_count": 490,
+          "observed_pct": 0.5,
+          "expected_count": 435.0,
+          "expected_pct": 0.44,
+          "diff_pct": 0.06,
+          "z_score": 2.62,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 99,
+          "observed_count": 2091,
+          "observed_pct": 2.12,
+          "expected_count": 430.6,
+          "expected_pct": 0.44,
+          "diff_pct": 1.68,
+          "z_score": 80.17,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        }
+      ]
+    }
+  },
+  "expenditures_audit": {
+    "first_digit": {
+      "test_type": "first_digit",
+      "sample_size": 109125,
+      "mad": 0.01136,
+      "conformity_status": "Acceptable Conformity",
+      "chi_square": 2470.61,
+      "p_value": 0.0,
+      "degrees_of_freedom": 8,
+      "anomaly_score": 58.9,
+      "critical_digits": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "distributions": [
+        {
+          "digit": 1,
+          "observed_count": 31483,
+          "observed_pct": 28.85,
+          "expected_count": 32849.9,
+          "expected_pct": 30.1,
+          "diff_pct": -1.25,
+          "z_score": -9.02,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 2,
+          "observed_count": 19803,
+          "observed_pct": 18.15,
+          "expected_count": 19216.0,
+          "expected_pct": 17.61,
+          "diff_pct": 0.54,
+          "z_score": 4.66,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 3,
+          "observed_count": 13721,
+          "observed_pct": 12.57,
+          "expected_count": 13633.9,
+          "expected_pct": 12.49,
+          "diff_pct": 0.08,
+          "z_score": 0.79,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        },
+        {
+          "digit": 4,
+          "observed_count": 14176,
+          "observed_pct": 12.99,
+          "expected_count": 10575.3,
+          "expected_pct": 9.69,
+          "diff_pct": 3.3,
+          "z_score": 36.84,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 5,
+          "observed_count": 7757,
+          "observed_pct": 7.11,
+          "expected_count": 8640.7,
+          "expected_pct": 7.92,
+          "diff_pct": -0.81,
+          "z_score": -9.9,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 6,
+          "observed_count": 5865,
+          "observed_pct": 5.37,
+          "expected_count": 7305.6,
+          "expected_pct": 6.69,
+          "diff_pct": -1.32,
+          "z_score": -17.44,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 7,
+          "observed_count": 6002,
+          "observed_pct": 5.5,
+          "expected_count": 6328.4,
+          "expected_pct": 5.8,
+          "diff_pct": -0.3,
+          "z_score": -4.22,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 8,
+          "observed_count": 4020,
+          "observed_pct": 3.68,
+          "expected_count": 5582.0,
+          "expected_pct": 5.12,
+          "diff_pct": -1.43,
+          "z_score": -21.46,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 9,
+          "observed_count": 6298,
+          "observed_pct": 5.77,
+          "expected_count": 4993.3,
+          "expected_pct": 4.58,
+          "diff_pct": 1.2,
+          "z_score": 18.89,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        }
+      ]
+    },
+    "second_digit": {
+      "test_type": "second_digit",
+      "sample_size": 109125,
+      "mad": 0.03359,
+      "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+      "chi_square": 19021.47,
+      "p_value": 0.0,
+      "degrees_of_freedom": 9,
+      "anomaly_score": 100.0,
+      "critical_digits": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "distributions": [
+        {
+          "digit": 0,
+          "observed_count": 22121,
+          "observed_pct": 20.27,
+          "expected_count": 13060.0,
+          "expected_pct": 11.97,
+          "diff_pct": 8.3,
+          "z_score": 84.5,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 1,
+          "observed_count": 7655,
+          "observed_pct": 7.01,
+          "expected_count": 12428.3,
+          "expected_pct": 11.39,
+          "diff_pct": -4.37,
+          "z_score": -45.48,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 2,
+          "observed_count": 9848,
+          "observed_pct": 9.02,
+          "expected_count": 11875.1,
+          "expected_pct": 10.88,
+          "diff_pct": -1.86,
+          "z_score": -19.7,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 3,
+          "observed_count": 6488,
+          "observed_pct": 5.95,
+          "expected_count": 11385.0,
+          "expected_pct": 10.43,
+          "diff_pct": -4.49,
+          "z_score": -48.49,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 4,
+          "observed_count": 11324,
+          "observed_pct": 10.38,
+          "expected_count": 10946.1,
+          "expected_pct": 10.03,
+          "diff_pct": 0.35,
+          "z_score": 3.8,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 5,
+          "observed_count": 11657,
+          "observed_pct": 10.68,
+          "expected_count": 10549.9,
+          "expected_pct": 9.67,
+          "diff_pct": 1.01,
+          "z_score": 11.34,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 6,
+          "observed_count": 6842,
+          "observed_pct": 6.27,
+          "expected_count": 10189.5,
+          "expected_pct": 9.34,
+          "diff_pct": -3.07,
+          "z_score": -34.82,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 7,
+          "observed_count": 9001,
+          "observed_pct": 8.25,
+          "expected_count": 9859.7,
+          "expected_pct": 9.04,
+          "diff_pct": -0.79,
+          "z_score": -9.06,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 8,
+          "observed_count": 7131,
+          "observed_pct": 6.53,
+          "expected_count": 9556.1,
+          "expected_pct": 8.76,
+          "diff_pct": -2.22,
+          "z_score": -25.97,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 9,
+          "observed_count": 17058,
+          "observed_pct": 15.63,
+          "expected_count": 9275.3,
+          "expected_pct": 8.5,
+          "diff_pct": 7.13,
+          "z_score": 84.47,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        }
+      ]
+    },
+    "first_two_digits": {
+      "test_type": "first_two_digits",
+      "sample_size": 109125,
+      "mad": 0.00483,
+      "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+      "chi_square": 47503.96,
+      "p_value": 0.0,
+      "degrees_of_freedom": 89,
+      "anomaly_score": 93.6,
+      "critical_digits": [
+        10,
+        11,
+        12,
+        13,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        71,
+        72,
+        74,
+        75,
+        76,
+        77,
+        78,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        97,
+        98,
+        99
+      ],
+      "distributions": [
+        {
+          "digit": 10,
+          "observed_count": 5925,
+          "observed_pct": 5.43,
+          "expected_count": 4517.0,
+          "expected_pct": 4.14,
+          "diff_pct": 1.29,
+          "z_score": 21.39,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 11,
+          "observed_count": 2845,
+          "observed_pct": 2.61,
+          "expected_count": 4123.7,
+          "expected_pct": 3.78,
+          "diff_pct": -1.17,
+          "z_score": -20.29,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 12,
+          "observed_count": 4109,
+          "observed_pct": 3.77,
+          "expected_count": 3793.4,
+          "expected_pct": 3.48,
+          "diff_pct": 0.29,
+          "z_score": 5.21,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 13,
+          "observed_count": 1748,
+          "observed_pct": 1.6,
+          "expected_count": 3512.2,
+          "expected_pct": 3.22,
+          "diff_pct": -1.62,
+          "z_score": -30.25,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 14,
+          "observed_count": 3251,
+          "observed_pct": 2.98,
+          "expected_count": 3269.7,
+          "expected_pct": 3.0,
+          "diff_pct": -0.02,
+          "z_score": -0.32,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        },
+        {
+          "digit": 15,
+          "observed_count": 3409,
+          "observed_pct": 3.12,
+          "expected_count": 3058.6,
+          "expected_pct": 2.8,
+          "diff_pct": 0.32,
+          "z_score": 6.42,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 16,
+          "observed_count": 1969,
+          "observed_pct": 1.8,
+          "expected_count": 2873.1,
+          "expected_pct": 2.63,
+          "diff_pct": -0.83,
+          "z_score": -17.08,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 17,
+          "observed_count": 2271,
+          "observed_pct": 2.08,
+          "expected_count": 2708.9,
+          "expected_pct": 2.48,
+          "diff_pct": -0.4,
+          "z_score": -8.51,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 18,
+          "observed_count": 1873,
+          "observed_pct": 1.72,
+          "expected_count": 2562.4,
+          "expected_pct": 2.35,
+          "diff_pct": -0.63,
+          "z_score": -13.77,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 19,
+          "observed_count": 4083,
+          "observed_pct": 3.74,
+          "expected_count": 2430.9,
+          "expected_pct": 2.23,
+          "diff_pct": 1.51,
+          "z_score": 33.88,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 20,
+          "observed_count": 3762,
+          "observed_pct": 3.45,
+          "expected_count": 2312.3,
+          "expected_pct": 2.12,
+          "diff_pct": 1.33,
+          "z_score": 30.46,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 21,
+          "observed_count": 1291,
+          "observed_pct": 1.18,
+          "expected_count": 2204.7,
+          "expected_pct": 2.02,
+          "diff_pct": -0.84,
+          "z_score": -19.65,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 22,
+          "observed_count": 1521,
+          "observed_pct": 1.39,
+          "expected_count": 2106.7,
+          "expected_pct": 1.93,
+          "diff_pct": -0.54,
+          "z_score": -12.87,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 23,
+          "observed_count": 1364,
+          "observed_pct": 1.25,
+          "expected_count": 2017.0,
+          "expected_pct": 1.85,
+          "diff_pct": -0.6,
+          "z_score": -14.66,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 24,
+          "observed_count": 3221,
+          "observed_pct": 2.95,
+          "expected_count": 1934.7,
+          "expected_pct": 1.77,
+          "diff_pct": 1.18,
+          "z_score": 29.5,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 25,
+          "observed_count": 2943,
+          "observed_pct": 2.7,
+          "expected_count": 1858.8,
+          "expected_pct": 1.7,
+          "diff_pct": 0.99,
+          "z_score": 25.35,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 26,
+          "observed_count": 1317,
+          "observed_pct": 1.21,
+          "expected_count": 1788.6,
+          "expected_pct": 1.64,
+          "diff_pct": -0.43,
+          "z_score": -11.23,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 27,
+          "observed_count": 893,
+          "observed_pct": 0.82,
+          "expected_count": 1723.5,
+          "expected_pct": 1.58,
+          "diff_pct": -0.76,
+          "z_score": -20.15,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 28,
+          "observed_count": 1340,
+          "observed_pct": 1.23,
+          "expected_count": 1663.1,
+          "expected_pct": 1.52,
+          "diff_pct": -0.3,
+          "z_score": -7.97,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 29,
+          "observed_count": 2151,
+          "observed_pct": 1.97,
+          "expected_count": 1606.7,
+          "expected_pct": 1.47,
+          "diff_pct": 0.5,
+          "z_score": 13.67,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 30,
+          "observed_count": 2779,
+          "observed_pct": 2.55,
+          "expected_count": 1554.0,
+          "expected_pct": 1.42,
+          "diff_pct": 1.12,
+          "z_score": 31.29,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 31,
+          "observed_count": 595,
+          "observed_pct": 0.55,
+          "expected_count": 1504.6,
+          "expected_pct": 1.38,
+          "diff_pct": -0.83,
+          "z_score": -23.6,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 32,
+          "observed_count": 765,
+          "observed_pct": 0.7,
+          "expected_count": 1458.3,
+          "expected_pct": 1.34,
+          "diff_pct": -0.64,
+          "z_score": -18.27,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 33,
+          "observed_count": 789,
+          "observed_pct": 0.72,
+          "expected_count": 1414.8,
+          "expected_pct": 1.3,
+          "diff_pct": -0.57,
+          "z_score": -16.73,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 34,
+          "observed_count": 1203,
+          "observed_pct": 1.1,
+          "expected_count": 1373.8,
+          "expected_pct": 1.26,
+          "diff_pct": -0.16,
+          "z_score": -4.62,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 35,
+          "observed_count": 1123,
+          "observed_pct": 1.03,
+          "expected_count": 1335.1,
+          "expected_pct": 1.22,
+          "diff_pct": -0.19,
+          "z_score": -5.83,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 36,
+          "observed_count": 1093,
+          "observed_pct": 1.0,
+          "expected_count": 1298.5,
+          "expected_pct": 1.19,
+          "diff_pct": -0.19,
+          "z_score": -5.72,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 37,
+          "observed_count": 2874,
+          "observed_pct": 2.63,
+          "expected_count": 1263.9,
+          "expected_pct": 1.16,
+          "diff_pct": 1.48,
+          "z_score": 45.54,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 38,
+          "observed_count": 839,
+          "observed_pct": 0.77,
+          "expected_count": 1231.0,
+          "expected_pct": 1.13,
+          "diff_pct": -0.36,
+          "z_score": -11.22,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 39,
+          "observed_count": 1661,
+          "observed_pct": 1.52,
+          "expected_count": 1199.9,
+          "expected_pct": 1.1,
+          "diff_pct": 0.42,
+          "z_score": 13.37,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 40,
+          "observed_count": 2576,
+          "observed_pct": 2.36,
+          "expected_count": 1170.2,
+          "expected_pct": 1.07,
+          "diff_pct": 1.29,
+          "z_score": 41.3,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 41,
+          "observed_count": 834,
+          "observed_pct": 0.76,
+          "expected_count": 1142.0,
+          "expected_pct": 1.05,
+          "diff_pct": -0.28,
+          "z_score": -9.15,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 42,
+          "observed_count": 1017,
+          "observed_pct": 0.93,
+          "expected_count": 1115.2,
+          "expected_pct": 1.02,
+          "diff_pct": -0.09,
+          "z_score": -2.94,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 43,
+          "observed_count": 614,
+          "observed_pct": 0.56,
+          "expected_count": 1089.5,
+          "expected_pct": 1.0,
+          "diff_pct": -0.44,
+          "z_score": -14.46,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 44,
+          "observed_count": 962,
+          "observed_pct": 0.88,
+          "expected_count": 1065.0,
+          "expected_pct": 0.98,
+          "diff_pct": -0.09,
+          "z_score": -3.16,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 45,
+          "observed_count": 1186,
+          "observed_pct": 1.09,
+          "expected_count": 1041.6,
+          "expected_pct": 0.95,
+          "diff_pct": 0.13,
+          "z_score": 4.48,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 46,
+          "observed_count": 607,
+          "observed_pct": 0.56,
+          "expected_count": 1019.2,
+          "expected_pct": 0.93,
+          "diff_pct": -0.38,
+          "z_score": -12.96,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 47,
+          "observed_count": 887,
+          "observed_pct": 0.81,
+          "expected_count": 997.8,
+          "expected_pct": 0.91,
+          "diff_pct": -0.1,
+          "z_score": -3.51,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 48,
+          "observed_count": 1265,
+          "observed_pct": 1.16,
+          "expected_count": 977.2,
+          "expected_pct": 0.9,
+          "diff_pct": 0.26,
+          "z_score": 9.23,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 49,
+          "observed_count": 4228,
+          "observed_pct": 3.87,
+          "expected_count": 957.5,
+          "expected_pct": 0.88,
+          "diff_pct": 3.0,
+          "z_score": 106.15,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 50,
+          "observed_count": 3543,
+          "observed_pct": 3.25,
+          "expected_count": 938.5,
+          "expected_pct": 0.86,
+          "diff_pct": 2.39,
+          "z_score": 85.37,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 51,
+          "observed_count": 509,
+          "observed_pct": 0.47,
+          "expected_count": 920.3,
+          "expected_pct": 0.84,
+          "diff_pct": -0.38,
+          "z_score": -13.6,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 52,
+          "observed_count": 513,
+          "observed_pct": 0.47,
+          "expected_count": 902.7,
+          "expected_pct": 0.83,
+          "diff_pct": -0.36,
+          "z_score": -13.01,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 53,
+          "observed_count": 301,
+          "observed_pct": 0.28,
+          "expected_count": 885.9,
+          "expected_pct": 0.81,
+          "diff_pct": -0.54,
+          "z_score": -19.71,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 54,
+          "observed_count": 527,
+          "observed_pct": 0.48,
+          "expected_count": 869.6,
+          "expected_pct": 0.8,
+          "diff_pct": -0.31,
+          "z_score": -11.65,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 55,
+          "observed_count": 319,
+          "observed_pct": 0.29,
+          "expected_count": 853.9,
+          "expected_pct": 0.78,
+          "diff_pct": -0.49,
+          "z_score": -18.36,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 56,
+          "observed_count": 351,
+          "observed_pct": 0.32,
+          "expected_count": 838.8,
+          "expected_pct": 0.77,
+          "diff_pct": -0.45,
+          "z_score": -16.89,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 57,
+          "observed_count": 548,
+          "observed_pct": 0.5,
+          "expected_count": 824.2,
+          "expected_pct": 0.76,
+          "diff_pct": -0.25,
+          "z_score": -9.64,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 58,
+          "observed_count": 326,
+          "observed_pct": 0.3,
+          "expected_count": 810.1,
+          "expected_pct": 0.74,
+          "diff_pct": -0.44,
+          "z_score": -17.06,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 59,
+          "observed_count": 820,
+          "observed_pct": 0.75,
+          "expected_count": 796.5,
+          "expected_pct": 0.73,
+          "diff_pct": 0.02,
+          "z_score": 0.82,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        },
+        {
+          "digit": 60,
+          "observed_count": 1077,
+          "observed_pct": 0.99,
+          "expected_count": 783.4,
+          "expected_pct": 0.72,
+          "diff_pct": 0.27,
+          "z_score": 10.51,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 61,
+          "observed_count": 492,
+          "observed_pct": 0.45,
+          "expected_count": 770.6,
+          "expected_pct": 0.71,
+          "diff_pct": -0.26,
+          "z_score": -10.05,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 62,
+          "observed_count": 850,
+          "observed_pct": 0.78,
+          "expected_count": 758.3,
+          "expected_pct": 0.69,
+          "diff_pct": 0.08,
+          "z_score": 3.32,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 63,
+          "observed_count": 515,
+          "observed_pct": 0.47,
+          "expected_count": 746.4,
+          "expected_pct": 0.68,
+          "diff_pct": -0.21,
+          "z_score": -8.48,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 64,
+          "observed_count": 556,
+          "observed_pct": 0.51,
+          "expected_count": 734.8,
+          "expected_pct": 0.67,
+          "diff_pct": -0.16,
+          "z_score": -6.6,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 65,
+          "observed_count": 480,
+          "observed_pct": 0.44,
+          "expected_count": 723.6,
+          "expected_pct": 0.66,
+          "diff_pct": -0.22,
+          "z_score": -9.07,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 66,
+          "observed_count": 517,
+          "observed_pct": 0.47,
+          "expected_count": 712.7,
+          "expected_pct": 0.65,
+          "diff_pct": -0.18,
+          "z_score": -7.34,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 67,
+          "observed_count": 349,
+          "observed_pct": 0.32,
+          "expected_count": 702.1,
+          "expected_pct": 0.64,
+          "diff_pct": -0.32,
+          "z_score": -13.35,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 68,
+          "observed_count": 346,
+          "observed_pct": 0.32,
+          "expected_count": 691.9,
+          "expected_pct": 0.63,
+          "diff_pct": -0.32,
+          "z_score": -13.17,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 69,
+          "observed_count": 683,
+          "observed_pct": 0.63,
+          "expected_count": 681.9,
+          "expected_pct": 0.62,
+          "diff_pct": 0.0,
+          "z_score": 0.02,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        },
+        {
+          "digit": 70,
+          "observed_count": 705,
+          "observed_pct": 0.65,
+          "expected_count": 672.2,
+          "expected_pct": 0.62,
+          "diff_pct": 0.03,
+          "z_score": 1.25,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        },
+        {
+          "digit": 71,
+          "observed_count": 264,
+          "observed_pct": 0.24,
+          "expected_count": 662.8,
+          "expected_pct": 0.61,
+          "diff_pct": -0.37,
+          "z_score": -15.52,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 72,
+          "observed_count": 395,
+          "observed_pct": 0.36,
+          "expected_count": 653.7,
+          "expected_pct": 0.6,
+          "diff_pct": -0.24,
+          "z_score": -10.13,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 73,
+          "observed_count": 693,
+          "observed_pct": 0.64,
+          "expected_count": 644.8,
+          "expected_pct": 0.59,
+          "diff_pct": 0.04,
+          "z_score": 1.88,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        },
+        {
+          "digit": 74,
+          "observed_count": 993,
+          "observed_pct": 0.91,
+          "expected_count": 636.1,
+          "expected_pct": 0.58,
+          "diff_pct": 0.33,
+          "z_score": 14.17,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 75,
+          "observed_count": 1459,
+          "observed_pct": 1.34,
+          "expected_count": 627.7,
+          "expected_pct": 0.58,
+          "diff_pct": 0.76,
+          "z_score": 33.25,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 76,
+          "observed_count": 233,
+          "observed_pct": 0.21,
+          "expected_count": 619.5,
+          "expected_pct": 0.57,
+          "diff_pct": -0.35,
+          "z_score": -15.55,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 77,
+          "observed_count": 294,
+          "observed_pct": 0.27,
+          "expected_count": 611.5,
+          "expected_pct": 0.56,
+          "diff_pct": -0.29,
+          "z_score": -12.86,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 78,
+          "observed_count": 338,
+          "observed_pct": 0.31,
+          "expected_count": 603.7,
+          "expected_pct": 0.55,
+          "diff_pct": -0.24,
+          "z_score": -10.82,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 79,
+          "observed_count": 628,
+          "observed_pct": 0.58,
+          "expected_count": 596.1,
+          "expected_pct": 0.55,
+          "diff_pct": 0.03,
+          "z_score": 1.29,
+          "is_anomaly": false,
+          "risk_level": "NORMAL"
+        },
+        {
+          "digit": 80,
+          "observed_count": 1066,
+          "observed_pct": 0.98,
+          "expected_count": 588.7,
+          "expected_pct": 0.54,
+          "diff_pct": 0.44,
+          "z_score": 19.7,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 81,
+          "observed_count": 458,
+          "observed_pct": 0.42,
+          "expected_count": 581.5,
+          "expected_pct": 0.53,
+          "diff_pct": -0.11,
+          "z_score": -5.11,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 82,
+          "observed_count": 445,
+          "observed_pct": 0.41,
+          "expected_count": 574.5,
+          "expected_pct": 0.53,
+          "diff_pct": -0.12,
+          "z_score": -5.39,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 83,
+          "observed_count": 269,
+          "observed_pct": 0.25,
+          "expected_count": 567.6,
+          "expected_pct": 0.52,
+          "diff_pct": -0.27,
+          "z_score": -12.54,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 84,
+          "observed_count": 342,
+          "observed_pct": 0.31,
+          "expected_count": 560.9,
+          "expected_pct": 0.51,
+          "diff_pct": -0.2,
+          "z_score": -9.24,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 85,
+          "observed_count": 376,
+          "observed_pct": 0.34,
+          "expected_count": 554.3,
+          "expected_pct": 0.51,
+          "diff_pct": -0.16,
+          "z_score": -7.57,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 86,
+          "observed_count": 212,
+          "observed_pct": 0.19,
+          "expected_count": 547.9,
+          "expected_pct": 0.5,
+          "diff_pct": -0.31,
+          "z_score": -14.36,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 87,
+          "observed_count": 257,
+          "observed_pct": 0.24,
+          "expected_count": 541.6,
+          "expected_pct": 0.5,
+          "diff_pct": -0.26,
+          "z_score": -12.24,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 88,
+          "observed_count": 224,
+          "observed_pct": 0.21,
+          "expected_count": 535.5,
+          "expected_pct": 0.49,
+          "diff_pct": -0.29,
+          "z_score": -13.47,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 89,
+          "observed_count": 371,
+          "observed_pct": 0.34,
+          "expected_count": 529.5,
+          "expected_pct": 0.49,
+          "diff_pct": -0.15,
+          "z_score": -6.88,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 90,
+          "observed_count": 688,
+          "observed_pct": 0.63,
+          "expected_count": 523.7,
+          "expected_pct": 0.48,
+          "diff_pct": 0.15,
+          "z_score": 7.18,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 91,
+          "observed_count": 367,
+          "observed_pct": 0.34,
+          "expected_count": 518.0,
+          "expected_pct": 0.47,
+          "diff_pct": -0.14,
+          "z_score": -6.63,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 92,
+          "observed_count": 233,
+          "observed_pct": 0.21,
+          "expected_count": 512.4,
+          "expected_pct": 0.47,
+          "diff_pct": -0.26,
+          "z_score": -12.35,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 93,
+          "observed_count": 195,
+          "observed_pct": 0.18,
+          "expected_count": 506.9,
+          "expected_pct": 0.46,
+          "diff_pct": -0.29,
+          "z_score": -13.86,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 94,
+          "observed_count": 269,
+          "observed_pct": 0.25,
+          "expected_count": 501.5,
+          "expected_pct": 0.46,
+          "diff_pct": -0.21,
+          "z_score": -10.38,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 95,
+          "observed_count": 362,
+          "observed_pct": 0.33,
+          "expected_count": 496.3,
+          "expected_pct": 0.45,
+          "diff_pct": -0.12,
+          "z_score": -6.02,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 96,
+          "observed_count": 543,
+          "observed_pct": 0.5,
+          "expected_count": 491.1,
+          "expected_pct": 0.45,
+          "diff_pct": 0.05,
+          "z_score": 2.32,
+          "is_anomaly": true,
+          "risk_level": "MODERATE"
+        },
+        {
+          "digit": 97,
+          "observed_count": 628,
+          "observed_pct": 0.58,
+          "expected_count": 486.1,
+          "expected_pct": 0.45,
+          "diff_pct": 0.13,
+          "z_score": 6.43,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 98,
+          "observed_count": 580,
+          "observed_pct": 0.53,
+          "expected_count": 481.1,
+          "expected_pct": 0.44,
+          "diff_pct": 0.09,
+          "z_score": 4.49,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        },
+        {
+          "digit": 99,
+          "observed_count": 2433,
+          "observed_pct": 2.23,
+          "expected_count": 476.3,
+          "expected_pct": 0.44,
+          "diff_pct": 1.79,
+          "z_score": 89.83,
+          "is_anomaly": true,
+          "risk_level": "CRITICAL"
+        }
+      ]
+    }
+  },
+  "procurement_rules": {
+    "threshold_cliffs": [
+      {
+        "rule_name": "Single Tender / Quotation Limit (\u20b95 Lakhs)",
+        "threshold_amount": 500000.0,
+        "danger_zone_range": "\u20b9450,000 - \u20b9499,999",
+        "post_zone_range": "\u20b9500,000 - \u20b9550,000",
+        "danger_count": 5160,
+        "danger_pct": 5.23,
+        "post_count": 10690,
+        "post_pct": 10.84,
+        "evasion_ratio": 0.48,
+        "cliff_detected": false,
+        "risk_verdict": "NORMAL SPREAD",
+        "description": "Works split or priced just under \u20b95 Lakhs to evade mandatory multi-bid competitive tendering."
+      },
+      {
+        "rule_name": "Limited Tender Inquiry Limit (\u20b910 Lakhs)",
+        "threshold_amount": 1000000.0,
+        "danger_zone_range": "\u20b9900,000 - \u20b9999,999",
+        "post_zone_range": "\u20b91,000,000 - \u20b91,100,000",
+        "danger_count": 3783,
+        "danger_pct": 3.83,
+        "post_count": 4959,
+        "post_pct": 5.03,
+        "evasion_ratio": 0.76,
+        "cliff_detected": false,
+        "risk_verdict": "NORMAL SPREAD",
+        "description": "Transactions structured right below \u20b910 Lakhs to avoid broader advertised e-tender publicity."
+      },
+      {
+        "rule_name": "National e-Procurement Threshold (\u20b925 Lakhs)",
+        "threshold_amount": 2500000.0,
+        "danger_zone_range": "\u20b92,350,000 - \u20b92,499,999",
+        "post_zone_range": "\u20b92,500,000 - \u20b92,650,000",
+        "danger_count": 480,
+        "danger_pct": 0.49,
+        "post_count": 579,
+        "post_pct": 0.59,
+        "evasion_ratio": 0.83,
+        "cliff_detected": false,
+        "risk_verdict": "NORMAL SPREAD",
+        "description": "Works budgeted right under \u20b925 Lakhs to bypass state-level centralized e-tendering."
+      },
+      {
+        "rule_name": "Special Technical Sanction Limit (\u20b950 Lakhs)",
+        "threshold_amount": 5000000.0,
+        "danger_zone_range": "\u20b94,700,000 - \u20b94,999,999",
+        "post_zone_range": "\u20b95,000,000 - \u20b95,300,000",
+        "danger_count": 109,
+        "danger_pct": 0.11,
+        "post_count": 203,
+        "post_pct": 0.21,
+        "evasion_ratio": 0.53,
+        "cliff_detected": false,
+        "risk_verdict": "NORMAL SPREAD",
+        "description": "Budgeted right under \u20b950 Lakhs to avoid mandatory Superintending Engineer scrutiny."
+      }
+    ],
+    "round_numbers": {
+      "total_analyzed": 98649,
+      "multiples_50k_count": 44515,
+      "multiples_50k_pct": 45.12,
+      "multiples_100k_count": 36571,
+      "multiples_100k_pct": 37.07,
+      "multiples_500k_count": 16718,
+      "multiples_500k_pct": 16.95,
+      "round_bias_detected": true,
+      "verdict": "HIGH ESTIMATION BIAS (Manufactured figures likely)"
+    }
+  },
+  "drilldowns": {
+    "top_states_by_mad": [
+      {
+        "entity": "Karnataka",
+        "records_count": 3731,
+        "total_amount": 2570227630.0,
+        "mad": 0.07654,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 3935.57,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Mizoram",
+        "records_count": 172,
+        "total_amount": 99944229.0,
+        "mad": 0.07264,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 118.46,
+        "p_value": 6.89e-22,
+        "critical_digits": [
+          2,
+          4,
+          6
+        ]
+      },
+      {
+        "entity": "Andhra Pradesh",
+        "records_count": 3738,
+        "total_amount": 2648256124.0,
+        "mad": 0.06853,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 2649.96,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Odisha",
+        "records_count": 4853,
+        "total_amount": 1900659451.0,
+        "mad": 0.06615,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 2557.04,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Meghalaya",
+        "records_count": 476,
+        "total_amount": 202920000.0,
+        "mad": 0.0649,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 247.12,
+        "p_value": 7.04e-49,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Arunachal Pradesh",
+        "records_count": 246,
+        "total_amount": 194856601.0,
+        "mad": 0.06475,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 223.89,
+        "p_value": 5.79e-44,
+        "critical_digits": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "entity": "Maharashtra",
+        "records_count": 2961,
+        "total_amount": 3054410165.87,
+        "mad": 0.05884,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1161.86,
+        "p_value": 1.66e-245,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Gujarat",
+        "records_count": 7453,
+        "total_amount": 2811129746.0,
+        "mad": 0.0588,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 2944.65,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Uttarakhand",
+        "records_count": 1122,
+        "total_amount": 599979495.0,
+        "mad": 0.05597,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 446.45,
+        "p_value": 2.13e-91,
+        "critical_digits": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "entity": "Jharkhand",
+        "records_count": 4615,
+        "total_amount": 1805664462.0,
+        "mad": 0.05499,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1184.64,
+        "p_value": 1.99e-250,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ],
+    "top_districts_by_mad": [
+      {
+        "entity": "KISHANGANJ(DISTRICT PLANNING OFFICER KISHANGANJ_IDA)",
+        "records_count": 127,
+        "total_amount": 82435700.0,
+        "mad": 0.20735,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1770.03,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "entity": "KAUSHAMBI(DISTRICT MAGISTRAE KAUSHAMBI_IDA)",
+        "records_count": 534,
+        "total_amount": 47247090.0,
+        "mad": 0.20559,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 8367.09,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "KATIHAR(DISTRICT PLANNING OFFICER KATIHAR_IDA)",
+        "records_count": 98,
+        "total_amount": 93514260.0,
+        "mad": 0.20069,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1514.61,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "PURNIA(DISTRICT PLANNING OFFICER PURNIA_IDA)",
+        "records_count": 138,
+        "total_amount": 113208418.0,
+        "mad": 0.18632,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1020.34,
+        "p_value": 6.06e-215,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "entity": "Shrawasti(DISTRICT MAGISTRATE SHRAVASTI_IDA)",
+        "records_count": 649,
+        "total_amount": 45617210.0,
+        "mad": 0.18206,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 3002.69,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "PAKUR(Deputy Commissioner Pakur_IDA)",
+        "records_count": 180,
+        "total_amount": 36273000.0,
+        "mad": 0.17815,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 797.45,
+        "p_value": 7.31e-167,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "LATEHAR(Deputy Commissioner latehar_IDA)",
+        "records_count": 84,
+        "total_amount": 21139730.0,
+        "mad": 0.17251,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 349.68,
+        "p_value": 1.06e-70,
+        "critical_digits": [
+          1,
+          2,
+          4
+        ]
+      },
+      {
+        "entity": "SIWAN(DISTRICT PLANNING OFFICER SIWAN_IDA)",
+        "records_count": 156,
+        "total_amount": 149397854.0,
+        "mad": 0.17074,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 2115.85,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          9
+        ]
+      },
+      {
+        "entity": "PILIBHIT(DISTRICT MAGISTRAE PILIBHIT_IDA)",
+        "records_count": 300,
+        "total_amount": 277485030.0,
+        "mad": 0.1705,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1217.63,
+        "p_value": 1.49e-257,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "SHAHJAHANPUR(DISTRICT MAGISTRAE SHAHJAHANAPUR_IDA)",
+        "records_count": 349,
+        "total_amount": 479489360.0,
+        "mad": 0.16781,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1373.62,
+        "p_value": 2.86e-291,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    ],
+    "top_mps_by_mad": [
+      {
+        "entity": "Tariq Anwar",
+        "records_count": 84,
+        "total_amount": 81785060.0,
+        "mad": 0.21205,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1751.77,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          9
+        ]
+      },
+      {
+        "entity": "Dr Mohammad Jawed",
+        "records_count": 183,
+        "total_amount": 118345700.0,
+        "mad": 0.20735,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 2550.51,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Rajesh Ranjan Alias Pappu Yadav",
+        "records_count": 96,
+        "total_amount": 89027618.0,
+        "mad": 0.19697,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1554.43,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          8
+        ]
+      },
+      {
+        "entity": "Vijaylakshmi Devi",
+        "records_count": 141,
+        "total_amount": 134850955.0,
+        "mad": 0.18999,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 2366.76,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          9
+        ]
+      },
+      {
+        "entity": "Shri Neeraj Shekhar",
+        "records_count": 93,
+        "total_amount": 95113319.0,
+        "mad": 0.18874,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 972.07,
+        "p_value": 1.6e-204,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Mr Gopal Jee Thakur",
+        "records_count": 170,
+        "total_amount": 84256768.0,
+        "mad": 0.18761,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1385.61,
+        "p_value": 7.3e-294,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9
+        ]
+      },
+      {
+        "entity": "Pushpendra Saroj",
+        "records_count": 715,
+        "total_amount": 69456045.0,
+        "mad": 0.18552,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 6465.43,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Manish Jaiswal",
+        "records_count": 118,
+        "total_amount": 58513050.0,
+        "mad": 0.18121,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 638.36,
+        "p_value": 1.32e-132,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "entity": "Ram Shiromani",
+        "records_count": 652,
+        "total_amount": 48117210.0,
+        "mad": 0.18105,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 2982.95,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "entity": "Ashok Kumar Yadav",
+        "records_count": 158,
+        "total_amount": 86903559.0,
+        "mad": 0.17505,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1055.43,
+        "p_value": 1.62e-222,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ],
+    "top_vendors_by_mad": [
+      {
+        "entity": "PUNYASHILA AUTOMOBILES",
+        "records_count": 52,
+        "total_amount": 4944000.0,
+        "mad": 0.21205,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1084.43,
+        "p_value": 8.84e-229,
+        "critical_digits": [
+          1,
+          2,
+          9
+        ]
+      },
+      {
+        "entity": "THE MP STATE AGRO IND DEV CORP LTD SHEOPUR",
+        "records_count": 50,
+        "total_amount": 4145446.0,
+        "mad": 0.21085,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 927.47,
+        "p_value": 6.7e-195,
+        "critical_digits": [
+          1,
+          2,
+          8
+        ]
+      },
+      {
+        "entity": "MOHAMMAD SIDDEQ",
+        "records_count": 97,
+        "total_amount": 7169367.0,
+        "mad": 0.20934,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1575.65,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7
+        ]
+      },
+      {
+        "entity": "MP AGRO JHABUA",
+        "records_count": 74,
+        "total_amount": 5890400.0,
+        "mad": 0.20934,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1202.04,
+        "p_value": 3.48e-254,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          7
+        ]
+      },
+      {
+        "entity": "GRAND TRADING COMPANY",
+        "records_count": 139,
+        "total_amount": 96883000.0,
+        "mad": 0.20735,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1937.28,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "entity": "IMAMUDDIN",
+        "records_count": 153,
+        "total_amount": 8558401.0,
+        "mad": 0.20317,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1754.23,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "entity": "JOGENDRA KUMAR BARIK",
+        "records_count": 59,
+        "total_amount": 2360000.0,
+        "mad": 0.20069,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 549.81,
+        "p_value": 1.43e-113,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "entity": "ALAM BROTHERS",
+        "records_count": 121,
+        "total_amount": 113404000.0,
+        "mad": 0.19552,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 2153.08,
+        "p_value": 0.0,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          9
+        ]
+      },
+      {
+        "entity": "UPENDER KURELLA",
+        "records_count": 67,
+        "total_amount": 7688396.0,
+        "mad": 0.19547,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1188.05,
+        "p_value": 3.66e-251,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          9
+        ]
+      },
+      {
+        "entity": "RANA CONSTRUCTION",
+        "records_count": 82,
+        "total_amount": 6728782.0,
+        "mad": 0.19459,
+        "conformity_status": "Non-Conformity (Suspicious Manipulation)",
+        "anomaly_score": 100.0,
+        "chi_square": 1296.5,
+        "p_value": 1.34e-274,
+        "critical_digits": [
+          1,
+          2,
+          3,
+          4,
+          8
+        ]
+      }
+    ]
+  },
+  "flagged_transactions": [
+    {
+      "work_id": "WS/MP18371/2024-2025/163349",
+      "mp_name": "Angomcha Bimol Akoijam",
+      "state": "Manipur",
+      "ida": "BISHNUPUR(Deputy Commissioner Bishnupur_ida)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 4900000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b950L Special Approval Evasion",
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "CRITICAL"
+    },
+    {
+      "work_id": "WS/MP18250/2024-2025/135269",
+      "mp_name": "Sk Nurul Islam",
+      "state": "West Bengal",
+      "ida": "North 24 Parganas(DISTRICT MAGISTRATE NORTH TWENTY FOUR PARGANAS_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 2800000.0,
+      "lead_digit": 2,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18250/2024-2025/142044",
+      "mp_name": "Sk Nurul Islam",
+      "state": "West Bengal",
+      "ida": "North 24 Parganas(DISTRICT MAGISTRATE NORTH TWENTY FOUR PARGANAS_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 2425500.0,
+      "lead_digit": 2,
+      "reasons": [
+        "\u20b925L e-Procurement Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18299/2024-2025/171164",
+      "mp_name": "Smt. Sagarika Ghose",
+      "state": "West Bengal",
+      "ida": "KOLKATA(COMMISSIONER KOLKATA MUNICIPAL CORPORATION_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 49000000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP544/2025-2026/155247",
+      "mp_name": "Mr Gopal Jee Thakur",
+      "state": "Bihar",
+      "ida": "DARBHANGA(DISTRICT PLANNING OFFICER DARBANGA_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 495000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18250/2024-2025/142038",
+      "mp_name": "Sk Nurul Islam",
+      "state": "West Bengal",
+      "ida": "North 24 Parganas(DISTRICT MAGISTRATE NORTH TWENTY FOUR PARGANAS_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1400000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18320/2025-2026/175021",
+      "mp_name": "Geniben Nagaji Thakor",
+      "state": "Gujarat",
+      "ida": "BANAS KANTHA(DISTRICT COLLECTOR BANAS KANTHA_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 500000.0,
+      "lead_digit": 5,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP893/2024-2025/171163",
+      "mp_name": "Shri Samirul Islam",
+      "state": "West Bengal",
+      "ida": "KOLKATA(COMMISSIONER KOLKATA MUNICIPAL CORPORATION_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 72500000.0,
+      "lead_digit": 7,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP176/2024-2025/149419",
+      "mp_name": "Shri Rajeev Shukla",
+      "state": "Chhattisgarh",
+      "ida": "Uttar Bastar Kanker(DISTRICT COLLECTOR KANKER_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 30000000.0,
+      "lead_digit": 3,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP544/2025-2026/176647",
+      "mp_name": "Mr Gopal Jee Thakur",
+      "state": "Bihar",
+      "ida": "DARBHANGA(DISTRICT PLANNING OFFICER DARBANGA_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 495000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP544/2025-2026/155248",
+      "mp_name": "Mr Gopal Jee Thakur",
+      "state": "Bihar",
+      "ida": "DARBHANGA(DISTRICT PLANNING OFFICER DARBANGA_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 495000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18084/2024-2025/169442",
+      "mp_name": "Dr. Prabha Mallikarjun",
+      "state": "Karnataka",
+      "ida": "Davanagere(DEPUTY COMMISSIONER DAUANAGERE_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1500000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP220/2024-2025/171199",
+      "mp_name": "Shri Derek O' Brien",
+      "state": "West Bengal",
+      "ida": "KOLKATA(COMMISSIONER KOLKATA MUNICIPAL CORPORATION_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 73500000.0,
+      "lead_digit": 7,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP446/2024-2025/156588",
+      "mp_name": "Vishnu Dutt Sharma",
+      "state": "Madhya Pradesh",
+      "ida": "PANNA(DISTRICT COLLECTOR PANNA_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 2422881.0,
+      "lead_digit": 2,
+      "reasons": [
+        "\u20b925L e-Procurement Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP218/2024-2025/171165",
+      "mp_name": "Ms. Dola Sen",
+      "state": "West Bengal",
+      "ida": "KOLKATA(COMMISSIONER KOLKATA MUNICIPAL CORPORATION_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 67500000.0,
+      "lead_digit": 6,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18371/2025-2026/179143",
+      "mp_name": "Angomcha Bimol Akoijam",
+      "state": "Manipur",
+      "ida": "BISHNUPUR(Deputy Commissioner Bishnupur_ida)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1500000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP195/2023-2024/33313",
+      "mp_name": "Shri B.L. Verma",
+      "state": "Uttar Pradesh",
+      "ida": "BUDAUN(DISTRICT MAGISTRATE BUDAUN_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 2500000.0,
+      "lead_digit": 2,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18371/2024-2025/162867",
+      "mp_name": "Angomcha Bimol Akoijam",
+      "state": "Manipur",
+      "ida": "THOUBAL(Deputy Commissioner Thoubal MPLADS_ida)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 4900000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b950L Special Approval Evasion",
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "CRITICAL"
+    },
+    {
+      "work_id": "WS/MP18371/2025-2026/179142",
+      "mp_name": "Angomcha Bimol Akoijam",
+      "state": "Manipur",
+      "ida": "BISHNUPUR(Deputy Commissioner Bishnupur_ida)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 2600000.0,
+      "lead_digit": 2,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18284/2025-2026/179069",
+      "mp_name": "Shri Ashok Singh",
+      "state": "Madhya Pradesh",
+      "ida": "DATIA(District Collector Datia_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1000000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18217/2024-2025/136141",
+      "mp_name": "Akshaya Yadav",
+      "state": "Uttar Pradesh",
+      "ida": "FIROZABAD(DISTRICT MAGISTRATE FIROZABAD_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 4762760.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b950L Special Approval Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18098/2024-2025/180436",
+      "mp_name": "Bharti Pardhi",
+      "state": "Madhya Pradesh",
+      "ida": "BALAGHAT(DISTRICT COLLECTOR BALAGHAT_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 2500000.0,
+      "lead_digit": 2,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18098/2024-2025/180437",
+      "mp_name": "Bharti Pardhi",
+      "state": "Madhya Pradesh",
+      "ida": "BALAGHAT(DISTRICT COLLECTOR BALAGHAT_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 2500000.0,
+      "lead_digit": 2,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18050/2025-2026/179770",
+      "mp_name": "Bhojraj Nag",
+      "state": "Chhattisgarh",
+      "ida": "KONDAGAON(DISTRICT COLLECTOR KONDAGAON_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1000000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18161/2024-2025/138069",
+      "mp_name": "Sanjna Jatav",
+      "state": "Rajasthan",
+      "ida": "ALWAR(DISTRICT COLLECTOR ALWAR_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 499545.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18090/2025-2026/204466",
+      "mp_name": "H.D. Kumaraswamy",
+      "state": "Karnataka",
+      "ida": "MANDYA(DEPUTY COMMISSIONER MANDYA_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 2000000.0,
+      "lead_digit": 2,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP429/2024-2025/153087",
+      "mp_name": "Jyotsna Charandas Mahant",
+      "state": "Chhattisgarh",
+      "ida": "Gaurela-Pendra-Marwahi(Collector GPM_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 600000.0,
+      "lead_digit": 6,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18161/2024-2025/138061",
+      "mp_name": "Sanjna Jatav",
+      "state": "Rajasthan",
+      "ida": "ALWAR(DISTRICT COLLECTOR ALWAR_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 498308.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18084/2024-2025/170692",
+      "mp_name": "Dr. Prabha Mallikarjun",
+      "state": "Karnataka",
+      "ida": "Davanagere(DEPUTY COMMISSIONER DAUANAGERE_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1000000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP465/2024-2025/174846",
+      "mp_name": "Swami Sachchidanandhari Sakshi ji Maharaj",
+      "state": "Uttar Pradesh",
+      "ida": "UNNAO(DISTRICT MAGIISTRATE UNNAO_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1400000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18161/2024-2025/138091",
+      "mp_name": "Sanjna Jatav",
+      "state": "Rajasthan",
+      "ida": "BHARATPUR(DISTRICT COLLECTOR BHARATPUR_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 600000.0,
+      "lead_digit": 6,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18078/2025-2026/186162",
+      "mp_name": "E. Tukaram",
+      "state": "Karnataka",
+      "ida": "BALLARI(DEPUTY COMMISSIONER BELLARY_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1200000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18050/2025-2026/179297",
+      "mp_name": "Bhojraj Nag",
+      "state": "Chhattisgarh",
+      "ida": "DHAMTARI(DISTRICT COLLECTOR DHAMTARI_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1000000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP650/2024-2025/160985",
+      "mp_name": "Shankar Lalwani",
+      "state": "Madhya Pradesh",
+      "ida": "INDORE(DISTRICT COLLECTOR INDORE_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 460000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18324/2024-2025/153722",
+      "mp_name": "Bharatbhai Manubhai Sutariya",
+      "state": "Gujarat",
+      "ida": "AMRELI(DISTRICT COLLECTOR AMRELI_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 494000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18371/2024-2025/162866",
+      "mp_name": "Angomcha Bimol Akoijam",
+      "state": "Manipur",
+      "ida": "IMPHAL EAST(Deputy Commissioner Imphal East_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 4900000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b950L Special Approval Evasion",
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "CRITICAL"
+    },
+    {
+      "work_id": "WS/MP429/2024-2025/140545",
+      "mp_name": "Jyotsna Charandas Mahant",
+      "state": "Chhattisgarh",
+      "ida": "Gaurela-Pendra-Marwahi(Collector GPM_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 500000.0,
+      "lead_digit": 5,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP568/2024-2025/161401",
+      "mp_name": "Vijay Baghel",
+      "state": "Chhattisgarh",
+      "ida": "BEMETARA(Collector Bemetara_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 500000.0,
+      "lead_digit": 5,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP568/2024-2025/161400",
+      "mp_name": "Vijay Baghel",
+      "state": "Chhattisgarh",
+      "ida": "BEMETARA(Collector Bemetara_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 500000.0,
+      "lead_digit": 5,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18357/2025-2026/181430",
+      "mp_name": "Jyotiraditya M. Scindia",
+      "state": "Madhya Pradesh",
+      "ida": "SHIVPURI(District Collector Shivpuri_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1000000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18316/2025-2026/166109",
+      "mp_name": "Smt. Maya Naroliya",
+      "state": "Madhya Pradesh",
+      "ida": "Narsimhapur(DISTRICT COLLECTOR NARSINGHPUR_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 1000000.0,
+      "lead_digit": 1,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18009/2024-2025/157138",
+      "mp_name": "B K Parthasarathi",
+      "state": "Andhra Pradesh",
+      "ida": "Sri Sathya Sai(DISTRICT COLLECTOR SRI SATHYA SAI_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 8000000.0,
+      "lead_digit": 8,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18050/2025-2026/179765",
+      "mp_name": "Bhojraj Nag",
+      "state": "Chhattisgarh",
+      "ida": "KONDAGAON(DISTRICT COLLECTOR KONDAGAON_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 500000.0,
+      "lead_digit": 5,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18050/2025-2026/179768",
+      "mp_name": "Bhojraj Nag",
+      "state": "Chhattisgarh",
+      "ida": "KONDAGAON(DISTRICT COLLECTOR KONDAGAON_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 500000.0,
+      "lead_digit": 5,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18161/2024-2025/151704",
+      "mp_name": "Sanjna Jatav",
+      "state": "Rajasthan",
+      "ida": "BHARATPUR(DISTRICT COLLECTOR BHARATPUR_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 499054.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18048/2024-2025/149428",
+      "mp_name": "Mahesh Kashyap",
+      "state": "Chhattisgarh",
+      "ida": "BIJAPUR(Collector Bijapur_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 476145.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP416/2024-2025/156914",
+      "mp_name": "Ashok Kumar Yadav",
+      "state": "Bihar",
+      "ida": "DARBHANGA(DISTRICT PLANNING OFFICER DARBANGA_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 495000.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18161/2024-2025/138074",
+      "mp_name": "Sanjna Jatav",
+      "state": "Rajasthan",
+      "ida": "BHARATPUR(DISTRICT COLLECTOR BHARATPUR_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 600000.0,
+      "lead_digit": 6,
+      "reasons": [
+        "Exact Multiple of \u20b91 Lakh (Estimate Inflation)"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18161/2024-2025/136673",
+      "mp_name": "Sanjna Jatav",
+      "state": "Rajasthan",
+      "ida": "ALWAR(DISTRICT COLLECTOR ALWAR_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 494356.0,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    },
+    {
+      "work_id": "WS/MP18161/2024-2025/136674",
+      "mp_name": "Sanjna Jatav",
+      "state": "Rajasthan",
+      "ida": "ALWAR(DISTRICT COLLECTOR ALWAR_IDA)",
+      "work_category": "Normal/Others",
+      "sanction_amount": 494706.1,
+      "lead_digit": 4,
+      "reasons": [
+        "\u20b95L Tender Ceiling Evasion"
+      ],
+      "risk_level": "HIGH"
+    }
+  ]
+}

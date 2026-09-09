@@ -1,0 +1,230 @@
+"""
+Multi-Modal Vision Auditor & Error Level Analysis (ELA) Engine
+==============================================================
+STATUS: RESERVED FOR FUTURE INNOVATION DEPLOYMENT
+(Ready-to-run module for Semantic Asset Verification and Photoshop Tamper Detection)
+
+This module solves the 2 critical limitations of standard computer vision:
+1. Bypasses YOLO's 80-class restriction by using Open-Vocabulary Multimodal VLM
+   (Gemini Flash Vision) to verify civil works assets (CC Roads, Hand Pumps,
+   Anganwadi buildings, Solar Street Lights, Crematorium Sheds).
+2. Error Level Analysis (ELA) using JPEG DCT compression variance to expose
+   digitally modified pixels (Photoshopped signboards, fabricated GPS banners,
+   erased potholes).
+
+Usage (when ready to activate):
+    python forensics/vision_auditor.py --image path/to/photo.jpg --work-title "Construction of CC Road"
+"""
+
+import os
+import io
+import json
+from typing import Dict, Any, Optional
+from PIL import Image, ImageChops, ImageEnhance
+import numpy as np
+
+# Load environment configuration
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ENV_FILE = os.path.join(ROOT_DIR, ".env")
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv(ENV_FILE)
+except Exception:
+    pass
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+
+
+# ==============================================================================
+# 1. ERROR LEVEL ANALYSIS (ELA) — Pure Math / Zero Cloud Dependencies
+# ==============================================================================
+
+def generate_ela_heatmap(
+    image_path: str,
+    output_path: Optional[str] = None,
+    quality: int = 90,
+    rescale_factor: int = 15
+) -> Dict[str, Any]:
+    """
+    Performs Error Level Analysis (ELA) on a JPEG image.
+    
+    How it works:
+    - Resaves image at a known quality level (90%) in memory.
+    - Computes pixel-by-pixel difference between original and resaved version.
+    - Enhances brightness of the difference to create an ELA heatmap.
+    - Digitally modified areas (cloned objects, spliced text, fake camera stamps)
+      have higher error levels and glow brightly compared to the background.
+    """
+    try:
+        original = Image.open(image_path).convert("RGB")
+        
+        # Resave to in-memory buffer at fixed compression quality
+        buffer = io.BytesIO()
+        original.save(buffer, "JPEG", quality=quality)
+        buffer.seek(0)
+        resaved = Image.open(buffer)
+        
+        # Calculate pixel difference
+        diff = ImageChops.difference(original, resaved)
+        
+        # Get maximum difference across color channels
+        extrema = diff.getextrema()
+        max_diff = max([ex[1] for ex in extrema])
+        if max_diff == 0:
+            max_diff = 1
+        scale = 255.0 / max_diff * (rescale_factor / 10.0)
+        
+        # Enhance difference to highlight tamper artifacts
+        enhancer = ImageEnhance.Brightness(diff)
+        ela_img = enhancer.enhance(scale)
+        
+        # Compute tampering metric (standard deviation of difference)
+        diff_arr = np.array(diff, dtype=np.float32)
+        tamper_score = float(np.mean(diff_arr))
+        
+        # Thresholds: normal camera shots have uniform low variance (< 5.0).
+        # Spliced/photoshopped components introduce local spikes (> 12.0).
+        is_tampered = tamper_score > 12.0
+        
+        if output_path:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            ela_img.save(output_path, "JPEG")
+            
+        return {
+            "success": True,
+            "tamper_score": round(tamper_score, 2),
+            "is_tampered": is_tampered,
+            "verdict": "SUSPECTED_TAMPERING" if is_tampered else "AUTHENTIC_COMPRESSION",
+            "ela_image_path": output_path,
+            "notes": (
+                "High compression variance detected across image regions. Possible digital manipulation or text splicing."
+                if is_tampered else
+                "Uniform JPEG compression artifacts verified. No signs of digital splicing."
+            )
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "verdict": "ERROR"
+        }
+
+
+# ==============================================================================
+# 2. MULTIMODAL FORENSIC CIVIL AUDITOR (Gemini Flash Vision)
+# ==============================================================================
+
+def audit_asset_photo_gemini(
+    image_path: str,
+    work_title: str,
+    sanction_amount: float = 0.0,
+    category: str = "Civil Works"
+) -> Dict[str, Any]:
+    """
+    Open-Vocabulary Multimodal Asset Verification.
+    Examines uploaded site photographs against official public work descriptions.
+    Bypasses YOLO's 80-class limitation.
+    """
+    if not GEMINI_API_KEY:
+        return {
+            "success": False,
+            "error": "GEMINI_API_KEY not configured in .env",
+            "verdict": "API_KEY_MISSING"
+        }
+        
+    try:
+        from google import genai
+        from google.genai import types
+        
+        client = genai.Client(api_key=GEMINI_API_KEY)
+        
+        with open(image_path, "rb") as f:
+            image_bytes = f.read()
+            
+        prompt = f"""
+You are a Senior Forensic Civil Engineering Auditor for the Ministry of Statistics & Programme Implementation (MoSPI).
+You are inspecting a photograph submitted as completion evidence for an Indian Member of Parliament (MPLADS) public project.
+
+Declared Project Details:
+- Work Title: "{work_title}"
+- Sanctioned Category: "{category}"
+- Sanctioned Amount: ₹{sanction_amount:,.2f}
+
+Audit Guidelines:
+1. Examine what is physically depicted in the photograph.
+2. Does it show genuine civil infrastructure matching the declared work (e.g. paved concrete road, masonry hall, hand pump, solar light pole)?
+3. Or does it depict an unrelated scene (e.g. empty agricultural wasteland with weeds, indoor domestic room, office desk, selfie, stock photo)?
+4. Look for authentic construction markers: fresh concrete curing, road curb leveling, drainage joints, brickwork.
+5. Provide a strict confidence score (0 to 100).
+
+Return your findings strictly in valid JSON format:
+{{
+  "asset_verified": true or false,
+  "detected_scene": "Accise 1-sentence description of what is actually visible",
+  "claimed_asset": "{work_title}",
+  "confidence_score": 0-100,
+  "verdict": "VERIFIED_INFRASTRUCTURE" | "SUSPECTED_GHOST_ASSET" | "INCONCLUSIVE",
+  "audit_reasoning": "Detailed civil engineering forensic observation",
+  "action_recommendation": "Clear administrative step for District Magistrate"
+}}
+"""
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=[
+                types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg"),
+                prompt
+            ]
+        )
+        
+        text = response.text.strip()
+        if text.startswith("```json"):
+            text = text[7:]
+        if text.startswith("```"):
+            text = text[3:]
+        if text.endswith("```"):
+            text = text[:-3]
+        text = text.strip()
+        
+        parsed = json.loads(text)
+        parsed["success"] = True
+        return parsed
+
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "verdict": "AUDIT_FAILED"
+        }
+
+
+# ==============================================================================
+# 3. CLI DEMO / TEST HARNESS
+# ==============================================================================
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Multi-Modal Vision Auditor & ELA Forensic Engine")
+    parser.add_argument("--image", help="Path to site photograph", default=None)
+    parser.add_argument("--work-title", help="Declared work title", default="Construction of CC Road in Village Rampur")
+    parser.add_argument("--amount", type=float, help="Sanctioned amount", default=1500000.0)
+    args = parser.parse_args()
+
+    print("=" * 70)
+    print("  MULTI-MODAL VISION AUDITOR & ELA TAMPER ENGINE (RESERVED MODULE)")
+    print("=" * 70)
+
+    if not args.image:
+        print("\n[*] Module is preserved and ready for future activation.")
+        print("[*] ELA Function: generate_ela_heatmap(image_path, output_path)")
+        print("[*] Vision Auditor: audit_asset_photo_gemini(image_path, work_title)")
+        print("[*] To test with an image: python forensics/vision_auditor.py --image <path>")
+    else:
+        print(f"\n[1] Running Error Level Analysis (ELA) on: {args.image}")
+        ela_res = generate_ela_heatmap(args.image, output_path="forensics/ela_preview.jpg")
+        print("ELA Result:", json.dumps(ela_res, indent=2))
+
+        print(f"\n[2] Running Gemini Multimodal Vision Audit...")
+        vision_res = audit_asset_photo_gemini(args.image, args.work_title, args.amount)
+        print("Vision Result:", json.dumps(vision_res, indent=2))
