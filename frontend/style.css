@@ -597,6 +597,9 @@ textarea {
     top: calc(100% + 8px);
     right: 0;
     min-width: 360px;
+    max-width: 440px;
+    max-height: 420px;
+    overflow-y: auto;
     background: rgba(18, 22, 34, 0.96);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -611,6 +614,41 @@ textarea {
     transform: translateY(-8px);
     transition: opacity 0.2s ease, transform 0.2s ease;
     z-index: 1200;
+}
+
+.role-dropdown-menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+.role-dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(201, 162, 75, 0.35);
+    border-radius: 4px;
+}
+
+.mp-select-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: rgba(18, 22, 34, 0.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c9a24b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center !important;
+    padding-right: 32px !important;
+    border: 1px solid rgba(201, 162, 75, 0.35) !important;
+    border-radius: 8px !important;
+    color: var(--ink) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+    transition: all 0.2s ease !important;
+}
+
+.mp-select-input:hover, .mp-select-input:focus {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 2px rgba(201, 162, 75, 0.25) !important;
+    outline: none !important;
+}
+
+.mp-select-input option {
+    background: #121622;
+    color: #e2e8f0;
+    padding: 8px;
 }
 
 [data-theme="light"] .role-dropdown-menu {
@@ -1262,6 +1300,8 @@ html[data-theme="light"] h1.hero-title .accent {
     -webkit-backdrop-filter: blur(14px);
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 32px, black calc(100% - 32px), transparent);
+    mask-image: linear-gradient(to right, transparent, black 32px, black calc(100% - 32px), transparent);
 }
 
 .ticker-inner {
@@ -1304,9 +1344,45 @@ html[data-theme="light"] h1.hero-title .accent {
 
 .hero-ctas {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     margin-top: 22px;
     flex-wrap: wrap;
+    align-items: center;
+}
+
+.hero-ctas .btn {
+    cursor: pointer;
+    user-select: none;
+}
+
+.badge-mini {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 1.5px 5px;
+    border-radius: 4px;
+    letter-spacing: 0.4px;
+    vertical-align: middle;
+}
+
+.badge-mini.badge-ls {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-mini.badge-rs {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-mini.badge-nom {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .btn {
@@ -1658,6 +1734,7 @@ main {
 
 .view {
     display: none;
+    padding-top: 16px;
 }
 
 .view.active {

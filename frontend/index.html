@@ -157,13 +157,13 @@
 
         <div class="nav-sep"></div>
 
-        <!-- Unified Role Selector with Custom Glassmorphic Dropdown -->
-        <div class="custom-role-dropdown" id="customRoleDropdown" title="Switch administrative statutory context">
-          <button type="button" class="role-trigger-btn" id="roleTriggerBtn" aria-haspopup="listbox" aria-expanded="false">
+        <!-- Unified Parliamentary House Filter Dropdown (Exact 4 Options from Photo in 1st Image Theme) -->
+        <div class="custom-role-dropdown" id="customRoleDropdown" title="Filter Parliamentary Houses">
+          <button type="button" class="role-trigger-btn" id="roleTriggerBtn" aria-haspopup="listbox" aria-expanded="false" title="Switch Parliamentary House">
             <span class="role-trigger-icon" id="roleTriggerIcon">🏛️</span>
             <div class="role-trigger-text">
-              <span class="role-trigger-title" id="roleTriggerTitle">MoSPI — Central Ministry</span>
-              <span class="role-trigger-tag" id="roleTriggerTag">NATIONAL</span>
+              <span class="role-trigger-title" id="roleTriggerTitle">All Houses</span>
+              <span class="role-trigger-tag" id="roleTriggerTag">774 MPs</span>
             </div>
             <svg class="role-trigger-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
@@ -172,74 +172,62 @@
 
           <!-- Synchronized hidden select for internal scripts -->
           <select class="role-switch" id="roleSwitch" style="display:none;" aria-hidden="true">
-            <option value="ministry" selected>MoSPI — Central Ministry</option>
-            <option value="mp_ls">Lok Sabha MP Portal</option>
-            <option value="mp_rs">Rajya Sabha MP Portal</option>
-            <option value="district">District Authority / DM</option>
-            <option value="auditor">Audit &amp; Vigilance (CAG)</option>
+            <option value="all" selected>All Houses</option>
+            <option value="Lok Sabha">Lok Sabha</option>
+            <option value="Rajya Sabha">Rajya Sabha</option>
+            <option value="Nominated">Nominated</option>
           </select>
           <span id="rolePill" style="display:none;"></span>
 
-          <!-- Floating Glassmorphic Dropdown Menu -->
+          <!-- Floating Glassmorphic Dropdown Menu: ONLY 4 OPTIONS FROM PHOTO -->
           <div class="role-dropdown-menu" id="roleDropdownMenu" role="listbox">
             <div class="role-dropdown-header">
-              <span>STATUTORY GOVERNANCE CONTEXT</span>
-              <span class="role-header-sub">MPLADS TIER</span>
+              <span>PARLIAMENTARY HOUSES // MP 360°</span>
+              <span class="role-header-sub">SELECT HOUSE</span>
             </div>
 
-            <div class="role-option active" data-role-val="ministry" role="option">
+            <div class="role-option active" data-house-val="all" role="option">
               <div class="role-opt-left">
                 <span class="role-opt-icon">🏛️</span>
                 <div class="role-opt-info">
-                  <div class="role-opt-title">MoSPI — Central Ministry</div>
-                  <div class="role-opt-desc">National AI Radar, Policy &amp; Fund Release (All India)</div>
+                  <div class="role-opt-title">All Houses</div>
+                  <div class="role-opt-desc">Total Roster (774 MPs · 543 LS + 245 RS)</div>
                 </div>
               </div>
-              <span class="role-opt-badge badge-central">CENTRAL</span>
+              <span class="role-opt-badge badge-central">ALL HOUSES</span>
             </div>
 
-            <div class="role-option" data-role-val="mp_ls" role="option">
+            <div class="role-option" data-house-val="Lok Sabha" role="option">
               <div class="role-opt-left">
                 <span class="role-opt-icon">🟢</span>
                 <div class="role-opt-info">
-                  <div class="role-opt-title">Lok Sabha MP Portal</div>
-                  <div class="role-opt-desc">Constituency Works &amp; Public Demands (543 MPs)</div>
+                  <div class="role-opt-title">Lok Sabha</div>
+                  <div class="role-opt-desc">Directly Elected Members (543 Constituencies)</div>
                 </div>
               </div>
               <span class="role-opt-badge badge-ls">LOK SABHA</span>
             </div>
 
-            <div class="role-option" data-role-val="mp_rs" role="option">
+            <div class="role-option" data-house-val="Rajya Sabha" role="option">
               <div class="role-opt-left">
                 <span class="role-opt-icon">🔴</span>
                 <div class="role-opt-info">
-                  <div class="role-opt-title">Rajya Sabha MP Portal</div>
-                  <div class="role-opt-desc">State-wide Works &amp; Fund Utilization (245 MPs)</div>
+                  <div class="role-opt-title">Rajya Sabha</div>
+                  <div class="role-opt-desc">Council of States Representation (245 MPs)</div>
                 </div>
               </div>
               <span class="role-opt-badge badge-rs">RAJYA SABHA</span>
             </div>
 
-            <div class="role-option" data-role-val="district" role="option">
+            <div class="role-option" data-house-val="Nominated" role="option">
               <div class="role-opt-left">
-                <span class="role-opt-icon">📍</span>
+                <span class="role-opt-icon">⭐</span>
                 <div class="role-opt-info">
-                  <div class="role-opt-title">District Authority / DM</div>
-                  <div class="role-opt-desc">Tenders, Financial Sanctions &amp; Contractor Payments</div>
+                  <div class="role-opt-title">Nominated</div>
+                  <div class="role-opt-desc">Presidential Nominees (12 Eminent Portfolios)</div>
                 </div>
               </div>
-              <span class="role-opt-badge badge-dist">DISTRICT</span>
-            </div>
-
-            <div class="role-option" data-role-val="auditor" role="option">
-              <div class="role-opt-left">
-                <span class="role-opt-icon">🔍</span>
-                <div class="role-opt-info">
-                  <div class="role-opt-title">Audit &amp; Vigilance (CAG)</div>
-                  <div class="role-opt-desc">Tamper-evident SHA-256 Ledger &amp; Benford χ² Forensics</div>
-                </div>
-              </div>
-              <span class="role-opt-badge badge-audit">CAG AUDIT</span>
+              <span class="role-opt-badge badge-audit">NOMINATED</span>
             </div>
           </div>
         </div>
@@ -393,49 +381,60 @@
     </div>
   </div>
 
-  <header class="hero">
-    <div class="hero-tag"><span class="seal">STATUTORY</span> National MPLADS AI Vigilance &amp; Forensic Audit Platform
-    </div>
-    <h1 class="hero-title">Every sanctioned rupee, <span class="accent">under continuous watch.</span></h1>
-    <p class="hero-sub">Continuous oversight across 98,649 sanctioned works, ₹4,300+ Cr in disbursements and 774 Member
-      of Parliament allocations — cross-checked by a five-model AI ensemble and perceptual image forensics.</p>
-
-    <!-- Live Smart Autonomous AI Sentinel Stream HUD -->
-    <div class="sentinel-hud-bar">
-      <div class="sentinel-status">
-        <span class="sentinel-pulse-dot"></span>
-        <span class="sentinel-live-tag">LIVE AI SENTINELS</span>
-        <span class="sentinel-model-badge">5 MODELS ACTIVE</span>
-      </div>
-      <div class="sentinel-stream">
-        <span class="sentinel-agent-chip" id="sentinelAgentChip">🤖 AGENT-04 · VISION FORENSICS</span>
-        <span class="sentinel-msg" id="sentinelMsg">Scanning completion photos via Perceptual Hash (pHash)… Delta: 0.02
-          ✓ PASS</span>
-      </div>
-      <div class="sentinel-stats">
-        <div class="hud-stat"><span class="l">AUTO-AUDITS</span><b class="v mono" id="hudScans">2,491/hr</b></div>
-        <div class="hud-stat"><span class="l">AUTONOMY</span><b class="v mono text-teal">99.8%</b></div>
-        <div class="hud-stat"><span class="l">SHA LEDGER</span><b class="v mono text-gold">100% SEALED</b></div>
-      </div>
-    </div>
-
-    <div class="ticker">
-      <div class="ticker-inner" id="tickerInner"></div>
-    </div>
-    <div class="hero-ctas">
-      <button class="btn btn-primary" id="ctaCritical">Investigate priority red flags</button>
-      <button class="btn btn-secondary" id="ctaBriefing">Generate Secretary briefing memo</button>
-      <button class="btn btn-ghost" id="ctaExport">Export national fraud CSV dossier</button>
-      <button class="btn btn-ghost" id="ctaImageForensics">Run image forensics</button>
-    </div>
-  </header>
-
-  <section class="kpi-grid" id="kpiGrid"></section>
-
   <main>
 
     <!-- OVERVIEW -->
     <section class="view active" id="view-overview">
+
+      <header class="hero">
+        <div class="hero-tag"><span class="seal">STATUTORY</span> National MPLADS AI Vigilance &amp; Forensic Audit Platform</div>
+        <h1 class="hero-title">Every sanctioned rupee, <span class="accent">under continuous watch.</span></h1>
+        <p class="hero-sub" id="heroSub">Continuous oversight across 98,649 sanctioned works, ₹4,300+ Cr in disbursements and 774 Member
+          of Parliament allocations — cross-checked by a five-model AI ensemble and perceptual image forensics.</p>
+
+        <!-- Live Smart Autonomous AI Sentinel Stream HUD -->
+        <div class="sentinel-hud-bar">
+          <div class="sentinel-status">
+            <span class="sentinel-pulse-dot"></span>
+            <span class="sentinel-live-tag">LIVE AI SENTINELS</span>
+            <span class="sentinel-model-badge">5 MODELS ACTIVE</span>
+          </div>
+          <div class="sentinel-stream">
+            <span class="sentinel-agent-chip" id="sentinelAgentChip">🤖 AGENT-04 · VISION FORENSICS</span>
+            <span class="sentinel-msg" id="sentinelMsg">Scanning completion photos via Perceptual Hash (pHash)… Delta: 0.02
+              ✓ PASS</span>
+          </div>
+          <div class="sentinel-stats">
+            <div class="hud-stat"><span class="l">AUTO-AUDITS</span><b class="v mono" id="hudScans">2,491/hr</b></div>
+            <div class="hud-stat"><span class="l">AUTONOMY</span><b class="v mono text-teal">99.8%</b></div>
+            <div class="hud-stat"><span class="l">SHA LEDGER</span><b class="v mono text-gold">100% SEALED</b></div>
+          </div>
+        </div>
+
+        <div class="ticker">
+          <div class="ticker-inner" id="tickerInner"></div>
+        </div>
+        <div class="hero-ctas">
+          <button class="btn btn-primary" id="ctaCritical">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>Investigate priority red flags</span>
+          </button>
+          <button class="btn btn-secondary" id="ctaBriefing">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Generate Secretary briefing memo</span>
+          </button>
+          <button class="btn btn-ghost" id="ctaExport">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Export national fraud CSV dossier</span>
+          </button>
+          <button class="btn btn-ghost" id="ctaImageForensics">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Run image forensics</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="kpi-grid" id="kpiGrid"></section>
       <div class="panel-head">
         <div>
           <div class="panel-title">Priority action radar</div>

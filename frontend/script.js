@@ -24,8 +24,78 @@
     });
   });
 
-  /* ---------- ROLES / NAV ---------- */
+  /* ---------- ROLES & PARLIAMENTARY HOUSES STATE ---------- */
   let currentRole = "ministry";
+  let currentHouseFilter = "all";
+  let currentStateFilter = "all";
+
+  const houseMetricsData = {
+    all: {
+      works: 98649,
+      sanctioned: "₹4,412 Cr",
+      disbursed: "₹4,317 Cr",
+      critRisk: "₹612 Cr",
+      critCount: 1084,
+      highRisk: "₹390 Cr",
+      highCount: 2217,
+      monopolies: 341,
+      missingPhotos: 906,
+      splitTenders: 178,
+      premature: 244,
+      mps: 774,
+      mpsSub: "across 774 constituencies",
+      houseLabel: "National MPLADS Portfolio (543 LS + 245 RS)"
+    },
+    "Lok Sabha": {
+      works: 68420,
+      sanctioned: "₹2,950 Cr",
+      disbursed: "₹2,880 Cr",
+      critRisk: "₹422 Cr",
+      critCount: 762,
+      highRisk: "₹270 Cr",
+      highCount: 1540,
+      monopolies: 238,
+      missingPhotos: 624,
+      splitTenders: 122,
+      premature: 168,
+      mps: 543,
+      mpsSub: "543 Directly Elected Members",
+      houseLabel: "Lok Sabha (543 Parliamentary Constituencies)"
+    },
+    "Rajya Sabha": {
+      works: 28140,
+      sanctioned: "₹1,360 Cr",
+      disbursed: "₹1,335 Cr",
+      critRisk: "₹178 Cr",
+      critCount: 308,
+      highRisk: "₹112 Cr",
+      highCount: 645,
+      monopolies: 98,
+      missingPhotos: 268,
+      splitTenders: 52,
+      premature: 72,
+      mps: 245,
+      mpsSub: "245 Council of States Seats",
+      houseLabel: "Rajya Sabha (245 States/UT Representatives)"
+    },
+    "Nominated": {
+      works: 2089,
+      sanctioned: "₹102 Cr",
+      disbursed: "₹98 Cr",
+      critRisk: "₹12 Cr",
+      critCount: 14,
+      highRisk: "₹8 Cr",
+      highCount: 32,
+      monopolies: 5,
+      missingPhotos: 14,
+      splitTenders: 4,
+      premature: 4,
+      mps: 12,
+      mpsSub: "12 Presidential Nominees",
+      houseLabel: "Nominated Members (12 Pan-India Portfolios)"
+    }
+  };
+
   const roleLabels = {
     ministry: "MoSPI — Central Ministry (All India)",
     mp_ls: "Lok Sabha MP Portal (543 Constituencies)",
@@ -58,14 +128,26 @@
     });
 
     if (role === "mp_ls") {
+      currentHouseFilter = "Lok Sabha";
+      updateNavbarHouseUI("Lok Sabha");
+      renderKPIs("Lok Sabha");
+      updateTickerForHouse("Lok Sabha");
       setView("mp");
-      if (typeof filterByHouseAndSelectFirst === "function") filterByHouseAndSelectFirst("Lok Sabha");
+      if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
     } else if (role === "mp_rs") {
+      currentHouseFilter = "Rajya Sabha";
+      updateNavbarHouseUI("Rajya Sabha");
+      renderKPIs("Rajya Sabha");
+      updateTickerForHouse("Rajya Sabha");
       setView("mp");
-      if (typeof filterByHouseAndSelectFirst === "function") filterByHouseAndSelectFirst("Rajya Sabha");
+      if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
     } else if (role === "mp_nom") {
+      currentHouseFilter = "Nominated";
+      updateNavbarHouseUI("Nominated");
+      renderKPIs("Nominated");
+      updateTickerForHouse("Nominated");
       setView("mp");
-      if (typeof filterByHouseAndSelectFirst === "function") filterByHouseAndSelectFirst("Nominated");
+      if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
     } else if (role === "state") {
       setView("geo");
     } else if (role === "district") {
@@ -77,7 +159,7 @@
       if (activeLink && activeLink.hidden) setView("overview");
     }
 
-    updateCustomRoleUI(role);
+    if (typeof updateCustomRoleUI === "function") updateCustomRoleUI(role);
     showToast(`Access context switched to ${roleLabels[role] || role}`);
   }
 
@@ -88,36 +170,47 @@
     if (name === "geo" && typeof onGeoTabActivated === "function") {
       setTimeout(onGeoTabActivated, 100);
     }
+    if (name === "benford" && typeof renderBenford === "function") {
+      setTimeout(renderBenford, 60);
+    }
+    if (name === "vendors" && typeof renderNetwork === "function") {
+      setTimeout(renderNetwork, 60);
+    }
+    if (name === "mp" && typeof applyMPFiltersAndRender === "function") {
+      setTimeout(() => applyMPFiltersAndRender(), 60);
+    }
+    if (name === "overview") {
+      renderKPIs(currentHouseFilter);
+      updateTickerForHouse(currentHouseFilter);
+    }
   }
 
   navLinks.forEach(link => link.addEventListener("click", () => setView(link.dataset.view)));
   document.querySelectorAll("[data-goto]").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.goto)));
 
-  /* ---------- CUSTOM ROLE DROPDOWN UI CONTROLLER ---------- */
+  /* ---------- CUSTOM PARLIAMENTARY HOUSE DROPDOWN ---------- */
   const customRoleDropdown = document.getElementById("customRoleDropdown");
   const roleTriggerBtn = document.getElementById("roleTriggerBtn");
   const roleDropdownMenu = document.getElementById("roleDropdownMenu");
   const roleTriggerIcon = document.getElementById("roleTriggerIcon");
   const roleTriggerTitle = document.getElementById("roleTriggerTitle");
   const roleTriggerTag = document.getElementById("roleTriggerTag");
-  const roleOptions = document.querySelectorAll(".role-option");
 
-  const roleMeta = {
-    ministry: { icon: "🏛️", title: "MoSPI — Central Ministry", tag: "NATIONAL" },
-    mp_ls: { icon: "🟢", title: "Lok Sabha MP Portal", tag: "LOK SABHA" },
-    mp_rs: { icon: "🔴", title: "Rajya Sabha MP Portal", tag: "RAJYA SABHA" },
-    district: { icon: "📍", title: "District Authority / DM", tag: "DISTRICT" },
-    auditor: { icon: "🔍", title: "Audit & Vigilance (CAG)", tag: "CAG AUDIT" }
-  };
+  function updateNavbarHouseUI(houseVal) {
+    if (!houseVal || !roleDropdownMenu) return;
+    const opt = roleDropdownMenu.querySelector(`.role-option[data-house-val="${houseVal}"]`);
+    if (opt) {
+      const icon = opt.querySelector(".role-opt-icon") ? opt.querySelector(".role-opt-icon").textContent.trim() : "🏛️";
+      const title = opt.querySelector(".role-opt-title") ? opt.querySelector(".role-opt-title").textContent.trim() : houseVal;
+      const badge = opt.querySelector(".role-opt-badge") ? opt.querySelector(".role-opt-badge").textContent.trim() : "";
+      if (roleTriggerIcon) roleTriggerIcon.textContent = icon;
+      if (roleTriggerTitle) roleTriggerTitle.textContent = title;
+      if (roleTriggerTag) roleTriggerTag.textContent = badge;
 
-  function updateCustomRoleUI(role) {
-    const meta = roleMeta[role] || { icon: "🏛️", title: "MoSPI — Central Ministry", tag: "NATIONAL" };
-    if (roleTriggerIcon) roleTriggerIcon.textContent = meta.icon;
-    if (roleTriggerTitle) roleTriggerTitle.textContent = meta.title;
-    if (roleTriggerTag) roleTriggerTag.textContent = meta.tag;
-    roleOptions.forEach(opt => {
-      opt.classList.toggle("active", opt.dataset.roleVal === role);
-    });
+      roleDropdownMenu.querySelectorAll(".role-option").forEach(o => {
+        o.classList.toggle("active", o.dataset.houseVal === houseVal);
+      });
+    }
   }
 
   function toggleRoleDropdown(forceState) {
@@ -136,15 +229,34 @@
     });
   }
 
-  roleOptions.forEach(opt => {
-    opt.addEventListener("click", () => {
-      const val = opt.dataset.roleVal;
-      if (roleSwitch) roleSwitch.value = val;
-      updateCustomRoleUI(val);
-      applyRole(val);
-      toggleRoleDropdown(false);
+  if (roleDropdownMenu) {
+    roleDropdownMenu.querySelectorAll(".role-option").forEach(opt => {
+      opt.addEventListener("click", () => {
+        const houseVal = opt.dataset.houseVal;
+        currentHouseFilter = houseVal;
+        updateNavbarHouseUI(houseVal);
+        renderKPIs(houseVal);
+        updateTickerForHouse(houseVal);
+
+        // Sync with the MP House Filter pills in MP 360 view
+        document.querySelectorAll("#mpHouseFilterPills .pill-btn").forEach(b => {
+          b.classList.toggle("on", b.dataset.houseFilter === houseVal);
+        });
+
+        if (houseVal === "Nominated") {
+          currentStateFilter = "all";
+          const mpStateFilter = document.getElementById("mpStateFilter");
+          if (mpStateFilter) mpStateFilter.value = "all";
+        }
+        if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
+        if (typeof renderAlerts === "function") renderAlerts();
+
+        const optTitle = opt.querySelector(".role-opt-title") ? opt.querySelector(".role-opt-title").textContent.trim() : houseVal;
+        showToast(`Filtered Parliamentary data for ${optTitle}`);
+        toggleRoleDropdown(false);
+      });
     });
-  });
+  }
 
   document.addEventListener("click", (e) => {
     if (customRoleDropdown && !customRoleDropdown.contains(e.target)) {
@@ -155,23 +267,96 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       toggleRoleDropdown(false);
+      document.querySelectorAll(".modal-backdrop.open").forEach(m => m.classList.remove("open"));
+      const drawer = document.getElementById("vendorDrawer");
+      if (drawer) drawer.classList.remove("open");
+      const drawerBackdrop = document.getElementById("drawerBackdrop");
+      if (drawerBackdrop) drawerBackdrop.classList.remove("open");
     }
   });
-
-  if (roleSwitch) roleSwitch.addEventListener("change", e => {
-    updateCustomRoleUI(e.target.value);
-    applyRole(e.target.value);
-  });
-  applyRole("ministry");
-  updateCustomRoleUI("ministry");
 
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      rolePill.textContent = "Guest — unauthenticated";
-      navLinks.forEach(l => l.hidden = !!l.dataset.role);
+      currentHouseFilter = "all";
+      currentStateFilter = "all";
+      updateNavbarHouseUI("all");
+      renderKPIs("all");
+      updateTickerForHouse("all");
+      document.querySelectorAll("#mpHouseFilterPills .pill-btn").forEach(b => {
+        b.classList.toggle("on", b.dataset.houseFilter === "all");
+      });
+      const mpStateFilter = document.getElementById("mpStateFilter");
+      if (mpStateFilter) mpStateFilter.value = "all";
+      if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
+      if (typeof renderAlerts === "function") renderAlerts();
       setView("overview");
-      showToast("Signed out. Operating under restricted guest view.", true);
+      showToast("Workstation session reset to national central overview.");
+    });
+  }
+
+  /* ---------- DYNAMIC TICKER & KPI RENDERING HELPERS ---------- */
+  function updateTickerForHouse(house) {
+    const m = houseMetricsData[house] || houseMetricsData["all"];
+    const tickerItems = [
+      ["MODELS ACTIVE", "Isolation Forest · Benford χ² · NLP · pHash"],
+      ["QUERY LATENCY", "<18ms"],
+      ["WORKS MONITORED", m.works.toLocaleString()],
+      ["DISBURSED", m.disbursed],
+      ["MP ALLOCATIONS", String(m.mps)],
+      ["OPEN CRITICAL FLAGS", m.critCount.toLocaleString()],
+      ["MONOPOLY CONTRACTORS", String(m.monopolies)],
+      ["GFR 144 EVASIONS", String(m.splitTenders)]
+    ];
+    const tHtml = tickerItems.map(([l, v]) => `<div class="ticker-item">${l} <b>${v}</b></div>`).join("");
+    const tickerInner = document.getElementById("tickerInner");
+    if (tickerInner) tickerInner.innerHTML = tHtml + tHtml;
+
+    const heroSub = document.getElementById("heroSub");
+    if (heroSub) {
+      heroSub.textContent = `Continuous oversight across ${m.works.toLocaleString()} sanctioned works, ${m.disbursed} in disbursements and ${m.mps} Member of Parliament allocations — cross-checked by a five-model AI ensemble and perceptual image forensics.`;
+    }
+  }
+
+  function renderKPIs(house) {
+    const kpiGrid = document.getElementById("kpiGrid");
+    if (!kpiGrid) return;
+    const m = houseMetricsData[house] || houseMetricsData["all"];
+    const cards = [
+      { label: "TOTAL MONITORED WORKS", value: m.works.toLocaleString(), sub: m.mpsSub, risk: null, goto: null, icon: "📊", theme: "cyan" },
+      { label: "TOTAL SANCTIONED BUDGET", value: m.sanctioned, sub: `statutory ceiling for ${m.mps} MPs`, risk: null, goto: null, icon: "🏛️", theme: "gold" },
+      { label: "TOTAL FUNDS DISBURSED", value: m.disbursed, sub: "97.8% statutory utilisation", risk: null, goto: null, icon: "⚡", theme: "emerald" },
+      { label: "CRITICAL CAPITAL AT RISK", value: m.critRisk, sub: `${m.critCount.toLocaleString()} high-urgency works`, risk: "crit", goto: "CRITICAL", icon: "🚨", theme: "crit" },
+      { label: "HIGH CAPITAL AT RISK", value: m.highRisk, sub: `${m.highCount.toLocaleString()} flagged schemes`, risk: "high", goto: "HIGH", icon: "⚠️", theme: "amber" },
+      { label: "CONTRACTOR MONOPOLY ALERT", value: String(m.monopolies), sub: "single-syndicate captured works", risk: null, goto: null, trigger: "vendor", icon: "🏢", theme: "indigo" },
+      { label: "MISSING PROOF-OF-WORK PHOTOS", value: String(m.missingPhotos), sub: "100% disbursed, zero photos", risk: null, goto: null, trigger: "missing_photo", icon: "📸", theme: "rose" },
+      { label: "SPLIT-TENDER VIOLATIONS", value: String(m.splitTenders), sub: "partitioned below e-tender limits", risk: null, goto: null, trigger: "split_tender", icon: "✂️", theme: "purple" },
+      { label: "PREMATURE TRANCHE RELEASES", value: String(m.premature), sub: "Clause 4.3 non-conformance", risk: null, goto: null, trigger: "premature_tranche", icon: "⏳", theme: "teal" },
+    ];
+
+    kpiGrid.innerHTML = cards.map(k => `
+      <button class="kpi-card kpi-theme-${k.theme} ${k.risk === 'crit' ? 'risk-crit' : k.risk === 'high' ? 'risk-high' : ''}" data-goto-risk="${k.goto || ''}" data-goto-trigger="${k.trigger || ''}">
+        <div class="kpi-header-row">
+          <span class="kpi-label">${k.label}</span>
+          <span class="kpi-icon-badge">${k.icon}</span>
+        </div>
+        <div class="kpi-value">${k.value}</div>
+        <div class="kpi-sub">${k.sub}</div>
+      </button>`).join("");
+
+    kpiGrid.querySelectorAll(".kpi-card").forEach(card => {
+      card.addEventListener("click", () => {
+        setView("alerts");
+        const r = card.dataset.gotoRisk, tr = card.dataset.gotoTrigger;
+        if (r) {
+          const chip = document.querySelector(`[data-risk="${r}"]`);
+          if (chip) chip.click();
+        }
+        if (tr) {
+          const fTrig = document.getElementById("fTrigger");
+          if (fTrig) { fTrig.value = tr; currentPage = 1; if (typeof renderAlerts === "function") renderAlerts(); }
+        }
+      });
     });
   }
 
@@ -238,20 +423,8 @@
   setInterval(checkBackendLatency, 3200);
   checkBackendLatency();
 
-  /* ---------- TICKER ---------- */
-  const tickerItems = [
-    ["MODELS ACTIVE", "Isolation Forest · Benford χ² · NLP · pHash"],
-    ["QUERY LATENCY", "<18ms"],
-    ["WORKS MONITORED", "98,649"],
-    ["DISBURSED", "₹4,317 Cr"],
-    ["MP ALLOCATIONS", "774"],
-    ["OPEN CRITICAL FLAGS", "1,084"],
-    ["MONOPOLY CONTRACTORS", "341"],
-    ["GFR 144 EVASIONS", "178"]
-  ];
-  const tHtml = tickerItems.map(([l, v]) => `<div class="ticker-item">${l} <b>${v}</b></div>`).join("");
-  const tickerInner = document.getElementById("tickerInner");
-  if (tickerInner) tickerInner.innerHTML = tHtml + tHtml;
+  /* ---------- INITIAL TICKER RENDERING ---------- */
+  updateTickerForHouse(currentHouseFilter);
 
   /* ---------- LIVE SMART AUTONOMOUS VIGILANCE TELEMETRY LOOP ---------- */
   const sentinelFeeds = [
@@ -291,44 +464,8 @@
   }
   setInterval(cycleSentinelTelemetry, 3500);
 
-  /* ---------- KPI GRID (9 STATUTORY CARDS) ---------- */
-  const kpis = [
-    { label: "TOTAL MONITORED WORKS", value: "98,649", sub: "across 774 constituencies", risk: null, goto: null, icon: "📊", theme: "cyan" },
-    { label: "TOTAL SANCTIONED BUDGET", value: "₹4,412 Cr", sub: "statutory ceiling ₹4,000+ Cr", risk: null, goto: null, icon: "🏛️", theme: "gold" },
-    { label: "TOTAL FUNDS DISBURSED", value: "₹4,317 Cr", sub: "97.8% utilisation rate", risk: null, goto: null, icon: "⚡", theme: "emerald" },
-    { label: "CRITICAL CAPITAL AT RISK", value: "₹612 Cr", sub: "1,084 high-urgency works", risk: "crit", goto: "CRITICAL", icon: "🚨", theme: "crit" },
-    { label: "HIGH CAPITAL AT RISK", value: "₹390 Cr", sub: "2,217 flagged schemes", risk: "high", goto: "HIGH", icon: "⚠️", theme: "amber" },
-    { label: "CONTRACTOR MONOPOLY ALERT", value: "341", sub: "single-syndicate captured works", risk: null, goto: null, trigger: "vendor", icon: "🏢", theme: "indigo" },
-    { label: "MISSING PROOF-OF-WORK PHOTOS", value: "906", sub: "100% disbursed, zero photos", risk: null, goto: null, trigger: "missing_photo", icon: "📸", theme: "rose" },
-    { label: "SPLIT-TENDER VIOLATIONS", value: "178", sub: "partitioned below e-tender limits", risk: null, goto: null, trigger: "split_tender", icon: "✂️", theme: "purple" },
-    { label: "PREMATURE TRANCHE RELEASES", value: "244", sub: "Clause 4.3 non-conformance", risk: null, goto: null, trigger: "premature_tranche", icon: "⏳", theme: "teal" },
-  ];
-  const kpiGrid = document.getElementById("kpiGrid");
-  if (kpiGrid) {
-    kpiGrid.innerHTML = kpis.map(k => `
-      <button class="kpi-card kpi-theme-${k.theme} ${k.risk === 'crit' ? 'risk-crit' : k.risk === 'high' ? 'risk-high' : ''}" data-goto-risk="${k.goto || ''}" data-goto-trigger="${k.trigger || ''}">
-        <div class="kpi-header-row">
-          <span class="kpi-label">${k.label}</span>
-          <span class="kpi-icon-badge">${k.icon}</span>
-        </div>
-        <div class="kpi-value">${k.value}</div>
-        <div class="kpi-sub">${k.sub}</div>
-      </button>`).join("");
-    document.querySelectorAll(".kpi-card").forEach(card => {
-      card.addEventListener("click", () => {
-        setView("alerts");
-        const r = card.dataset.gotoRisk, tr = card.dataset.gotoTrigger;
-        if (r) {
-          const chip = document.querySelector(`[data-risk="${r}"]`);
-          if (chip) chip.click();
-        }
-        if (tr) {
-          const fTrig = document.getElementById("fTrigger");
-          if (fTrig) { fTrig.value = tr; currentPage = 1; renderAlerts(); }
-        }
-      });
-    });
-  }
+  /* ---------- INITIAL KPI GRID RENDERING ---------- */
+  renderKPIs(currentHouseFilter);
 
   function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
@@ -1101,6 +1238,10 @@
 
   function getFilteredRows() {
     return alertsData.filter(a => {
+      if (currentHouseFilter !== "all") {
+        const mpObj = (typeof mps !== "undefined") ? mps.find(m => m.name === a.mp) : null;
+        if (mpObj && mpObj.house !== currentHouseFilter) return false;
+      }
       if (currentRisk !== "ALL" && riskLabel(a.risk) !== currentRisk) return false;
       if (vendorOnly && !a.monopoly) return false;
       if (a.risk < minScore) return false;
@@ -1142,10 +1283,13 @@
 
     const tbody = document.querySelector("#alertsTable tbody");
     if (tbody) {
-      tbody.innerHTML = paginatedRows.map(a => `
+      tbody.innerHTML = paginatedRows.map(a => {
+        const mpObj = (typeof mps !== "undefined") ? mps.find(m => m.name === a.mp) : null;
+        const houseBadge = mpObj ? (mpObj.house === "Lok Sabha" ? '<span class="badge-mini badge-ls">LS</span>' : mpObj.house === "Rajya Sabha" ? '<span class="badge-mini badge-rs">RS</span>' : '<span class="badge-mini badge-nom">NOM</span>') : '';
+        return `
         <tr class="rowlink" data-open-case="${a.id}">
           <td><div style="font-weight:500;">${a.id}</div><div class="mono" style="color:var(--ink-faint); font-size:10.5px;">${a.date}</div></td>
-          <td>${a.state} · ${a.ida}<div style="color:var(--ink-faint); font-size:11px;">${a.mp}</div></td>
+          <td>${a.state} · ${a.ida}<div style="color:var(--ink-faint); font-size:11px; display:flex; align-items:center; gap:5px; margin-top:2px;"><span>${a.mp}</span>${houseBadge}</div></td>
           <td>${a.cat}<div style="color:var(--ink-faint); font-size:11px;">${a.desc}</div></td>
           <td class="mono">₹${(a.sanction / 100000).toFixed(1)}L${a.overrun > 0 ? `<div style="color:var(--crimson); font-size:10.5px;">+${a.overrun}% overrun</div>` : ""}</td>
           <td><span class="progress-mini"><i style="width:${a.progress}%;"></i></span>${a.progress}%${a.stalled ? '<div style="color:var(--amber); font-size:10.5px;">Stalled</div>' : ""}</td>
@@ -1153,7 +1297,8 @@
           <td><span class="risk-tag risk-${riskLabel(a.risk)}">${a.risk} · ${riskLabel(a.risk)}</span></td>
           <td style="color:var(--ink-faint); font-size:11.5px; max-width:200px;">${a.reason}</td>
           <td><div class="row-actions" onclick="event.stopPropagation();"><button data-open-case="${a.id}">Inspect</button><button data-pdf="${a.id}">PDF</button></div></td>
-        </tr>`).join("") || `<tr><td colspan="9" class="empty-state">No schemes match this filter.</td></tr>`;
+        </tr>`;
+      }).join("") || `<tr><td colspan="9" class="empty-state">No schemes match this parliamentary house or filter.</td></tr>`;
     }
 
     const pageInfo = document.getElementById("pageInfo");
@@ -1173,8 +1318,11 @@
   const ctaCritical = document.getElementById("ctaCritical");
   if (ctaCritical) ctaCritical.addEventListener("click", () => {
     setView("alerts");
-    const chip = document.querySelector('[data-risk="CRITICAL"]');
+    const chip = document.querySelector('[data-quick-filter="critical"]') || document.querySelector('[data-risk="CRITICAL"]');
     if (chip) chip.click();
+    const table = document.getElementById("alertsTable");
+    if (table) table.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("🚨 Surfaced Critical Priority Red Flags for statutory investigation", true);
   });
 
   /* ================= CASE FILE INVESTIGATION MODAL ================= */
@@ -1587,8 +1735,6 @@
     { name: "MP Ilaiyaraaja", house: "Nominated", state: "Nominated", cons: "Nominated by President of India", jurisdiction: "Pan-India Mandate (₹5 Cr/Yr)", works: 130, amount: "₹6.3 Cr", spent: "₹5.9 Cr", risk: 23, exec: [{ label: "Completed", value: 104, color: cssVar('--teal') }, { label: "In progress", value: 20, color: cssVar('--gold') }, { label: "Delayed", value: 5, color: cssVar('--amber') }, { label: "Flagged", value: 1, color: cssVar('--crimson') }], vendors: [{ label: "Cultural Heritage Centers Co.", value: 55 }, { label: "Acoustic Arts Infra", value: 30 }] }
   ];
 
-  let currentHouseFilter = "all";
-  let currentStateFilter = "all";
   const mpSelect = document.getElementById("mpSelect");
   const mpStateFilter = document.getElementById("mpStateFilter");
 
@@ -1666,7 +1812,12 @@
         if (mpStateFilter) mpStateFilter.value = "all";
       }
 
+      updateNavbarHouseUI(currentHouseFilter);
+      renderKPIs(currentHouseFilter);
+      updateTickerForHouse(currentHouseFilter);
+      if (typeof renderAlerts === "function") renderAlerts();
       applyMPFiltersAndRender();
+      showToast(`Switched Parliamentary Context to ${btn.textContent.trim()}`);
     });
   });
 
@@ -2182,7 +2333,7 @@
           style="cursor:pointer; transition:all 0.18s ease;">
         </path>`;
 
-      // Clean, well-aligned state codes in crisp BLACK (user requested: 'black se likho, thoda kam kro, acha se align kro')
+      // Clean, well-aligned state codes in clean WHITE (user requested: 'white me hi kr do')
       const visibleLabelCodes = [
         "JK", "LA", "HP", "PB", "UK", "HR", "RJ", "UP", "BR", "JH",
         "WB", "OD", "CH", "MP", "GJ", "MH", "TG", "AP", "KA", "KL",
@@ -2196,13 +2347,13 @@
             dominant-baseline="central"
             pointer-events="none"
             font-family="IBM Plex Mono"
-            font-size="9"
+            font-size="9.5"
             font-weight="700"
-            fill="#0a0e17"
-            stroke="rgba(255, 255, 255, 0.75)"
-            stroke-width="0.8px"
+            fill="#ffffff"
+            stroke="rgba(0, 0, 0, 0.65)"
+            stroke-width="0.6px"
             paint-order="stroke fill"
-            style="letter-spacing:0.4px;">${code}</text>`;
+            style="letter-spacing:0.4px; text-shadow:0 1px 3px rgba(0,0,0,0.9);">${code}</text>`;
       }
 
       // Radar pulse target circle on Tier 3 critical states
@@ -2552,9 +2703,23 @@
     openModal("pdfModal");
   }
 
-  /* ================= CSV EXPORT / BRIEFING / BULK ================= */
   const ctaBriefing = document.getElementById("ctaBriefing");
-  if (ctaBriefing) ctaBriefing.addEventListener("click", () => openModal("briefingModal"));
+  if (ctaBriefing) {
+    ctaBriefing.addEventListener("click", () => {
+      const m = houseMetricsData[currentHouseFilter] || houseMetricsData["all"];
+      const briefingModal = document.getElementById("briefingModal");
+      if (briefingModal) {
+        const pEls = briefingModal.querySelectorAll("p");
+        if (pEls && pEls.length >= 3) {
+          pEls[0].textContent = `Across the national MPLADS portfolio (${m.houseLabel}), ${m.critCount.toLocaleString()} works are currently classified critical across ${m.mps} Members of Parliament, where round-number invoicing exceeds the Benford-expected baseline by more than double.`;
+          pEls[1].textContent = `Vendor-network analysis has identified ${m.monopolies} contractor monopoly alerts operating across constituency boundaries, with ${m.splitTenders} works flagged for artificial tender-splitting under GFR Rule 144.`;
+          pEls[2].textContent = `Recommended action: prioritise statutory adjudication on ${m.critRisk} in capital at risk across flagged authorities before the next central tranche release.`;
+        }
+      }
+      openModal("briefingModal");
+      showToast("Synthesized Secretary briefing memo from live audit telemetry.");
+    });
+  }
 
   const bulkBtn = document.getElementById("bulkBtn");
   if (bulkBtn) bulkBtn.addEventListener("click", () => openModal("bulkModal"));
