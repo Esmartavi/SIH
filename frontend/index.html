@@ -1,23 +1,1325 @@
-<!doctype html>
-<html lang="en" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%230b1120' stroke='%230ea5e9' stroke-width='6'/><path d='M50 18 L50 82 M18 50 L82 50' stroke='%23f59e0b' stroke-width='4'/><circle cx='50' cy='50' r='16' fill='%230284c7'/></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="BHARAT-DRISHTI: Next-Gen AI Forensic & Vigilance Platform for MPLADS Fund Tracking, Ghost Scheme Detection, and Statutory Compliance Audit" />
-    <meta name="theme-color" content="#060911" />
-    <title>BHARAT-DRISHTI // National MPLADS AI Vigilance & Audit System</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Leaflet CSS for Map View -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  </head>
-  <body class="bg-navy-950 text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BHARAT-DRISHTI // MPLADS AI Vigilance Platform</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Ambient Dynamic Background Elements (Dark & Light Mode) -->
+  <div class="bg-mesh-canvas" aria-hidden="true">
+    <div class="ambient-orb orb-gold"></div>
+    <div class="ambient-orb orb-cyan"></div>
+    <div class="ambient-orb orb-indigo"></div>
+    <div class="ambient-orb orb-rose"></div>
+    <div class="ambient-orb orb-emerald"></div>
+    <div class="bg-grid-matrix"></div>
+
+    <!-- Live Glowing Neural Circuit Tree with Flowing Electricity -->
+    <div class="bg-circuit-tree-wrap">
+      <svg class="circuit-tree-svg" viewBox="0 0 1600 1000" preserveAspectRatio="none">
+        <defs>
+          <filter id="circuitGlowTeal" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#14b8a6" flood-opacity="0.9" />
+            <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#06b6d4" flood-opacity="0.6" />
+          </filter>
+          <filter id="circuitGlowGold" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#f59e0b" flood-opacity="0.9" />
+            <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#fbbf24" flood-opacity="0.6" />
+          </filter>
+          <filter id="circuitGlowCyan" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#06b6d4" flood-opacity="0.9" />
+            <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#3b82f6" flood-opacity="0.6" />
+          </filter>
+        </defs>
+
+        <!-- BASE STATIC WIRE TRACKS (Left Tree) -->
+        <g class="circuit-tracks">
+          <path
+            d="M 320,860 L 480,860 L 540,800 L 720,800 L 760,840 L 880,840 L 920,800 L 1080,800 L 1140,860 L 1280,860"
+            class="wire-track" />
+          <path d="M 420,930 L 590,930 L 640,880 L 960,880 L 1010,930 L 1180,930" class="wire-track" />
+        </g>
+
+        <!-- LIVE ELECTRIC CURRENT FLOW OVERLAYS (Left Tree) -->
+        <g class="circuit-currents">
+          <!-- <path d="M 30,1000 L 30,680 L 90,620 L 90,440 L 170,360 L 320,360 L 380,300 L 480,300"
+            class="wire-current current-teal speed-1" />
+          <path d="M 90,540 L 150,480 L 280,480 L 330,430 L 410,430"
+            class="wire-current current-cyan speed-2 delay-1" />
+          <path d="M 170,360 L 230,300 L 230,220 L 290,160 L 420,160"
+            class="wire-current current-gold speed-3 delay-2" />
+          <path d="M 120,1000 L 120,760 L 190,690 L 190,560 L 280,470 L 440,470 L 490,420 L 580,420"
+            class="wire-current current-teal speed-2 delay-3" />
+          <path d="M 190,640 L 260,570 L 370,570 L 410,530 L 510,530"
+            class="wire-current current-cyan speed-1 delay-2" />
+          <path d="M 0,380 L 80,380 L 140,320 L 140,190 L 220,110 L 360,110 L 400,70 L 530,70"
+            class="wire-current current-gold speed-3 delay-1" />
+          <path d="M 140,260 L 200,200 L 310,200 L 350,160 L 460,160"
+            class="wire-current current-teal speed-1 delay-4" /> -->
+
+          <!-- Live Current Overlays (Right Tree) -->
+          <!-- <path d="M 1570,1000 L 1570,680 L 1510,620 L 1510,440 L 1430,360 L 1280,360 L 1220,300 L 1120,300"
+            class="wire-current current-cyan speed-1 delay-2" />
+          <path d="M 1510,540 L 1450,480 L 1320,480 L 1270,430 L 1190,430"
+            class="wire-current current-teal speed-3 delay-1" />
+          <path d="M 1430,360 L 1370,300 L 1370,220 L 1310,160 L 1180,160"
+            class="wire-current current-gold speed-2 delay-3" />
+          <path d="M 1480,1000 L 1480,760 L 1410,690 L 1410,560 L 1320,470 L 1160,470 L 1110,420 L 1020,420"
+            class="wire-current current-teal speed-1 delay-1" />
+          <path d="M 1410,640 L 1340,570 L 1230,570 L 1190,530 L 1090,530"
+            class="wire-current current-cyan speed-2 delay-4" />
+          <path d="M 1600,380 L 1520,380 L 1460,320 L 1460,190 L 1380,110 L 1240,110 L 1200,70 L 1070,70"
+            class="wire-current current-gold speed-1 delay-3" />
+          <path d="M 1460,260 L 1400,200 L 1290,200 L 1250,160 L 1140,160"
+            class="wire-current current-teal speed-3 delay-2" /> -->
+
+          <!-- Live Current Overlays (Center Bus) -->
+          <path
+            d="M 320,860 L 480,860 L 540,800 L 720,800 L 760,840 L 880,840 L 920,800 L 1080,800 L 1140,860 L 1280,860"
+            class="wire-current current-teal speed-1 delay-3" />
+          <path d="M 420,930 L 590,930 L 640,880 L 960,880 L 1010,930 L 1180,930"
+            class="wire-current current-cyan speed-2 delay-1" />
+        </g>
+
+        <!-- TERMINAL JUNCTION PADS / CAPACITORS -->
+        <!-- <g class="circuit-nodes">
+          <circle cx="480" cy="300" r="3.5" class="circuit-node node-pulse-teal" />
+          <circle cx="410" cy="430" r="3" class="circuit-node node-pulse-cyan" />
+          <circle cx="420" cy="160" r="3.5" class="circuit-node node-pulse-gold" />
+          <circle cx="580" cy="420" r="4" class="circuit-node node-pulse-teal" />
+          <circle cx="510" cy="530" r="3" class="circuit-node node-pulse-cyan" />
+          <circle cx="530" cy="70" r="4" class="circuit-node node-pulse-gold" />
+          <circle cx="460" cy="160" r="3" class="circuit-node node-pulse-teal" />
+
+          <circle cx="1120" cy="300" r="3.5" class="circuit-node node-pulse-cyan" />
+          <circle cx="1190" cy="430" r="3" class="circuit-node node-pulse-teal" />
+          <circle cx="1180" cy="160" r="3.5" class="circuit-node node-pulse-gold" />
+          <circle cx="1020" cy="420" r="4" class="circuit-node node-pulse-teal" />
+          <circle cx="1090" cy="530" r="3" class="circuit-node node-pulse-cyan" />
+          <circle cx="1070" cy="70" r="4" class="circuit-node node-pulse-gold" />
+          <circle cx="1140" cy="160" r="3" class="circuit-node node-pulse-teal" />
+
+          <circle cx="720" cy="800" r="3.5" class="circuit-node node-pulse-teal" />
+          <circle cx="880" cy="840" r="3.5" class="circuit-node node-pulse-cyan" />
+          <circle cx="640" cy="880" r="3" class="circuit-node node-pulse-gold" />
+          <circle cx="960" cy="880" r="3" class="circuit-node node-pulse-teal" />
+        </g> -->
+      </svg>
+    </div>
+
+    <div class="bg-radar-concentric">
+      <div class="bg-radar-sweep-beam"></div>
+    </div>
+    <!-- Live Autonomous Background Telemetry Blip Nodes -->
+    <div class="radar-node node-up"><span class="node-dot dot-crit"></span><span class="node-label">AUTO-FLAG //
+        UP-40217</span></div>
+    <div class="radar-node node-mh"><span class="node-dot dot-crit"></span><span class="node-label">GFR 144 //
+        MH-62104</span></div>
+    <div class="radar-node node-rj"><span class="node-dot dot-amber"></span><span class="node-label">pHASH ALERT //
+        RJ-33109</span></div>
+    <div class="radar-node node-as"><span class="node-dot dot-cyan"></span><span class="node-label">MONITORING //
+        AS-11290</span></div>
+    <div class="radar-node node-br"><span class="node-dot dot-teal"></span><span class="node-label">CLEAR //
+        BR-05512</span></div>
+  </div>
+
+  <div class="nav-wrap">
+    <div class="nav-top">
+      <div class="brand">
+        <div class="brand-mark">भा</div>
+        <div class="brand-text">
+          <span class="name">BHARAT-DRISHTI</span>
+          <span class="sub">MoSPI · Problem Statement 26102</span>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <div class="health-badge" title="Real-time audit latency">
+          <span class="dot"></span>
+          <span id="latencyText">SYNCED · 14ms</span>
+        </div>
+
+        <div class="task-badge" id="taskBadge">
+          <span class="spinner"></span>
+          <span id="taskText">Task running…</span>
+        </div>
+
+        <div class="nav-sep"></div>
+
+        <!-- Unified Role Selector with Custom Glassmorphic Dropdown -->
+        <div class="custom-role-dropdown" id="customRoleDropdown" title="Switch administrative statutory context">
+          <button type="button" class="role-trigger-btn" id="roleTriggerBtn" aria-haspopup="listbox" aria-expanded="false">
+            <span class="role-trigger-icon" id="roleTriggerIcon">🏛️</span>
+            <div class="role-trigger-text">
+              <span class="role-trigger-title" id="roleTriggerTitle">MoSPI — Central Ministry</span>
+              <span class="role-trigger-tag" id="roleTriggerTag">NATIONAL</span>
+            </div>
+            <svg class="role-trigger-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Synchronized hidden select for internal scripts -->
+          <select class="role-switch" id="roleSwitch" style="display:none;" aria-hidden="true">
+            <option value="ministry" selected>MoSPI — Central Ministry</option>
+            <option value="mp_ls">Lok Sabha MP Portal</option>
+            <option value="mp_rs">Rajya Sabha MP Portal</option>
+            <option value="district">District Authority / DM</option>
+            <option value="auditor">Audit &amp; Vigilance (CAG)</option>
+          </select>
+          <span id="rolePill" style="display:none;"></span>
+
+          <!-- Floating Glassmorphic Dropdown Menu -->
+          <div class="role-dropdown-menu" id="roleDropdownMenu" role="listbox">
+            <div class="role-dropdown-header">
+              <span>STATUTORY GOVERNANCE CONTEXT</span>
+              <span class="role-header-sub">MPLADS TIER</span>
+            </div>
+
+            <div class="role-option active" data-role-val="ministry" role="option">
+              <div class="role-opt-left">
+                <span class="role-opt-icon">🏛️</span>
+                <div class="role-opt-info">
+                  <div class="role-opt-title">MoSPI — Central Ministry</div>
+                  <div class="role-opt-desc">National AI Radar, Policy &amp; Fund Release (All India)</div>
+                </div>
+              </div>
+              <span class="role-opt-badge badge-central">CENTRAL</span>
+            </div>
+
+            <div class="role-option" data-role-val="mp_ls" role="option">
+              <div class="role-opt-left">
+                <span class="role-opt-icon">🟢</span>
+                <div class="role-opt-info">
+                  <div class="role-opt-title">Lok Sabha MP Portal</div>
+                  <div class="role-opt-desc">Constituency Works &amp; Public Demands (543 MPs)</div>
+                </div>
+              </div>
+              <span class="role-opt-badge badge-ls">LOK SABHA</span>
+            </div>
+
+            <div class="role-option" data-role-val="mp_rs" role="option">
+              <div class="role-opt-left">
+                <span class="role-opt-icon">🔴</span>
+                <div class="role-opt-info">
+                  <div class="role-opt-title">Rajya Sabha MP Portal</div>
+                  <div class="role-opt-desc">State-wide Works &amp; Fund Utilization (245 MPs)</div>
+                </div>
+              </div>
+              <span class="role-opt-badge badge-rs">RAJYA SABHA</span>
+            </div>
+
+            <div class="role-option" data-role-val="district" role="option">
+              <div class="role-opt-left">
+                <span class="role-opt-icon">📍</span>
+                <div class="role-opt-info">
+                  <div class="role-opt-title">District Authority / DM</div>
+                  <div class="role-opt-desc">Tenders, Financial Sanctions &amp; Contractor Payments</div>
+                </div>
+              </div>
+              <span class="role-opt-badge badge-dist">DISTRICT</span>
+            </div>
+
+            <div class="role-option" data-role-val="auditor" role="option">
+              <div class="role-opt-left">
+                <span class="role-opt-icon">🔍</span>
+                <div class="role-opt-info">
+                  <div class="role-opt-title">Audit &amp; Vigilance (CAG)</div>
+                  <div class="role-opt-desc">Tamper-evident SHA-256 Ledger &amp; Benford χ² Forensics</div>
+                </div>
+              </div>
+              <span class="role-opt-badge badge-audit">CAG AUDIT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-sep"></div>
+
+        <!-- Action Buttons with Distinct Icons -->
+        <div class="nav-btn-group">
+          <button class="nav-action-btn" id="retrainBtn" title="Trigger Isolation Forest & Model Re-calibration">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+            </svg>
+            <span>Retrain</span>
+          </button>
+          <button class="nav-action-btn" id="bulkBtn" title="Trigger Scraping & Ingestion Task">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+            </svg>
+            <span>Ingest</span>
+          </button>
+        </div>
+
+        <div class="nav-sep"></div>
+
+        <!-- Theme Switcher with Sun & Moon Icons -->
+        <div class="theme-toggle" id="themeToggle">
+          <button data-theme-btn="dark" class="on" title="Dark Audit Theme">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+          <button data-theme-btn="light" title="Light Audit Theme">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="1" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Logout / Session Reset Button -->
+        <button class="nav-logout-btn" id="logoutBtn" title="End official session">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="dock-container">
+      <nav class="nav-dock" id="navLinks">
+        <!-- Cluster 1: Surveillance Hub -->
+        <div class="dock-group">
+          <span class="dock-group-label">SURVEILLANCE</span>
+          <button class="nav-link active" data-view="overview" title="Executive War Room & Radar">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+            </svg>
+            <span>War Room</span>
+          </button>
+          <button class="nav-link" data-view="alerts" title="Statutory Red Flags & Scheme Directory">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            <span>Live Alerts</span>
+            <span class="dock-badge-crit">1,084</span>
+          </button>
+          <button class="nav-link" data-role="ministry,state" data-view="geo"
+            title="National Geospatial Vigilance Heatmap">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+              <line x1="8" y1="2" x2="8" y2="18" />
+              <line x1="16" y1="6" x2="16" y2="22" />
+            </svg>
+            <span>Geo Map</span>
+          </button>
+        </div>
+
+        <div class="dock-sep"></div>
+
+        <!-- Cluster 2: AI & Forensic Intelligence -->
+        <div class="dock-group">
+          <span class="dock-group-label">FORENSIC AI</span>
+          <button class="nav-link" data-view="benford" title="Benford's Law & GFR 144 Split-Tender Cliffs">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+            <span>Benford χ²</span>
+          </button>
+          <button class="nav-link" data-role="ministry,state,district" data-view="vendors"
+            title="Contractor Syndicates & Collusion Graph">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+            <span>Vendor Nexus</span>
+          </button>
+          <button class="nav-link" data-view="mp" title="Member of Parliament 360° Portfolio Analysis">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span>MP 360°</span>
+          </button>
+        </div>
+
+        <div class="dock-sep"></div>
+
+        <!-- Cluster 3: Statutory Audit & Compliance -->
+        <div class="dock-group">
+          <span class="dock-group-label">GOVERNANCE</span>
+          <button class="nav-link" data-view="ledger" title="Tamper-Evident SHA-256 Audit Log">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+            <span>Audit Ledger</span>
+          </button>
+          <button class="nav-link" data-role="ministry" data-view="daflagged" title="District Auditor Watchdog Panel">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            <span>DA Watchdog</span>
+            <span class="dock-badge-lock">MINISTRY</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-tag"><span class="seal">STATUTORY</span> National MPLADS AI Vigilance &amp; Forensic Audit Platform
+    </div>
+    <h1 class="hero-title">Every sanctioned rupee, <span class="accent">under continuous watch.</span></h1>
+    <p class="hero-sub">Continuous oversight across 98,649 sanctioned works, ₹4,300+ Cr in disbursements and 774 Member
+      of Parliament allocations — cross-checked by a five-model AI ensemble and perceptual image forensics.</p>
+
+    <!-- Live Smart Autonomous AI Sentinel Stream HUD -->
+    <div class="sentinel-hud-bar">
+      <div class="sentinel-status">
+        <span class="sentinel-pulse-dot"></span>
+        <span class="sentinel-live-tag">LIVE AI SENTINELS</span>
+        <span class="sentinel-model-badge">5 MODELS ACTIVE</span>
+      </div>
+      <div class="sentinel-stream">
+        <span class="sentinel-agent-chip" id="sentinelAgentChip">🤖 AGENT-04 · VISION FORENSICS</span>
+        <span class="sentinel-msg" id="sentinelMsg">Scanning completion photos via Perceptual Hash (pHash)… Delta: 0.02
+          ✓ PASS</span>
+      </div>
+      <div class="sentinel-stats">
+        <div class="hud-stat"><span class="l">AUTO-AUDITS</span><b class="v mono" id="hudScans">2,491/hr</b></div>
+        <div class="hud-stat"><span class="l">AUTONOMY</span><b class="v mono text-teal">99.8%</b></div>
+        <div class="hud-stat"><span class="l">SHA LEDGER</span><b class="v mono text-gold">100% SEALED</b></div>
+      </div>
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-inner" id="tickerInner"></div>
+    </div>
+    <div class="hero-ctas">
+      <button class="btn btn-primary" id="ctaCritical">Investigate priority red flags</button>
+      <button class="btn btn-secondary" id="ctaBriefing">Generate Secretary briefing memo</button>
+      <button class="btn btn-ghost" id="ctaExport">Export national fraud CSV dossier</button>
+      <button class="btn btn-ghost" id="ctaImageForensics">Run image forensics</button>
+    </div>
+  </header>
+
+  <section class="kpi-grid" id="kpiGrid"></section>
+
+  <main>
+
+    <!-- OVERVIEW -->
+    <section class="view active" id="view-overview">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Priority action radar</div>
+          <div class="panel-desc">Works surfaced by the ensemble for immediate adjudicator review.</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" data-goto="alerts">View full directory</button>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Top flagged works</div>
+          <div id="radarList"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Risk-tier distribution</div>
+          <div id="riskDistChart"></div>
+          <div class="card-title" style="margin-top:18px;">Model ensemble uptime</div>
+          <div id="modelStatus"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALERTS -->
+    <section class="view" id="view-alerts">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Live statutory alerts &amp; scheme directory</div>
+          <div class="panel-desc">Investigate any of the 98,649 sanctioned works.</div>
+        </div>
+      </div>
+      <!-- Sleek On-Demand Search & Filter Hub -->
+      <div class="search-command-wrapper">
+        <div class="search-bar-box">
+          <div class="search-input-group">
+            <svg class="search-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input id="fSearch" type="text"
+              placeholder="Search 98,649 works by ID, MP name, contractor, district, or description... (Press / to focus)"
+              autocomplete="off">
+            <span class="search-kbd" title="Press / on your keyboard to search">/</span>
+            <button class="search-clear-btn" id="searchClearBtn" style="display:none;" title="Clear search">✕</button>
+          </div>
+
+          <div class="search-bar-actions">
+            <button class="filter-drawer-toggle" id="filterDrawerToggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+              </svg>
+              <span>Advanced Filters</span>
+              <span class="filter-count-badge" id="filterCountBadge" style="display:none;">0</span>
+              <svg class="chevron-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <button class="reset-filters-btn" id="resetFiltersBtn" style="display:none;"
+              title="Reset all filters">Reset</button>
+          </div>
+        </div>
+
+        <!-- Quick Preset Filter Chips Bar -->
+        <div class="quick-chips-row">
+          <span class="chips-label">QUICK FILTERS:</span>
+          <button class="quick-chip on" data-quick-filter="all">All Works</button>
+          <button class="quick-chip chip-crit" data-quick-filter="critical">🚨 Critical Only</button>
+          <button class="quick-chip chip-high" data-quick-filter="high">🟠 High Risk</button>
+          <button class="quick-chip" data-quick-filter="monopoly">🏢 Monopoly Vendors</button>
+          <button class="quick-chip" data-quick-filter="ghost">📸 Duplicate Photos</button>
+          <button class="quick-chip" data-quick-filter="split">✂️ Split Tenders</button>
+          <button class="quick-chip" data-quick-filter="stalled">⏸️ Stalled Works</button>
+        </div>
+
+        <!-- Collapsible Advanced Filter Matrix Panel (Opens on-demand) -->
+        <div class="advanced-filter-drawer" id="advancedFilterDrawer">
+          <div class="drawer-inner-grid">
+            <div class="field">
+              <label><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+                </svg> STATE JURISDICTION</label>
+              <select id="fState">
+                <option value="">All 28 States &amp; UTs</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                </svg> WORK CATEGORY</label>
+              <select id="fCategory">
+                <option value="">All Categories</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                </svg> STATUTORY ANOMALY TRIGGER</label>
+              <select id="fTrigger">
+                <option value="">Any Trigger Mechanism</option>
+                <option value="premature_tranche">Premature tranche release (Clause 4.3)</option>
+                <option value="stalled">Stalled execution (&gt;90 days delay)</option>
+                <option value="split_tender">Split tender artificial evasion (GFR 144)</option>
+                <option value="duplicate">Recycled / Duplicate completion photo</option>
+                <option value="missing_photo">100% disbursed with zero photos</option>
+                <option value="overspend">Cost overrun &gt;15% above benchmark</option>
+                <option value="vendor">Contractor syndicate monopoly</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg> MIN COMPOSITE RISK SCORE: <b class="mono" id="minScoreVal">0</b>/100</label>
+              <input type="range" id="minScore" min="0" max="100" value="0" class="fancy-range">
+            </div>
+          </div>
+
+          <div class="drawer-footer-row">
+            <div class="risk-pills-wrap">
+              <span class="l-mini">RISK SEVERITY:</span>
+              <button class="filter-chip on" data-risk="ALL">All</button>
+              <button class="filter-chip" data-risk="CRITICAL">Critical (&ge;85)</button>
+              <button class="filter-chip" data-risk="HIGH">High (65–84)</button>
+              <button class="filter-chip" data-risk="MEDIUM">Medium (40–64)</button>
+              <button class="filter-chip" data-risk="LOW">Low (&lt;40)</button>
+            </div>
+            <div class="toggle-switch" id="vendorToggleWrap">
+              <span>Monopoly contractor only</span>
+              <div class="switch" id="vendorToggle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="padding:0; overflow-x:auto;">
+        <table id="alertsTable">
+          <thead>
+            <tr>
+              <th>Work / sanction date</th>
+              <th>Location &amp; MP</th>
+              <th>Category</th>
+              <th class="sortable" data-sort="sanction_amount">Financials <span class="arrow">⇅</span></th>
+              <th>Status</th>
+              <th>Contractor</th>
+              <th class="sortable" data-sort="risk_score">Risk score <span class="arrow">⇅</span></th>
+              <th>Reason</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <div class="left" id="pageInfo">Showing 1–6 of 6</div>
+        <div class="right">
+          <button id="pFirst">« First</button><button id="pPrev">‹ Prev</button>
+          <span class="mono" id="pageLabel" style="padding:0 6px;">Page 1 / 1</span>
+          <button id="pNext">Next ›</button><button id="pLast">Last »</button>
+          <select id="pageSize">
+            <option>6</option>
+            <option>10</option>
+            <option>25</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENFORD -->
+    <section class="view" id="view-benford">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Benford's Law forensic intelligence</div>
+          <div class="panel-desc">Statistical audit engine for invoice manipulation &amp; tender-splitting cliffs.</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="recomputeBtn">Recompute engine</button>
+      </div>
+      <div class="filter-row" style="margin-bottom:16px;">
+        <div class="pill-group" id="datasetPills">
+          <button class="pill-btn on" data-dataset="sanction">Sanction amounts</button>
+          <button class="pill-btn" data-dataset="vendor">Vendor disbursements</button>
+        </div>
+        <div class="pill-group" id="digitPills" style="margin-left:16px;">
+          <button class="pill-btn on" data-digit="D1">First digit (D1)</button>
+          <button class="pill-btn" data-digit="D2">Second digit (D2)</button>
+          <button class="pill-btn" data-digit="D1D2">First two (D1D2)</button>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Digit distribution — observed vs theoretical</div>
+          <div id="benfordChart"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">MAD conformity gauge</div>
+          <div id="gaugeChart"></div>
+          <div class="metric-row">
+            <div class="metric-pill">
+              <div class="l">CHI-SQUARE</div>
+              <div class="v" id="chiVal">–</div>
+            </div>
+            <div class="metric-pill">
+              <div class="l">P-VALUE</div>
+              <div class="v" id="pVal">–</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="card">
+          <div class="card-title">GFR 144 split-tender threshold cliffs</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Threshold</th>
+                <th>Below limit</th>
+                <th>Above limit</th>
+                <th>Evasion ratio</th>
+                <th>Verdict</th>
+              </tr>
+            </thead>
+            <tbody id="cliffsBody"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">Round-number estimation bias</div>
+          <div id="roundBiasChart"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Entity MAD ranking leaderboard
+          <div class="pill-group" id="entityPills">
+            <button class="pill-btn on" data-entity="state">By state</button>
+            <button class="pill-btn" data-entity="district">By district</button>
+            <button class="pill-btn" data-entity="mp">By MP</button>
+            <button class="pill-btn" data-entity="vendor">By vendor</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>Sample size</th>
+              <th>MAD</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="entityBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VENDORS -->
+    <section class="view" id="view-vendors">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Vendor collusion &amp; monopoly networks</div>
+          <div class="panel-desc">Contractor syndicates clustered around shared MPs and bidding patterns.</div>
+        </div>
+      </div>
+      <div class="filters-panel">
+        <div class="filters-grid" style="grid-template-columns:2fr 1fr;">
+          <div class="field"><label>Search vendor</label><input id="vendorSearch" type="text"
+              placeholder="Vendor name…"></div>
+          <div class="field"><label>Top N contractors: <span id="topNVal">30</span></label><input type="range" id="topN"
+              min="10" max="100" value="30"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Force-directed collusion graph</div>
+        <svg viewBox="0 0 700 320" class="chart-svg" id="netSvg"></svg>
+        <div class="legend-row">
+          <span><span class="legend-dot" style="background:var(--gold);"></span>Member of Parliament</span>
+          <span><span class="legend-dot" style="background:var(--crimson);"></span>Flagged contractor</span>
+          <span><span class="legend-dot" style="background:var(--ink-faint);"></span>Vendor</span>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px; padding:0;">
+        <div class="card-title" style="padding:18px 18px 0;">Contractor monopoly leaderboard</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Vendor</th>
+              <th>Contracts</th>
+              <th>Total sanctioned</th>
+              <th>Avg risk</th>
+              <th>Monopoly flags</th>
+              <th>Unique MPs</th>
+              <th>States</th>
+            </tr>
+          </thead>
+          <tbody id="vendorBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MP DRILLDOWN -->
+    <section class="view" id="view-mp">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Member of Parliament 360° drilldown</div>
+          <div class="panel-desc">Focused portfolio analysis across all 774 MPs (543 Lok Sabha + 245 Rajya Sabha).</div>
+        </div>
+        <div class="mp-head-actions" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <!-- Parliamentary House Filter Pills -->
+          <div class="pill-group" id="mpHouseFilterPills">
+            <button class="pill-btn on" data-house-filter="all">All Houses (774)</button>
+            <button class="pill-btn" data-house-filter="Lok Sabha">🟢 Lok Sabha (543)</button>
+            <button class="pill-btn" data-house-filter="Rajya Sabha">🔴 Rajya Sabha (245)</button>
+            <button class="pill-btn" data-house-filter="Nominated">⭐ Nominated (12)</button>
+          </div>
+
+          <!-- All States & UTs Filter Dropdown -->
+          <div class="mp-state-wrapper">
+            <select id="mpStateFilter" class="mp-select-input" style="padding:7px 12px; font-size:12.5px; border-radius:6px; background:var(--panel-2); color:var(--ink); border:1px solid var(--line); font-weight:600; cursor:pointer;">
+              <option value="all">🇮🇳 All States &amp; UTs (36)</option>
+              <option value="Uttar Pradesh">Uttar Pradesh (80 LS · 31 RS)</option>
+              <option value="Maharashtra">Maharashtra (48 LS · 19 RS)</option>
+              <option value="West Bengal">West Bengal (42 LS · 16 RS)</option>
+              <option value="Bihar">Bihar (40 LS · 16 RS)</option>
+              <option value="Tamil Nadu">Tamil Nadu (39 LS · 18 RS)</option>
+              <option value="Madhya Pradesh">Madhya Pradesh (29 LS · 11 RS)</option>
+              <option value="Karnataka">Karnataka (28 LS · 12 RS)</option>
+              <option value="Gujarat">Gujarat (26 LS · 11 RS)</option>
+              <option value="Andhra Pradesh">Andhra Pradesh (25 LS · 11 RS)</option>
+              <option value="Rajasthan">Rajasthan (25 LS · 10 RS)</option>
+              <option value="Odisha">Odisha (21 LS · 10 RS)</option>
+              <option value="Kerala">Kerala (20 LS · 9 RS)</option>
+              <option value="Telangana">Telangana (17 LS · 7 RS)</option>
+              <option value="Assam">Assam (14 LS · 7 RS)</option>
+              <option value="Jharkhand">Jharkhand (14 LS · 6 RS)</option>
+              <option value="Punjab">Punjab (13 LS · 7 RS)</option>
+              <option value="Chhattisgarh">Chhattisgarh (11 LS · 5 RS)</option>
+              <option value="Haryana">Haryana (10 LS · 5 RS)</option>
+              <option value="Delhi">Delhi (7 LS · 3 RS)</option>
+              <option value="Jammu &amp; Kashmir">Jammu &amp; Kashmir (5 LS · 4 RS)</option>
+              <option value="Uttarakhand">Uttarakhand (5 LS · 3 RS)</option>
+              <option value="Himachal Pradesh">Himachal Pradesh (4 LS · 3 RS)</option>
+              <option value="Goa">Goa (2 LS · 1 RS)</option>
+              <option value="Tripura">Tripura (2 LS · 1 RS)</option>
+              <option value="Manipur">Manipur (2 LS · 1 RS)</option>
+              <option value="Meghalaya">Meghalaya (2 LS · 1 RS)</option>
+              <option value="Arunachal Pradesh">Arunachal Pradesh (2 LS · 1 RS)</option>
+              <option value="Nagaland">Nagaland (1 LS · 1 RS)</option>
+              <option value="Mizoram">Mizoram (1 LS · 1 RS)</option>
+              <option value="Sikkim">Sikkim (1 LS · 1 RS)</option>
+              <option value="Ladakh">Ladakh (1 LS)</option>
+            </select>
+          </div>
+
+          <!-- MP Search & Select -->
+          <div class="mp-select-wrapper">
+            <select id="mpSelect" class="mp-select-input" style="padding:7px 12px; font-size:12.5px; border-radius:6px; background:var(--panel-2); color:var(--ink); border:1px solid var(--line); font-weight:600; cursor:pointer; min-width:240px;"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live State & Parliamentary Context Info Strip -->
+      <div class="mp-context-strip" id="mpContextStrip">
+        <div class="strip-left">
+          <span class="strip-icon" id="mpStripIcon">🏛️</span>
+          <span class="strip-title" id="mpStripTitle">National Parliamentary Roster</span>
+          <span class="strip-sep">·</span>
+          <span class="strip-meta" id="mpStripMeta">774 Members across 28 States &amp; 8 UTs (₹3,870 Cr Annual Scheme Entitlement)</span>
+        </div>
+        <div class="strip-right" id="mpStripStats">
+          <span class="strip-stat-pill" id="mpStripStatLS">543 Lok Sabha</span>
+          <span class="strip-stat-pill" id="mpStripStatRS">245 Rajya Sabha</span>
+          <span class="strip-stat-pill" id="mpStripStatBudget">₹3,870 Cr/Yr</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <div style="font-family:var(--serif); font-size:20px; font-weight:600;" id="mpName">—</div>
+              <span id="mpHouseBadge" class="house-badge house-ls">🟢 Lok Sabha</span>
+            </div>
+            <div class="panel-desc" id="mpMeta" style="margin-top:4px;">—</div>
+          </div>
+          <div id="mpJurisdictionTag" class="jurisdiction-pill">Constituency Mandate</div>
+        </div>
+        <div class="metric-row" style="margin-top:16px;">
+          <div class="metric-pill">
+            <div class="l">TOTAL WORKS</div>
+            <div class="v" id="mpWorks">–</div>
+          </div>
+          <div class="metric-pill">
+            <div class="l">SANCTIONED</div>
+            <div class="v" id="mpAmount">–</div>
+          </div>
+          <div class="metric-pill">
+            <div class="l">DISBURSED</div>
+            <div class="v" id="mpSpent">–</div>
+          </div>
+          <div class="metric-pill">
+            <div class="l">AVG RISK SCORE</div>
+            <div class="v" id="mpRisk">–</div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="card">
+          <div class="card-title">Execution status breakdown</div>
+          <div id="mpDonut"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Vendor concentration</div>
+          <div id="mpVendorBars"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px; padding:0;">
+        <div class="card-title" style="padding:18px 18px 0;">Portfolio works</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Work</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Risk</th>
+            </tr>
+          </thead>
+          <tbody id="mpPortfolio"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- GEO -->
+    <section class="view" id="view-geo">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Geospatial National Vigilance Map</div>
+          <div class="panel-desc">Interactive State-Level Anomaly Surveillance Grid &amp; District Allocation Breakdown.
+            Click any state or chip to inspect authorities.</div>
+        </div>
+        <div class="geo-header-actions">
+          <div class="geo-view-toggle">
+            <button class="gvt-btn active" id="btnViewMap">Interactive Map</button>
+            <button class="gvt-btn" id="btnViewMatrix">State Risk Matrix</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick State Ribbon -->
+      <div class="state-quick-ribbon">
+        <span class="sqr-label">QUICK JUMP:</span>
+        <div class="sqr-chips" id="stateChipsContainer"></div>
+      </div>
+
+      <div class="geo-layout-grid">
+        <!-- Left Column: Map / Matrix View -->
+        <div class="card" style="position:relative;">
+          <div class="card-head"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="card-title" style="margin:0;">National Geospatial Cluster Heatmap</div>
+            <span class="active-state-tag" id="mapActiveStateTag">Uttar Pradesh Selected</span>
+          </div>
+
+          <!-- Interactive India SVG Vector Map -->
+          <div class="india-map-container" id="indiaMapContainer">
+            <div class="india-svg-wrapper" id="indiaSvgWrapper"></div>
+            <div class="map-tooltip-fancy" id="mapTooltip"></div>
+          </div>
+
+          <!-- State Risk Matrix Grid (Toggled) -->
+          <div class="state-risk-matrix-grid" id="stateMatrixContainer" style="display:none;"></div>
+
+          <!-- Risk Legend -->
+          <div class="geo-legend-bar">
+            <span class="glb-title">Risk Tiers:</span>
+            <span class="glb-item"><span class="legend-dot" style="background:var(--teal);"></span>Low (Tier 0)</span>
+            <span class="glb-item"><span class="legend-dot" style="background:var(--yellow);"></span>Moderate (Tier
+              1)</span>
+            <span class="glb-item"><span class="legend-dot" style="background:var(--amber);"></span>High (Tier 2)</span>
+            <span class="glb-item"><span class="legend-dot" style="background:var(--crimson);"></span>Critical (Tier
+              3)</span>
+          </div>
+        </div>
+
+        <!-- Right Column: State Forensic Dossier & District Table -->
+        <div class="card state-dossier-card">
+          <div class="state-dossier-header">
+            <div class="sdh-left">
+              <div class="sdh-flag-avatar">🏛️</div>
+              <div>
+                <div class="sdh-title-row">
+                  <h3 class="sdh-name" id="selectedStateTitle">Uttar Pradesh</h3>
+                  <span class="sdh-code mono" id="selectedStateCode">UP</span>
+                </div>
+                <div class="sdh-meta" id="selectedStateMeta">Capital: Lucknow · 80 Parliamentary Constituencies</div>
+              </div>
+            </div>
+            <span class="risk-tag risk-CRITICAL" id="selectedStateRiskTag">CRITICAL (Tier 3)</span>
+          </div>
+
+          <!-- State KPI Micro Cards -->
+          <div class="state-kpi-grid">
+            <div class="state-kpi-card">
+              <div class="skc-lbl">TOTAL SANCTIONED</div>
+              <div class="skc-val mono text-gold" id="skcSanctioned">₹412.5 Cr</div>
+            </div>
+            <div class="state-kpi-card">
+              <div class="skc-lbl">AUDITED WORKS</div>
+              <div class="skc-val mono" id="skcWorks">8,420</div>
+            </div>
+            <div class="state-kpi-card">
+              <div class="skc-lbl">CRITICAL FLAGS</div>
+              <div class="skc-val mono text-crimson" id="skcCritical">142 (1.7%)</div>
+            </div>
+            <div class="state-kpi-card">
+              <div class="skc-lbl">RISK QUOTIENT</div>
+              <div class="skc-val mono text-amber" id="skcQuotient">84.2 / 100</div>
+            </div>
+          </div>
+
+          <!-- District Authorities Table -->
+          <div class="district-table-wrapper">
+            <div class="dtw-header">
+              <span class="dtw-title">District Administrative Authorities</span>
+              <span class="dtw-sub" id="districtCountLabel">Districts Monitored</span>
+            </div>
+            <div class="dtw-table-scroll">
+              <table class="district-table-fancy">
+                <thead>
+                  <tr>
+                    <th>District Authority</th>
+                    <th>Works</th>
+                    <th>Risk Severity</th>
+                    <th>Sanctioned Outlay</th>
+                    <th>Primary Statutory Anomaly</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="districtBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEDGER -->
+    <section class="view" id="view-ledger">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Immutable audit ledger</div>
+          <div class="panel-desc">Cryptographic, tamper-evident log of every official adjudication.</div>
+        </div>
+      </div>
+      <div class="card" style="padding:0; overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Log ID / time</th>
+              <th>Work</th>
+              <th>Official</th>
+              <th>Action</th>
+              <th>Justification</th>
+              <th>Score</th>
+              <th>SHA-256 seal</th>
+            </tr>
+          </thead>
+          <tbody id="ledgerBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DA FLAGGED -->
+    <section class="view" id="view-daflagged">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">District Auditor watchdog</div>
+          <div class="panel-desc">DAs who dismissed 10+ critical alerts within 30 days without escalation.</div>
+        </div>
+      </div>
+      <div class="card" id="daContent"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-links">
+        <a href="#" onclick="return false;">↗ CAG Statutory Evidence Archive</a>
+        <a href="#" onclick="return false;">↗ MoSPI Official Portal (mplads.mospi.gov.in)</a>
+        <a href="#" id="footerExport">⬇ Download raw system CSV</a>
+      </div>
+      <div class="conn-pill"><span class="dot" style="background:var(--teal);"></span>98,649 records cached · live</div>
+    </div>
+    <div class="footer-bottom">BHARAT-DRISHTI — National MPLADS AI Vigilance &amp; Anti-Corruption Audit Platform |
+      MoSPI Problem Statement 26102<br>FastAPI v2.2 // Scikit-Learn Isolation Forest // Gemini 3.6 Flash // PostgreSQL
+      SHA-256 Chain</div>
+  </footer>
+
+  <!-- Briefing modal -->
+  <div class="modal-backdrop" id="briefingModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title">Secretary executive briefing</div><button class="modal-close"
+          data-close="briefingModal">✕</button>
+      </div>
+      <p>Across the national MPLADS portfolio, 1,084 works are currently classified critical, concentrated in six states
+        where round-number invoicing exceeds the Benford-expected baseline by more than double.</p>
+      <p>Vendor-network analysis has identified three contractor syndicates operating across constituency boundaries,
+        each linked to more than four Members of Parliament through shared registration addresses.</p>
+      <p>Recommended action: prioritise adjudication in the districts flagged under the Auditor Watchdog panel before
+        the next disbursement cycle.</p>
+      <div class="sign">Synthesised from live audit data · GET /api/explain/briefing</div>
+    </div>
+  </div>
+
+  <!-- Bulk ingestion modal -->
+  <div class="modal-backdrop" id="bulkModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title">Bulk portal ingestion</div><button class="modal-close"
+          data-close="bulkModal">✕</button>
+      </div>
+      <div class="filters-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="field"><label>Ingestion limit</label><input type="number" id="bLimit" value="20" max="500"></div>
+        <div class="field"><label>State filter</label><input type="text" id="bState" placeholder="e.g. Uttar Pradesh">
+        </div>
+        <div class="field"><label>MP filter</label><input type="text" id="bMp" placeholder="e.g. Javed"></div>
+        <div class="field"><label>Min sanction amount (₹)</label><input type="number" id="bAmount" value="5000000">
+        </div>
+        <div class="field"><label>Concurrency workers</label><input type="number" id="bWorkers" value="4" min="1"
+            max="10"></div>
+        <div class="field"><label style="margin-bottom:9px;">Auto-run forensics after</label>
+          <div class="switch" id="bAuto"></div>
+        </div>
+      </div>
+      <button class="btn btn-gold" style="margin-top:16px;" id="bSubmit">Queue cloud scraping task</button>
+      <div id="bStatus" style="margin-top:14px; display:none;">
+        <div class="score-track" style="height:10px;">
+          <div class="score-fill" id="bProgress" style="width:0%; transition:width .3s;"></div>
+        </div>
+        <div class="mono" style="font-size:11px; color:var(--ink-faint); margin-top:6px;" id="bStatusText">Queued…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case file modal -->
+  <div class="modal-backdrop" id="caseModal">
+    <div class="modal wide">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="caseTitle">Work #—</div>
+          <div class="modal-sub" id="caseSub">—</div>
+        </div>
+        <button class="modal-close" data-close="caseModal">✕</button>
+      </div>
+      <div class="card-title" style="margin-top:6px;">Multi-model scoring breakdown</div>
+      <div id="caseScores"></div>
+      <div class="card-title" style="margin-top:16px;">Document forensics &amp; cross-scheme fraud</div>
+      <p id="caseDocFindings">—</p>
+      <div class="card-title" style="margin-top:6px;">Perceptual photo forensics (ghost work detection)</div>
+      <p id="casePhotoFindings">—</p>
+      <div class="card-title" style="margin-top:16px;">Live AI case file stream</div>
+      <div class="stream-box" id="streamBox"></div>
+      <div class="card-title" style="margin-top:16px;">Cryptographic audit history</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Official</th>
+            <th>Action</th>
+            <th>Seal</th>
+          </tr>
+        </thead>
+        <tbody id="caseHistory"></tbody>
+      </table>
+      <div class="card-title" style="margin-top:16px;">Statutory adjudication &amp; action</div>
+      <div class="field"><label style="font-size:11px; color:var(--ink-faint); font-family:var(--mono);">ACTION</label>
+        <select id="adjAction">
+          <option>DISMISSED</option>
+          <option>CONFIRMED</option>
+          <option>ESCALATED</option>
+          <option>FALSE_POSITIVE</option>
+          <option>INSPECTION_ORDERED</option>
+          <option>TREASURY_HOLD_RECOMMENDED</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>WRITTEN RATIONALE &amp; LEGAL JUSTIFICATION (min. 50 characters)</label>
+        <textarea id="adjText" placeholder="State the statutory basis for this action…"></textarea>
+        <div class="char-count" id="charCount">0 / 50</div>
+      </div>
+      <button class="btn btn-gold" style="margin-top:12px;" id="sealBtn" disabled>Seal &amp; commit audit
+        action</button>
+      <div class="sign">Download official statutory audit PDF · GET /api/export/work-pdf/{work_id}</div>
+    </div>
+  </div>
+
+  <!-- Vendor drawer -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <div class="drawer" id="vendorDrawer">
+    <button class="drawer-close" data-close-drawer>✕</button>
+    <div class="modal-title" id="drawerName" style="margin-top:20px;">—</div>
+    <div class="panel-desc" style="margin-top:6px;">Vendor 360° profile</div>
+    <div class="card-title" style="margin-top:18px;">Alias cluster (NLP resolved)</div>
+    <div id="drawerAliases"></div>
+    <div class="card-title" style="margin-top:16px;">Associated MPs &amp; states</div>
+    <div id="drawerAssoc" style="font-size:12.5px; color:var(--ink-dim); line-height:1.8;"></div>
+    <div class="card-title" style="margin-top:16px;">Contract history</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Work</th>
+          <th>Amount</th>
+          <th>Risk</th>
+        </tr>
+      </thead>
+      <tbody id="drawerContracts"></tbody>
+    </table>
+  </div>
+
+  <!-- Image Forensics modal -->
+  <div class="modal-backdrop" id="imageForensicsModal">
+    <div class="modal wide">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">AI Perceptual Image Forensics &amp; Ghost Scheme Detector</div>
+          <div class="modal-sub">Multi-scheme completion photo cross-matching &amp; pHash vector cosine distance</div>
+        </div>
+        <button class="modal-close" data-close="imageForensicsModal">✕</button>
+      </div>
+      <div class="forensics-alert-box">
+        <span class="badge-crit">CRITICAL FLAG</span>
+        <span>Identical structural photo fingerprint recycled across two non-adjacent sanctions (pHash similarity:
+          <b>97.4%</b>). Suspected Ghost Scheme execution.</span>
+      </div>
+      <div class="photo-compare-grid">
+        <div class="photo-card">
+          <div class="photo-badge">SOURCE SCHEME: MPLADS-UP-40217</div>
+          <div class="photo-frame">
+            <svg viewBox="0 0 320 180" class="sim-photo-svg">
+              <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2a3b4c" />
+                  <stop offset="100%" stop-color="#141c26" />
+                </linearGradient>
+                <linearGradient id="roadGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#3d4957" />
+                  <stop offset="100%" stop-color="#1a222c" />
+                </linearGradient>
+              </defs>
+              <rect width="320" height="180" fill="url(#skyGrad)" />
+              <polygon points="0,180 120,100 200,100 320,180" fill="url(#roadGrad)" />
+              <line x1="160" y1="100" x2="160" y2="180" stroke="#c9a24b" stroke-width="2" stroke-dasharray="6,6" />
+              <circle cx="250" cy="50" r="18" fill="#e0a64c" opacity="0.6" />
+              <text x="12" y="166" fill="#e7e9ec" font-size="10" font-family="IBM Plex Mono">LAT: 28.6271° N · LON:
+                79.8089° E (Pilibhit, UP)</text>
+            </svg>
+            <div class="photo-meta">
+              <div><b>Work:</b> Rural link road resurfacing</div>
+              <div><b>Uploaded:</b> 14 Jan 2026 · 11:22 AM</div>
+              <div><b>Contractor:</b> Shree Infra Works</div>
+            </div>
+          </div>
+        </div>
+        <div class="photo-card match-flagged">
+          <div class="photo-badge" style="background:var(--crimson); color:#fff;">DUPLICATE MATCH: MPLADS-UP-38810</div>
+          <div class="photo-frame">
+            <svg viewBox="0 0 320 180" class="sim-photo-svg">
+              <rect width="320" height="180" fill="url(#skyGrad)" />
+              <polygon points="0,180 120,100 200,100 320,180" fill="url(#roadGrad)" />
+              <line x1="160" y1="100" x2="160" y2="180" stroke="#c9a24b" stroke-width="2" stroke-dasharray="6,6" />
+              <circle cx="250" cy="50" r="18" fill="#e0a64c" opacity="0.6" />
+              <rect x="0" y="0" width="320" height="180" fill="rgba(226,104,92,0.12)" />
+              <text x="12" y="166" fill="#e2685c" font-size="10" font-family="IBM Plex Mono">GEOTAG CONFLICT: Barabanki,
+                UP (142 km delta)</text>
+            </svg>
+            <div class="photo-meta">
+              <div><b>Work:</b> Community hall construction</div>
+              <div><b>Uploaded:</b> 02 Nov 2025 · 03:15 PM</div>
+              <div><b>Contractor:</b> Shree Infra Works</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="card">
+          <div class="card-title">Perceptual Hash &amp; EXIF Forensic Telemetry</div>
+          <table style="font-size:12px;">
+            <tr>
+              <td>pHash 64-bit Hamming Distance</td>
+              <td class="mono" style="color:var(--crimson);">2 bits (Threshold &lt; 5 = Identical)</td>
+            </tr>
+            <tr>
+              <td>Cosine Feature Similarity</td>
+              <td class="mono" style="color:var(--crimson);">0.974</td>
+            </tr>
+            <tr>
+              <td>Camera EXIF Hardware UUID</td>
+              <td class="mono">Xiaomi Redmi Note 12 (Identical UUID)</td>
+            </tr>
+            <tr>
+              <td>Solar Zenith Shadow Angle</td>
+              <td class="mono">38.2° (Consistent with same-day shoot)</td>
+            </tr>
+            <tr>
+              <td>OCR Recycled Billboard Sign</td>
+              <td class="mono" style="color:var(--amber);">Same milestone marker text detected</td>
+            </tr>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">Ensemble Verdict &amp; Recommended Action</div>
+          <p style="font-size:13px; color:var(--ink-dim); line-height:1.6;">The AI perceptual vision model flags this
+            image as recycled. Shree Infra Works claimed 100% fund disbursement against identical completion photographs
+            in two separate administrative districts.</p>
+          <div style="display:flex; gap:8px; margin-top:16px;">
+            <button class="btn btn-primary" id="btnHoldTreasury">Recommend Immediate Treasury Hold</button>
+            <button class="btn btn-secondary" id="btnOrderInspection">Order Vigilance Field Inspection</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statutory PDF Audit Dossier Modal -->
+  <div class="modal-backdrop" id="pdfModal">
+    <div class="modal wide">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">Statutory Audit Case Dossier</div>
+          <div class="modal-sub">National Anti-Corruption Vigilance Report (MoSPI &amp; CAG Format)</div>
+        </div>
+        <button class="modal-close" data-close="pdfModal">✕</button>
+      </div>
+      <div class="pdf-paper" id="pdfPaper">
+        <div class="pdf-header">
+          <div class="pdf-gov">GOVERNMENT OF INDIA · MINISTRY OF STATISTICS &amp; PROGRAMME IMPLEMENTATION</div>
+          <div class="pdf-sub">MEMBER OF PARLIAMENT LOCAL AREA DEVELOPMENT SCHEME (MPLADS)</div>
+          <div class="pdf-title">SPECIAL STATUTORY AUDIT &amp; FORENSIC INSPECTION DOSSIER</div>
+        </div>
+        <hr class="pdf-hr">
+        <div class="pdf-grid" id="pdfMetaGrid"></div>
+        <div class="card-title" style="margin:16px 0 6px;">1. AI FORENSIC RISK SCORING &amp; MULTI-MODEL ENSEMBLE</div>
+        <div id="pdfModelScores"></div>
+        <div class="card-title" style="margin:16px 0 6px;">2. STATUTORY NON-COMPLIANCE &amp; LEGAL FINDINGS</div>
+        <div class="pdf-finding-box" id="pdfLegalFinding"></div>
+        <div class="card-title" style="margin:16px 0 6px;">3. EVIDENCE ARCHIVE &amp; IMMUTABLE AUDIT TRAIL</div>
+        <table class="pdf-table" id="pdfLedgerTable">
+          <thead>
+            <tr>
+              <th>Timestamp (IST)</th>
+              <th>Official User</th>
+              <th>Action Taken</th>
+              <th>Cryptographic SHA-256 Seal</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="pdf-signature-row">
+          <div>
+            <div class="pdf-seal-text">VERIFIED BY BHARAT-DRISHTI ML ENGINE</div>
+            <div class="mono" style="font-size:10px; color:var(--ink-faint);" id="pdfCertHash">SHA-256: 8f92a1d04b3...
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="pdf-sign-line">Statutory Audit Officer / MoSPI Nodal Authority</div>
+            <div style="font-size:11px; color:var(--ink-dim);">Signed under Section 4.3 of MPLADS Guidelines</div>
+          </div>
+        </div>
+      </div>
+      <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; flex-wrap:wrap; gap:10px;">
+        <div class="sign" style="margin-top:0;">Official document compliant with Section 144 of General Financial Rules
+          (GFR).</div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary" onclick="window.print();">🖨 Print / Save as PDF</button>
+          <button class="btn btn-ghost" data-close="pdfModal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+
 </html>

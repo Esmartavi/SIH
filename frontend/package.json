@@ -1,31 +1,15 @@
 {
-  "name": "frontend",
+  "name": "bharat-drishti-frontend",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "2.2.0",
+  "description": "BHARAT-DRISHTI // National MPLADS AI Vigilance & Anti-Corruption Audit Platform",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "leaflet": "^1.9.4",
-    "lucide-react": "^1.41.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "recharts": "^3.10.1",
-    "tailwind-merge": "^3.6.0"
+    "preview": "vite preview",
+    "serve": "node -e \"const http=require('http'),fs=require('fs'),path=require('path');http.createServer((req,res)=>{let f=path.join(__dirname,req.url==='/'?'index.html':req.url.split('?')[0]);if(fs.existsSync(f)&&fs.statSync(f).isFile()){let ext=path.extname(f);res.writeHead(200,{'Content-Type':{'.html':'text/html','.js':'application/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml'}[ext]||'text/plain'});fs.createReadStream(f).pipe(res)}else{res.writeHead(404);res.end('Not found')}}).listen(5173,()=>console.log('Server live at http://localhost:5173'))\""
   },
   "devDependencies": {
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.1.0",
-    "autoprefixer": "^10.5.5",
-    "oxlint": "^1.79.0",
-    "postcss": "^8.5.28",
-    "tailwindcss": "^3.4.19",
-    "vite": "^8.2.2"
+    "vite": "^5.4.0"
   }
 }
