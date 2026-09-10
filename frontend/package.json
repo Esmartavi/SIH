@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "node -e \"const http=require('http'),fs=require('fs'),path=require('path');http.createServer((req,res)=>{let f=path.join(__dirname,req.url==='/'?'index.html':req.url.split('?')[0]);if(fs.existsSync(f)&&fs.statSync(f).isFile()){let ext=path.extname(f);res.writeHead(200,{'Content-Type':{'.html':'text/html','.js':'application/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml'}[ext]||'text/plain'});fs.createReadStream(f).pipe(res)}else{res.writeHead(404);res.end('Not found')}}).listen(5173,()=>console.log('Server live at http://localhost:5173'))\""
+    "serve": "node -e \"const http=require('http'),fs=require('fs'),path=require('path');http.createServer((req,res)=>{let f=path.join(__dirname,req.url==='/'?'index.html':req.url.split('?')[0]);if(fs.existsSync(f)&&fs.statSync(f).isFile()){let ext=path.extname(f);res.writeHead(200,{'Content-Type':{'.html':'text/html','.js':'application/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2'}[ext]||'application/octet-stream'});fs.createReadStream(f).pipe(res)}else{res.writeHead(404);res.end('Not found')}}).listen(5173,()=>console.log('Server live at http://localhost:5173'))\""
   },
   "devDependencies": {
     "vite": "^5.4.0"

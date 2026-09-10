@@ -85,6 +85,9 @@
     navLinks.forEach(l => l.classList.toggle("active", l.dataset.view === name));
     views.forEach(v => v.classList.toggle("active", v.id === "view-" + name));
     window.scrollTo({ top: 0, behavior: "smooth" });
+    if (name === "geo" && typeof onGeoTabActivated === "function") {
+      setTimeout(onGeoTabActivated, 100);
+    }
   }
 
   navLinks.forEach(link => link.addEventListener("click", () => setView(link.dataset.view)));
@@ -1978,47 +1981,70 @@
 
   let activeGeoState = "Uttar Pradesh";
 
-  // Vector geometry definitions for all 28 Indian States + Key Parliamentary UTs (31 Total)
-  const indiaMapPaths = [
-    { code: "JK", name: "Jammu & Kashmir", level: 1, path: "M 175,70 L 205,30 L 235,35 L 230,105 L 210,120 Z", cx: 205, cy: 75 },
-    { code: "LA", name: "Ladakh", level: 0, path: "M 235,35 L 255,15 L 295,40 L 310,80 L 290,110 L 240,105 L 230,105 Z", cx: 270, cy: 68 },
-    { code: "HP", name: "Himachal Pradesh", level: 0, path: "M 210,120 L 240,105 L 265,115 L 260,145 L 225,150 L 210,135 Z", cx: 236, cy: 130 },
-    { code: "PB", name: "Punjab", level: 1, path: "M 170,125 L 210,120 L 225,150 L 205,175 L 165,160 Z", cx: 192, cy: 148 },
-    { code: "UK", name: "Uttarakhand", level: 0, path: "M 260,115 L 290,115 L 300,155 L 260,160 L 260,140 Z", cx: 278, cy: 138 },
-    { code: "HR", name: "Haryana", level: 0, path: "M 205,155 L 235,150 L 245,170 L 236,174 L 234,194 L 230,198 L 195,190 Z", cx: 215, cy: 172 },
-    { code: "DL", name: "Delhi", level: 0, path: "M 236,174 L 248,174 L 248,192 L 236,192 Z", cx: 242, cy: 183 },
-    { code: "RJ", name: "Rajasthan", level: 2, path: "M 115,185 L 165,160 L 195,190 L 210,240 L 180,270 L 125,265 L 105,225 Z", cx: 155, cy: 220 },
-    { code: "UP", name: "Uttar Pradesh", level: 3, path: "M 235,160 L 300,155 L 350,190 L 360,235 L 300,255 L 245,235 L 235,195 Z", cx: 295, cy: 205 },
-    { code: "BR", name: "Bihar", level: 3, path: "M 350,190 L 415,200 L 420,245 L 365,255 L 350,225 Z", cx: 382, cy: 226 },
-    { code: "SK", name: "Sikkim", level: 0, path: "M 415,168 L 432,166 L 432,188 L 415,188 Z", cx: 423, cy: 177 },
-    { code: "AR", name: "Arunachal Pradesh", level: 0, path: "M 470,148 L 535,145 L 552,175 L 525,198 L 485,178 L 470,168 Z", cx: 512, cy: 168 },
-    { code: "AS", name: "Assam", level: 1, path: "M 440,190 L 485,178 L 525,198 L 490,225 L 442,225 Z", cx: 478, cy: 205 },
-    { code: "ML", name: "Meghalaya", level: 0, path: "M 440,226 L 480,226 L 476,248 L 438,248 Z", cx: 458, cy: 237 },
-    { code: "NL", name: "Nagaland", level: 0, path: "M 525,198 L 550,202 L 545,232 L 520,228 Z", cx: 535, cy: 215 },
-    { code: "MN", name: "Manipur", level: 1, path: "M 520,228 L 545,232 L 540,262 L 515,258 Z", cx: 530, cy: 245 },
-    { code: "MZ", name: "Mizoram", level: 0, path: "M 500,260 L 525,260 L 520,295 L 495,292 Z", cx: 510, cy: 276 },
-    { code: "TR", name: "Tripura", level: 0, path: "M 472,250 L 496,250 L 492,280 L 468,276 Z", cx: 482, cy: 265 },
-    { code: "WB", name: "West Bengal", level: 2, path: "M 415,200 L 435,190 L 430,245 L 435,310 L 405,315 L 400,270 L 415,245 Z", cx: 418, cy: 268 },
-    { code: "JH", name: "Jharkhand", level: 1, path: "M 360,255 L 400,260 L 405,310 L 355,315 L 350,270 Z", cx: 375, cy: 285 },
-    { code: "OD", name: "Odisha", level: 1, path: "M 340,295 L 405,310 L 395,385 L 345,385 L 335,335 Z", cx: 368, cy: 345 },
-    { code: "CH", name: "Chhattisgarh", level: 1, path: "M 305,290 L 335,285 L 340,360 L 305,385 L 295,335 Z", cx: 318, cy: 335 },
-    { code: "MP", name: "Madhya Pradesh", level: 2, path: "M 180,260 L 245,235 L 300,255 L 325,290 L 305,335 L 230,340 L 165,310 L 160,285 Z", cx: 242, cy: 290 },
-    { code: "GJ", name: "Gujarat", level: 1, path: "M 70,260 L 125,260 L 145,285 L 155,335 L 115,340 L 95,315 L 60,305 Z", cx: 108, cy: 300 },
-    { code: "MH", name: "Maharashtra", level: 0, path: "M 140,335 L 230,330 L 295,345 L 275,415 L 180,425 L 170,410 L 140,395 Z", cx: 215, cy: 375 },
-    { code: "GA", name: "Goa", level: 0, path: "M 166,414 L 182,412 L 180,432 L 164,430 Z", cx: 173, cy: 422 },
-    { code: "TG", name: "Telangana", level: 1, path: "M 245,365 L 295,355 L 305,420 L 255,430 L 235,395 Z", cx: 272, cy: 395 },
-    { code: "AP", name: "Andhra Pradesh", level: 2, path: "M 295,355 L 350,380 L 315,485 L 275,480 L 265,435 L 305,420 Z", cx: 305, cy: 440 },
-    { code: "KA", name: "Karnataka", level: 0, path: "M 182,412 L 235,410 L 255,475 L 230,520 L 185,490 L 180,432 Z", cx: 212, cy: 465 },
-    { code: "KL", name: "Kerala", level: 0, path: "M 195,495 L 220,510 L 215,565 L 195,550 Z", cx: 206, cy: 532 },
-    { code: "TN", name: "Tamil Nadu", level: 0, path: "M 230,480 L 275,480 L 270,545 L 230,575 L 215,545 L 225,505 Z", cx: 248, cy: 530 }
-  ];
+  function normalizeStateName(s) {
+    if (!s) return "";
+    return s.toLowerCase().replace(/&/g, "and").replace(/[^a-z]/g, "");
+  }
+
+  function findStateData(nameOrCode) {
+    if (!nameOrCode) return null;
+    const n = normalizeStateName(nameOrCode);
+    return stateGeo.find(s => normalizeStateName(s.name) === n || (s.code && normalizeStateName(s.code) === n));
+  }
 
   function getRiskColor(level) {
-    if (level === 3) return "var(--crimson)";
-    if (level === 2) return "var(--amber)";
-    if (level === 1) return "var(--yellow)";
-    return "var(--teal)";
+    if (level === 3) return "#f43f5e"; // Crimson (Tier 3 Critical)
+    if (level === 2) return "#f59e0b"; // Amber (Tier 2 High)
+    if (level === 1) return "#eab308"; // Yellow (Tier 1 Moderate)
+    return "#14b8a6"; // Teal (Tier 0 Low)
   }
+
+  // Visual centroid coordinates for clean state code labels and radar pings
+  const stateCenterOverrides = {
+    // North
+    "Jammu and Kashmir": [152, 98],
+    "Jammu & Kashmir": [152, 98],
+    "Ladakh": [182, 74],
+    "Himachal Pradesh": [196, 143],
+    "Punjab": [164, 163],
+    "Uttarakhand": [233, 182],
+    "Haryana": [174, 202],
+    "Delhi": [192, 215],
+
+    // West
+    "Rajasthan": [138, 266],
+    "Gujarat": [92, 342],
+    "Goa": [132, 494],
+
+    // Central
+    "Madhya Pradesh": [215, 318],
+    "Chhattisgarh": [286, 376],
+
+    // East
+    "Uttar Pradesh": [262, 254],
+    "Bihar": [355, 278],
+    "Jharkhand": [358, 321],
+    "West Bengal": [402, 316],
+    "Odisha": [330, 394],
+
+    // South
+    "Maharashtra": [182, 416],
+    "Telangana": [234, 445],
+    "Andhra Pradesh": [256, 482],
+    "Karnataka": [180, 502],
+    "Kerala": [174, 584],
+    "Tamil Nadu": [224, 578],
+
+    // Northeast
+    "Assam": [490, 268],
+    "Arunachal Pradesh": [532, 222],
+    "Sikkim": [410, 238],
+    "Meghalaya": [465, 282],
+    "Nagaland": [524, 268],
+    "Manipur": [514, 300],
+    "Mizoram": [494, 332],
+    "Tripura": [474, 320]
+  };
 
   function renderMap() {
     renderStateQuickRibbon();
@@ -2045,74 +2071,144 @@
     });
   }
 
+  /* ================= TRUE-GEOGRAPHY REAL INDIA VECTOR MAP ================= */
   function renderIndiaSvgMap() {
     const wrapper = document.getElementById("indiaSvgWrapper");
     if (!wrapper) return;
 
+    if (!window.INDIA_GEOJSON || !window.INDIA_GEOJSON.features) {
+      wrapper.innerHTML = `<div style="padding:40px; text-align:center; color:var(--ink-dim);">Loading authentic India map boundaries...</div>`;
+      return;
+    }
+
+    // Mercator projection strictly calibrated for India (viewBox 0 0 600 660)
+    function mercatorY(lat) {
+      const rad = (lat * Math.PI) / 180;
+      return Math.log(Math.tan(Math.PI / 4 + rad / 2));
+    }
+
+    const minLng = 68.1, maxLng = 97.4;
+    const minLat = 8.0, maxLat = 37.1;
+    const yMin = mercatorY(minLat);
+    const yMax = mercatorY(maxLat);
+    const svgW = 600, svgH = 660, pad = 18;
+
+    function projectSvg(lng, lat) {
+      const x = (pad + ((lng - minLng) / (maxLng - minLng)) * (svgW - 2 * pad)).toFixed(1);
+      const mY = mercatorY(lat);
+      const y = (pad + ((yMax - mY) / (yMax - yMin)) * (svgH - 2 * pad)).toFixed(1);
+      return x + "," + y;
+    }
+
+    function coordsToD(coords, type) {
+      if (type === "Polygon") {
+        return coords.map(ring => "M " + ring.map(pt => projectSvg(pt[0], pt[1])).join(" L ") + " Z").join(" ");
+      } else if (type === "MultiPolygon") {
+        return coords.map(poly => poly.map(ring => "M " + ring.map(pt => projectSvg(pt[0], pt[1])).join(" L ") + " Z").join(" ")).join(" ");
+      }
+      return "";
+    }
+
     let svgHtml = `
-      <svg class="india-interactive-svg" viewBox="0 0 570 600" preserveAspectRatio="xMidYMid meet">
+      <svg class="india-interactive-svg" viewBox="0 0 600 660" preserveAspectRatio="xMidYMid meet">
         <defs>
           <filter id="geoGlowCrit" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#f43f5e" flood-opacity="0.8" />
+            <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#f43f5e" flood-opacity="0.85" />
           </filter>
           <filter id="geoGlowAmber" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#f59e0b" flood-opacity="0.8" />
+            <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#f59e0b" flood-opacity="0.85" />
           </filter>
         </defs>
 
-        <!-- Ambient Compass Grid Lines -->
-        <g class="map-grid-axes" opacity="0.15">
-          <line x1="40" y1="300" x2="520" y2="300" stroke="currentColor" stroke-dasharray="3,3" />
-          <line x1="270" y1="30" x2="270" y2="570" stroke="currentColor" stroke-dasharray="3,3" />
-          <circle cx="270" cy="300" r="180" fill="none" stroke="currentColor" stroke-dasharray="4,4" />
-          <text x="275" y="45" font-size="8" font-family="IBM Plex Mono" fill="currentColor">NORTH // 28°N</text>
-          <text x="470" y="315" font-size="8" font-family="IBM Plex Mono" fill="currentColor">EAST // 88°E</text>
+        <!-- Ambient Surveillance Radar Compass Axes & Range Rings -->
+        <g class="map-grid-axes" opacity="0.16">
+          <line x1="20" y1="340" x2="580" y2="340" stroke="currentColor" stroke-dasharray="3,3" />
+          <line x1="290" y1="20" x2="290" y2="640" stroke="currentColor" stroke-dasharray="3,3" />
+          <circle cx="290" cy="340" r="210" fill="none" stroke="currentColor" stroke-dasharray="4,4" />
+          <circle cx="290" cy="340" r="130" fill="none" stroke="currentColor" stroke-dasharray="2,4" opacity="0.6" />
+          <text x="296" y="38" font-size="8.5" font-family="IBM Plex Mono" fill="currentColor">NORTH // 28°N</text>
+          <text x="495" y="355" font-size="8.5" font-family="IBM Plex Mono" fill="currentColor">EAST // 88°E</text>
         </g>
 
-        <!-- State Vector Regions -->
+        <!-- Real Authentic State & UT Geographic Vector Paths -->
         <g class="map-state-paths">`;
 
-    indiaMapPaths.forEach(sp => {
-      const isSelected = sp.name === activeGeoState || sp.code === activeGeoState;
-      const matchedData = stateGeo.find(s => s.name === sp.name || s.code === sp.code);
-      const lvl = matchedData ? matchedData.level : sp.level;
+    window.INDIA_GEOJSON.features.forEach(f => {
+      const rawName = f.properties.st_nm;
+      const sData = findStateData(rawName);
+      const officialName = sData ? sData.name : rawName;
+      const code = sData ? sData.code : "";
+      const lvl = sData ? sData.level : 0;
+      const isSelected = sData && (sData.name === activeGeoState || sData.code === activeGeoState);
       const color = getRiskColor(lvl);
-      const fillOpacity = isSelected ? "0.85" : "0.55";
-      const strokeWidth = isSelected ? "2.5px" : "1.2px";
-      const strokeColor = isSelected ? "var(--gold)" : "var(--line-soft)";
-      const isSmall = ["GA", "SK", "DL", "TR", "MZ", "NL", "MN", "ML"].includes(sp.code);
-      const fontSize = isSmall ? "8" : "10";
+      const pathD = coordsToD(f.geometry.coordinates, f.geometry.type);
+      const fillOpacity = isSelected ? "0.86" : "0.52";
+      const strokeWidth = isSelected ? "2.4px" : "1.1px";
+      const strokeColor = isSelected ? "#ffffff" : "rgba(255,255,255,0.32)";
+
+      // Centroid placement for state code label
+      let cx = 0, cy = 0;
+      if (stateCenterOverrides[rawName]) {
+        [cx, cy] = stateCenterOverrides[rawName];
+      } else if (sData && stateCenterOverrides[sData.name]) {
+        [cx, cy] = stateCenterOverrides[sData.name];
+      } else {
+        let sumX = 0, sumY = 0, count = 0;
+        function walkPts(c) {
+          if (typeof c[0] === "number") {
+            const pt = projectSvg(c[0], c[1]).split(",");
+            sumX += parseFloat(pt[0]);
+            sumY += parseFloat(pt[1]);
+            count++;
+          } else {
+            c.forEach(walkPts);
+          }
+        }
+        walkPts(f.geometry.coordinates);
+        cx = count > 0 ? +(sumX / count).toFixed(1) : 0;
+        cy = count > 0 ? +(sumY / count).toFixed(1) : 0;
+      }
 
       svgHtml += `
-        <path d="${sp.path}"
+        <path d="${pathD}"
           class="map-state-poly tier-${lvl === 3 ? 'crit' : lvl === 2 ? 'amber' : lvl === 1 ? 'yellow' : 'teal'} ${isSelected ? 'state-active' : ''}"
-          data-state-name="${sp.name}"
-          data-state-code="${sp.code}"
+          data-state-name="${officialName}"
+          data-state-code="${code}"
           fill="${color}"
           fill-opacity="${fillOpacity}"
           stroke="${strokeColor}"
           stroke-width="${strokeWidth}"
           stroke-linejoin="round"
-          style="cursor:pointer; transition:all 0.2s ease;">
+          style="cursor:pointer; transition:all 0.18s ease;">
         </path>`;
 
-      // Centroid label for state code
-      svgHtml += `
-        <text x="${sp.cx}" y="${sp.cy}"
-          class="map-state-label"
-          text-anchor="middle"
-          dominant-baseline="central"
-          pointer-events="none"
-          font-family="IBM Plex Mono"
-          font-size="${fontSize}"
-          font-weight="700"
-          fill="#ffffff"
-          style="text-shadow:0 1px 3px rgba(0,0,0,0.8);">${sp.code}</text>`;
+      // Clean, well-aligned state codes in crisp BLACK (user requested: 'black se likho, thoda kam kro, acha se align kro')
+      const visibleLabelCodes = [
+        "JK", "LA", "HP", "PB", "UK", "HR", "RJ", "UP", "BR", "JH",
+        "WB", "OD", "CH", "MP", "GJ", "MH", "TG", "AP", "KA", "KL",
+        "TN", "AS", "AR"
+      ];
+      if (code && visibleLabelCodes.includes(code)) {
+        svgHtml += `
+          <text x="${cx}" y="${cy}"
+            class="map-state-label"
+            text-anchor="middle"
+            dominant-baseline="central"
+            pointer-events="none"
+            font-family="IBM Plex Mono"
+            font-size="9"
+            font-weight="700"
+            fill="#0a0e17"
+            stroke="rgba(255, 255, 255, 0.75)"
+            stroke-width="0.8px"
+            paint-order="stroke fill"
+            style="letter-spacing:0.4px;">${code}</text>`;
+      }
 
-      // Radar pulse target circle on critical states
+      // Radar pulse target circle on Tier 3 critical states
       if (lvl === 3) {
         svgHtml += `
-          <circle cx="${sp.cx}" cy="${sp.cy}" r="14" class="radar-ping-circle" pointer-events="none" />`;
+          <circle cx="${cx}" cy="${cy}" r="16" class="radar-ping-circle" pointer-events="none" />`;
       }
     });
 
@@ -2122,12 +2218,12 @@
 
     wrapper.innerHTML = svgHtml;
 
-    // Attach mouse interactions for tooltips and selection
+    // Attach interactive tooltips and selection handlers
     const tip = document.getElementById("mapTooltip");
     wrapper.querySelectorAll(".map-state-poly").forEach(poly => {
       const stateName = poly.dataset.stateName;
       const stateCode = poly.dataset.stateCode;
-      const stateObj = stateGeo.find(s => s.name === stateName || s.code === stateCode);
+      const stateObj = findStateData(stateName) || findStateData(stateCode);
 
       poly.addEventListener("mouseenter", e => {
         if (tip && stateObj) {
@@ -2185,7 +2281,16 @@
 
     container.querySelectorAll("[data-select-matrix]").forEach(card => {
       card.addEventListener("click", () => {
-        selectState(card.dataset.selectCode || card.dataset.selectMatrix);
+        const target = card.dataset.selectCode || card.dataset.selectMatrix;
+        selectState(target);
+        const btnMap = document.getElementById("btnViewMap");
+        const btnMatrix = document.getElementById("btnViewMatrix");
+        const mapBox = document.getElementById("indiaMapContainer");
+        const matrixBox = document.getElementById("stateMatrixContainer");
+        if (btnMap) btnMap.classList.add("active");
+        if (btnMatrix) btnMatrix.classList.remove("active");
+        if (mapBox) mapBox.style.display = "flex";
+        if (matrixBox) matrixBox.style.display = "none";
       });
     });
   }
@@ -2201,7 +2306,7 @@
     btnMap.addEventListener("click", () => {
       btnMap.classList.add("active");
       btnMatrix.classList.remove("active");
-      mapBox.style.display = "block";
+      mapBox.style.display = "flex";
       matrixBox.style.display = "none";
     });
 
@@ -2215,11 +2320,8 @@
 
   function selectState(stateIdentifier) {
     if (!stateIdentifier) return;
-    const target = stateIdentifier.trim().toLowerCase();
-    const stateObj = stateGeo.find(s => 
-      s.name.toLowerCase() === target || 
-      s.code.toLowerCase() === target
-    ) || stateGeo[0];
+    const target = stateIdentifier.trim();
+    const stateObj = findStateData(target) || stateGeo[0];
 
     activeGeoState = stateObj.name;
 
@@ -2237,9 +2339,9 @@
     document.querySelectorAll(".map-state-poly").forEach(poly => {
       const isSel = (poly.dataset.stateName === stateObj.name || poly.dataset.stateCode === stateObj.code);
       poly.classList.toggle("state-active", isSel);
-      poly.setAttribute("stroke", isSel ? "var(--gold)" : "var(--line-soft)");
-      poly.setAttribute("stroke-width", isSel ? "2.5px" : "1.2px");
-      poly.setAttribute("fill-opacity", isSel ? "0.88" : "0.55");
+      poly.setAttribute("stroke", isSel ? "#ffffff" : "rgba(255,255,255,0.32)");
+      poly.setAttribute("stroke-width", isSel ? "2.4px" : "1.1px");
+      poly.setAttribute("fill-opacity", isSel ? "0.86" : "0.52");
     });
 
     // Update matrix cards active state
