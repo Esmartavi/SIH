@@ -14,68 +14,193 @@
     }, 4000);
   }
 
-  /* ---------- NUMERIC SMOOTH COUNTER HELPER ---------- */
-  function animateNumber(el, targetVal, duration = 550) {
-    if (!el) return;
-    if (typeof targetVal === "number") targetVal = String(targetVal);
-    targetVal = String(targetVal).trim();
-    const currentText = el.textContent.trim();
-    if (currentText === targetVal) return;
+  /* ---------- STATS COUNTER HELPER & COMPONENT ---------- */
+  class StatsCounter {
+    constructor(element, options = {}) {
+      this.element = typeof element === "string" ? document.querySelector(element) : element;
+      if (!this.element) return;
 
-    // Matches: "₹4,412 Cr", "98,649", "0.021", "41.2", "₹612 Cr", "1.1%", "238", "< 0.001"
-    const regex = /^([^\d\-+.]*?)([\d,]+(?:\.\d+)?)(.*)$/;
-    const targetMatch = targetVal.match(regex);
-    const currentMatch = currentText.match(regex);
-
-    if (!targetMatch || !currentMatch) {
-      el.textContent = targetVal;
-      return;
-    }
-
-    const prefix = targetMatch[1];
-    const suffix = targetMatch[3];
-    const targetNum = parseFloat(targetMatch[2].replace(/,/g, ''));
-    const startNum = parseFloat(currentMatch[2].replace(/,/g, ''));
-
-    if (isNaN(startNum) || isNaN(targetNum) || startNum === targetNum) {
-      el.textContent = targetVal;
-      return;
-    }
-
-    const hasCommas = targetMatch[2].includes(',');
-    const decimals = targetMatch[2].includes('.') ? (targetMatch[2].split('.')[1].length) : 0;
-
-    el.classList.remove("num-updating");
-    void el.offsetWidth;
-    el.classList.add("num-updating");
-    const startTime = performance.now();
-
-    function step(now) {
-      const elapsed = now - startTime;
-      const progress = Math.min(1, elapsed / duration);
-      // Smooth cubic ease-out
-      const ease = 1 - Math.pow(1 - progress, 3);
-      const val = startNum + (targetNum - startNum) * ease;
-
-      let formattedNum;
-      if (decimals > 0) {
-        formattedNum = val.toFixed(decimals);
-      } else if (hasCommas) {
-        formattedNum = Math.round(val).toLocaleString();
-      } else {
-        formattedNum = Math.round(val).toString();
+      if (typeof options === "number" || typeof options === "string") {
+        options = { value: options };
       }
-      el.textContent = prefix + formattedNum + suffix;
 
-      if (progress < 1) {
-        requestAnimationFrame(step);
+      let parsedInitial = { num: 0, prefix: "", suffix: "", decimals: 0 };
+      if (this.element.textContent && options.value === undefined) {
+        parsedInitial = StatsCounter.parse(this.element.textContent);
+        options.value = parsedInitial.num;
+      }
+
+      let parsedTarget = { num: 0, prefix: "", suffix: "", decimals: 0 };
+      if (typeof options.value === "string") {
+        parsedTarget = StatsCounter.parse(options.value);
       } else {
-        el.textContent = targetVal;
-        setTimeout(() => el.classList.remove("num-updating"), 120);
+        parsedTarget.num = Number(options.value) || 0;
+      }
+
+      this.options = {
+        value: parsedTarget.num,
+        startValue: options.startValue !== undefined ? Number(options.startValue) : null,
+        prefix: options.prefix !== undefined ? options.prefix : (parsedTarget.prefix || parsedInitial.prefix || ""),
+        suffix: options.suffix !== undefined ? options.suffix : (parsedTarget.suffix || parsedInitial.suffix || ""),
+        duration: options.duration !== undefined ? Number(options.duration) : 1.8,
+        decimals: options.decimals !== undefined ? options.decimals : (parsedTarget.decimals || 0),
+        useCommas: options.useCommas !== undefined ? options.useCommas : true,
+        scrollTrigger: options.scrollTrigger !== undefined ? options.scrollTrigger : true,
+        threshold: options.threshold !== undefined ? options.threshold : 0.1,
+        easing: options.easing || "easeOutExpo",
+        onComplete: options.onComplete || null
+      };
+
+      if (this.options.scrollTrigger && typeof IntersectionObserver !== "undefined") {
+        let initialVal = this.options.startValue !== null ? this.options.startValue : 0;
+        if (!this.element.textContent || this.element.textContent.trim() === "" || this.element.textContent.trim() === "–") {
+          this.element.textContent = this.format(initialVal);
+        }
+
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (this.observer) {
+                this.observer.disconnect();
+                this.observer = null;
+              }
+              this.start();
+            }
+          });
+        }, {
+          threshold: this.options.threshold,
+          rootMargin: "0px 0px -20px 0px"
+        });
+        this.observer.observe(this.element);
+      } else {
+        this.start();
       }
     }
-    requestAnimationFrame(step);
+
+    static parse(valStr) {
+      if (typeof valStr === "number") return { num: valStr, prefix: "", suffix: "", decimals: 0 };
+      valStr = String(valStr).trim();
+      const match = valStr.match(/^([^\d\-+.]*?)([\d,]+(?:\.\d+)?)(.*)$/);
+      if (!match) return { num: 0, prefix: "", suffix: valStr, decimals: 0 };
+      
+      const prefix = match[1];
+      const numStr = match[2].replace(/,/g, "");
+      const suffix = match[3];
+      const decimals = match[2].includes(".") ? match[2].split(".")[1].length : 0;
+      return {
+        num: parseFloat(numStr) || 0,
+        prefix,
+        suffix,
+        decimals
+      };
+    }
+
+    static animate(element, options = {}) {
+      return new StatsCounter(element, options);
+    }
+
+    start() {
+      const el = this.element;
+      if (!el) return;
+
+      let startNum = this.options.startValue;
+      if (startNum === null) {
+        const currentParsed = StatsCounter.parse(el.textContent);
+        startNum = isNaN(currentParsed.num) ? 0 : currentParsed.num;
+      }
+
+      const targetNum = this.options.value;
+      const durationMs = Math.max(100, this.options.duration * 1000);
+
+      if (startNum === targetNum && el.textContent.trim().length > 0) {
+        el.textContent = this.format(targetNum);
+        return;
+      }
+
+      el.classList.add("stats-counter-active");
+      el.classList.add("num-updating");
+      const startTime = performance.now();
+
+      const tick = (now) => {
+        const elapsed = now - startTime;
+        const rawProgress = Math.min(1, elapsed / durationMs);
+
+        // Smooth Exponential Ease-Out
+        const ease = rawProgress === 1 ? 1 : 1 - Math.pow(2, -10 * rawProgress);
+        const currentVal = startNum + (targetNum - startNum) * ease;
+
+        el.textContent = this.format(currentVal);
+
+        if (rawProgress < 1) {
+          this.rafId = requestAnimationFrame(tick);
+        } else {
+          el.textContent = this.format(targetNum);
+          el.classList.remove("stats-counter-active");
+          setTimeout(() => el.classList.remove("num-updating"), 120);
+          if (typeof this.options.onComplete === "function") {
+            this.options.onComplete();
+          }
+        }
+      };
+
+      if (this.rafId) cancelAnimationFrame(this.rafId);
+      this.rafId = requestAnimationFrame(tick);
+    }
+
+    format(num) {
+      let formatted;
+      if (this.options.decimals > 0) {
+        formatted = num.toFixed(this.options.decimals);
+      } else {
+        formatted = Math.round(num).toString();
+      }
+
+      if (this.options.useCommas) {
+        const parts = formatted.split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        formatted = parts.join(".");
+      }
+
+      return `${this.options.prefix}${formatted}${this.options.suffix}`;
+    }
   }
+
+  // Backward-compatible wrapper
+  function animateNumber(el, targetVal, durationMs = 1200) {
+    if (!el) return;
+    return StatsCounter.animate(el, { value: targetVal, duration: durationMs / 1000 });
+  }
+
+  // Register Custom Web Component <stats-counter>
+  if (typeof customElements !== "undefined" && !customElements.get("stats-counter")) {
+    class StatsCounterElement extends HTMLElement {
+      static get observedAttributes() {
+        return ["value", "prefix", "suffix", "duration", "decimals", "use-commas"];
+      }
+      connectedCallback() {
+        this.classList.add("stats-counter");
+        this.update();
+      }
+      attributeChangedCallback(name, oldVal, newVal) {
+        if (oldVal !== newVal) this.update();
+      }
+      update() {
+        const valAttr = this.getAttribute("value");
+        if (valAttr === null) return;
+        StatsCounter.animate(this, {
+          value: valAttr,
+          prefix: this.getAttribute("prefix") || "",
+          suffix: this.getAttribute("suffix") || "",
+          duration: parseFloat(this.getAttribute("duration")) || 1.8,
+          decimals: this.getAttribute("decimals") !== null ? parseInt(this.getAttribute("decimals"), 10) : undefined,
+          useCommas: this.getAttribute("use-commas") !== "false"
+        });
+      }
+    }
+    customElements.define("stats-counter", StatsCounterElement);
+  }
+
+  window.StatsCounter = StatsCounter;
 
   /* ---------- THEME ---------- */
   const html = document.documentElement;
@@ -426,7 +551,7 @@
         const valEl = cardEl.querySelector(".kpi-value");
         const subEl = cardEl.querySelector(".kpi-sub");
         if (animate && valEl) {
-          animateNumber(valEl, k.value, 600);
+          StatsCounter.animate(valEl, { value: k.value, duration: 1.2 });
         } else if (valEl) {
           valEl.textContent = k.value;
         }
@@ -452,6 +577,18 @@
         <div class="kpi-value">${k.value}</div>
         <div class="kpi-sub">${k.sub}</div>
       </button>`).join("");
+
+    if (animate) {
+      kpiGrid.querySelectorAll(".kpi-value").forEach((valEl, idx) => {
+        const val = cards[idx]?.value;
+        if (val) {
+          valEl.textContent = "0";
+          setTimeout(() => {
+            StatsCounter.animate(valEl, { value: val, duration: 1.4 });
+          }, idx * 50);
+        }
+      });
+    }
 
     kpiGrid.querySelectorAll(".kpi-card").forEach(card => {
       card.addEventListener("click", () => {
@@ -3745,11 +3882,18 @@
     if (mpQuotaSC) mpQuotaSC.textContent = `✅ Clause 3.2 SC Mandate: ${scTarget}% (Target ≥15%)`;
     if (mpQuotaST) mpQuotaST.textContent = `✅ Clause 3.2 ST Mandate: ${stTarget}% (Target ≥7.5%)`;
 
-    // 4 Key Indicators
-    document.getElementById("mpWorks").textContent = m.works;
-    document.getElementById("mpAmount").textContent = m.amount;
-    document.getElementById("mpSpent").textContent = m.spent;
-    document.getElementById("mpRisk").textContent = m.risk;
+    // 4 Key Indicators with smooth StatsCounter
+    const elWorks = document.getElementById("mpWorks");
+    if (elWorks) StatsCounter.animate(elWorks, { value: m.works, duration: 1.1 });
+
+    const elAmount = document.getElementById("mpAmount");
+    if (elAmount) StatsCounter.animate(elAmount, { value: m.amount, duration: 1.1 });
+
+    const elSpent = document.getElementById("mpSpent");
+    if (elSpent) StatsCounter.animate(elSpent, { value: m.spent, duration: 1.1 });
+
+    const elRisk = document.getElementById("mpRisk");
+    if (elRisk) StatsCounter.animate(elRisk, { value: m.risk, duration: 1.1 });
 
     const completedVal = m.exec && m.exec[0] ? m.exec[0].value : Math.round(m.works * 0.6);
     const activeVal = m.exec && m.exec[1] ? m.exec[1].value : Math.round(m.works * 0.28);
@@ -3770,12 +3914,14 @@
     drawDonut("mpDonut", m.exec);
 
     const mpAvgDuration = document.getElementById("mpAvgDuration");
-    if (mpAvgDuration) mpAvgDuration.textContent = `${122 + (m.works % 38)} Days`;
+    if (mpAvgDuration) {
+      StatsCounter.animate(mpAvgDuration, { value: 122 + (m.works % 38), suffix: " Days", duration: 1.0 });
+    }
 
     const mpGeotagRate = document.getElementById("mpGeotagRate");
     if (mpGeotagRate) {
       const geoRate = m.risk >= 85 ? (74.2 + (m.works % 6)).toFixed(1) : m.risk >= 65 ? (86.4 + (m.works % 5)).toFixed(1) : (94.8 + (m.works % 4)).toFixed(1);
-      mpGeotagRate.textContent = `${geoRate}%`;
+      StatsCounter.animate(mpGeotagRate, { value: parseFloat(geoRate), suffix: "%", decimals: 1, duration: 1.0 });
       mpGeotagRate.style.color = m.risk >= 85 ? "var(--crimson)" : m.risk >= 65 ? "var(--amber)" : "var(--teal-bright)";
     }
 
@@ -3783,7 +3929,7 @@
     if (mpStalledCount) {
       const delayedVal = m.exec && m.exec[2] ? m.exec[2].value : 12;
       const stalledCount = Math.max(1, Math.round(delayedVal / 5));
-      mpStalledCount.textContent = `${stalledCount} Works`;
+      StatsCounter.animate(mpStalledCount, { value: stalledCount, suffix: " Works", duration: 1.0 });
       mpStalledCount.style.color = stalledCount > 5 ? "var(--crimson)" : "var(--amber)";
     }
 
