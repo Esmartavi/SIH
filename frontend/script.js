@@ -2701,61 +2701,510 @@
     }
   }
 
-  /* ================= VENDOR COLLUSION & NETWORKS ================= */
+  /* ================= VENDOR COLLUSION & NETWORKS (DYNAMIC & FULLY CONNECTED) ================= */
   const vendorLeaderboard = [
-    { name: "Shree Infra Works", contracts: 96, sanctioned: "₹41.2 Cr", risk: 82, monopoly: 6, mps: 4, states: 2, aliases: ["Shree Infra Wrks Pvt Ltd", "S. Infra Works", "Shree Infra (regd. UP-04421)"] },
-    { name: "Rayalaseema Builders", contracts: 74, sanctioned: "₹28.4 Cr", risk: 68, monopoly: 3, mps: 3, states: 1, aliases: ["Rayalaseema Infra", "Rayala Builders Corp"] },
-    { name: "Marwar Constructions", contracts: 62, sanctioned: "₹24.1 Cr", risk: 79, monopoly: 4, mps: 2, states: 1, aliases: ["Marwar Civil Eng", "M.C. Builders Jodhpur"] },
-    { name: "Northeast Solar Co.", contracts: 52, sanctioned: "₹19.1 Cr", risk: 59, monopoly: 2, mps: 5, states: 3, aliases: ["NE Solar Power Ltd", "Northeast Clean Energy"] },
-    { name: "Ganga Civil Contractors", contracts: 38, sanctioned: "₹11.6 Cr", risk: 41, monopoly: 0, mps: 2, states: 1, aliases: ["Ganga Works Patna"] },
-    { name: "Deccan Builders", contracts: 29, sanctioned: "₹9.0 Cr", risk: 35, monopoly: 0, mps: 1, states: 1, aliases: ["Deccan Infrastructure Group"] },
+    {
+      name: "Shree Infra Works",
+      contracts: 96,
+      sanctioned: "₹41.2 Cr",
+      risk: 82,
+      monopoly: 6,
+      mps: 4,
+      states: 2,
+      aliases: ["Shree Infra Wrks Pvt Ltd", "S. Infra Works", "Shree Infra (regd. UP-04421)"],
+      connectedMPs: ["MP Javed Ali", "MP D. Saikia", "MP Ramesh Chandra"],
+      subVendors: ["Awadh Works", "Purvanchal Road", "Jodhpur Civil"]
+    },
+    {
+      name: "Rayalaseema Builders",
+      contracts: 74,
+      sanctioned: "₹28.4 Cr",
+      risk: 68,
+      monopoly: 3,
+      mps: 3,
+      states: 1,
+      aliases: ["Rayalaseema Infra", "Rayala Builders Corp"],
+      connectedMPs: ["MP K. Reddy", "MP Javed Ali"],
+      subVendors: ["Rayala Tech", "Kurnool Cements"]
+    },
+    {
+      name: "Marwar Constructions",
+      contracts: 62,
+      sanctioned: "₹24.1 Cr",
+      risk: 79,
+      monopoly: 4,
+      mps: 2,
+      states: 1,
+      aliases: ["Marwar Civil Eng", "M.C. Builders Jodhpur"],
+      connectedMPs: ["MP Ramesh Chandra", "MP Javed Ali"],
+      subVendors: ["Marwar Civil Eng", "Purvanchal Road"]
+    },
+    {
+      name: "Northeast Solar Co.",
+      contracts: 52,
+      sanctioned: "₹19.1 Cr",
+      risk: 59,
+      monopoly: 2,
+      mps: 5,
+      states: 3,
+      aliases: ["NE Solar Power Ltd", "Northeast Clean Energy"],
+      connectedMPs: ["MP D. Saikia", "MP B. Sahu"],
+      subVendors: ["NE Solar Tech", "Brahmaputra Power"]
+    },
+    {
+      name: "Mahanadi Builders",
+      contracts: 46,
+      sanctioned: "₹16.8 Cr",
+      risk: 82,
+      monopoly: 4,
+      mps: 2,
+      states: 2,
+      aliases: ["Mahanadi Civil Corp", "Raipur Infra Group"],
+      connectedMPs: ["MP B. Sahu", "MP S. Soren"],
+      subVendors: ["Raipur Steel Fab", "Bastar Infra"]
+    },
+    {
+      name: "Chotanagpur Infra",
+      contracts: 42,
+      sanctioned: "₹14.5 Cr",
+      risk: 78,
+      monopoly: 3,
+      mps: 2,
+      states: 1,
+      aliases: ["Chotanagpur Roadworks", "CNP Civil Ltd"],
+      connectedMPs: ["MP S. Soren", "MP Ramesh Chandra"],
+      subVendors: ["Ranchi Stone Crushing", "Damodar Quarry"]
+    },
+    {
+      name: "Ganga Civil Contractors",
+      contracts: 38,
+      sanctioned: "₹11.6 Cr",
+      risk: 41,
+      monopoly: 0,
+      mps: 2,
+      states: 1,
+      aliases: ["Ganga Works Patna"],
+      connectedMPs: ["MP Javed Ali", "MP Ramesh Chandra"],
+      subVendors: ["Patna Concrete Supply"]
+    },
+    {
+      name: "Chinar Infra Projects",
+      contracts: 34,
+      sanctioned: "₹10.8 Cr",
+      risk: 65,
+      monopoly: 2,
+      mps: 2,
+      states: 1,
+      aliases: ["Chinar Valley Builders", "Srinagar Civil Works"],
+      connectedMPs: ["MP A. Lone", "MP Dr. S. Rao"],
+      subVendors: ["Jhelum Stone Works", "Valley Bitumen"]
+    },
+    {
+      name: "Deccan Builders",
+      contracts: 29,
+      sanctioned: "₹9.0 Cr",
+      risk: 35,
+      monopoly: 0,
+      mps: 1,
+      states: 1,
+      aliases: ["Deccan Infrastructure Group"],
+      connectedMPs: ["MP S. Patil"],
+      subVendors: ["Pune RMC Supply"]
+    },
+    {
+      name: "Konkan Coastal Works",
+      contracts: 27,
+      sanctioned: "₹8.4 Cr",
+      risk: 44,
+      monopoly: 1,
+      mps: 2,
+      states: 1,
+      aliases: ["Konkan Marine Infra", "Western Coast Civil"],
+      connectedMPs: ["MP S. Patil", "MP K. Reddy"],
+      subVendors: ["Ratnagiri Civil Co"]
+    },
+    {
+      name: "Garhwal Civil Works",
+      contracts: 25,
+      sanctioned: "₹7.9 Cr",
+      risk: 32,
+      monopoly: 0,
+      mps: 1,
+      states: 1,
+      aliases: ["Garhwal Hill Infra", "Uttarakhand Builders"],
+      connectedMPs: ["MP T. Rawat"],
+      subVendors: ["Doon Pavers"]
+    },
+    {
+      name: "Himalayan Infra Co.",
+      contracts: 24,
+      sanctioned: "₹7.2 Cr",
+      risk: 28,
+      monopoly: 0,
+      mps: 1,
+      states: 1,
+      aliases: ["Himalayan Concrete", "HP Mountain Works"],
+      connectedMPs: ["MP S. Kashyap"],
+      subVendors: ["Solan Aggregates"]
+    },
+    {
+      name: "Kalinga Stone & Roadways",
+      contracts: 22,
+      sanctioned: "₹6.8 Cr",
+      risk: 54,
+      monopoly: 1,
+      mps: 2,
+      states: 1,
+      aliases: ["Kalinga Infra Corp", "Odisha Roadlines"],
+      connectedMPs: ["MP K. Reddy", "MP D. Saikia"],
+      subVendors: ["Cuttack Bitumen"]
+    },
+    {
+      name: "Malwa Power & Civil",
+      contracts: 21,
+      sanctioned: "₹6.2 Cr",
+      risk: 49,
+      monopoly: 1,
+      mps: 2,
+      states: 1,
+      aliases: ["Malwa Energy Works", "MP Rural Electrics"],
+      connectedMPs: ["MP Ramesh Chandra", "MP B. Sahu"],
+      subVendors: ["Indore Metal Works"]
+    },
+    {
+      name: "Sundarbans Marine Works",
+      contracts: 19,
+      sanctioned: "₹5.9 Cr",
+      risk: 38,
+      monopoly: 0,
+      mps: 1,
+      states: 1,
+      aliases: ["Delta Marine Works", "Bengal Coastal Corp"],
+      connectedMPs: ["MP D. Saikia"],
+      subVendors: ["Delta Embankments"]
+    },
+    {
+      name: "National Heritage Trust",
+      contracts: 18,
+      sanctioned: "₹5.2 Cr",
+      risk: 21,
+      monopoly: 0,
+      mps: 2,
+      states: 2,
+      aliases: ["Heritage Conservation Foundation"],
+      connectedMPs: ["MP Dr. S. Rao"],
+      subVendors: ["Heritage Restoration Group"]
+    },
+    {
+      name: "Solar India Tech",
+      contracts: 17,
+      sanctioned: "₹4.8 Cr",
+      risk: 28,
+      monopoly: 0,
+      mps: 1,
+      states: 1,
+      aliases: ["Solar Tech Karnataka", "Green Power BLR"],
+      connectedMPs: ["MP Dr. S. Rao"],
+      subVendors: ["Bangalore Solar Modules"]
+    },
+    {
+      name: "Braj Civil Consortium",
+      contracts: 16,
+      sanctioned: "₹4.5 Cr",
+      risk: 62,
+      monopoly: 2,
+      mps: 2,
+      states: 1,
+      aliases: ["Braj Construction Partners", "Mathura Civil Corp"],
+      connectedMPs: ["MP Javed Ali", "MP Ramesh Chandra"],
+      subVendors: ["Mathura Materials"]
+    },
+    {
+      name: "Ladakh Renewable Power",
+      contracts: 15,
+      sanctioned: "₹4.1 Cr",
+      risk: 32,
+      monopoly: 0,
+      mps: 1,
+      states: 1,
+      aliases: ["Leh Renewable Energy", "Ladakh Solar Tech"],
+      connectedMPs: ["MP J. Tsering"],
+      subVendors: ["Leh Solar Allied"]
+    },
+    {
+      name: "Vindhya Infra Projects",
+      contracts: 14,
+      sanctioned: "₹3.9 Cr",
+      risk: 45,
+      monopoly: 1,
+      mps: 1,
+      states: 1,
+      aliases: ["Vindhya Civil Works", "Rewa Infra"],
+      connectedMPs: ["MP B. Sahu"],
+      subVendors: ["Rewa Concrete Co"]
+    },
+    {
+      name: "Cauvery Water Systems",
+      contracts: 13,
+      sanctioned: "₹3.6 Cr",
+      risk: 29,
+      monopoly: 0,
+      mps: 1,
+      states: 1,
+      aliases: ["Cauvery Irrigation Tech", "Southern Water Corp"],
+      connectedMPs: ["MP K. Reddy"],
+      subVendors: ["Mysuru Piping Co"]
+    },
+    {
+      name: "Thar Water Logistics",
+      contracts: 12,
+      sanctioned: "₹3.2 Cr",
+      risk: 52,
+      monopoly: 1,
+      mps: 1,
+      states: 1,
+      aliases: ["Thar Borewell Experts", "Bikaner Water Infra"],
+      connectedMPs: ["MP Ramesh Chandra"],
+      subVendors: ["Bikaner Borewells"]
+    },
+    {
+      name: "Coromandel Ports & Civil",
+      contracts: 11,
+      sanctioned: "₹2.9 Cr",
+      risk: 36,
+      monopoly: 0,
+      mps: 1,
+      states: 1,
+      aliases: ["Coromandel Infra Ltd"],
+      connectedMPs: ["MP K. Reddy"],
+      subVendors: ["Chennai Aggregate Hub"]
+    },
+    {
+      name: "Brahmaputra Dredging Corp",
+      contracts: 10,
+      sanctioned: "₹2.7 Cr",
+      risk: 48,
+      monopoly: 1,
+      mps: 1,
+      states: 1,
+      aliases: ["Assam Dredging Ltd", "Guwahati Marine Co"],
+      connectedMPs: ["MP D. Saikia"],
+      subVendors: ["Guwahati Marine Tools"]
+    },
+    {
+      name: "Mithila Public Works",
+      contracts: 9,
+      sanctioned: "₹2.4 Cr",
+      risk: 58,
+      monopoly: 1,
+      mps: 1,
+      states: 1,
+      aliases: ["Mithila Civil Co", "Darbhanga Builders"],
+      connectedMPs: ["MP Javed Ali"],
+      subVendors: ["Darbhanga Civil"]
+    }
   ];
 
-  function renderVendorTable(filterText) {
-    const rows = vendorLeaderboard.filter(v => !filterText || v.name.toLowerCase().includes(filterText.toLowerCase()));
+  function renderVendorTable(filterText, limit) {
+    limit = limit || 10;
+    let rows = vendorLeaderboard;
+    if (filterText) {
+      const q = filterText.toLowerCase();
+      rows = rows.filter(v => v.name.toLowerCase().includes(q) || (v.aliases && v.aliases.some(a => a.toLowerCase().includes(q))));
+    }
+    rows = rows.slice(0, limit);
+
     const tbody = document.getElementById("vendorBody");
     if (tbody) {
       tbody.innerHTML = rows.map(v => `
-        <tr class="rowlink" data-open-vendor="${v.name}"><td>${v.name}</td><td>${v.contracts}</td><td class="mono">${v.sanctioned}</td>
-        <td><span class="risk-tag risk-${riskLabel(v.risk)}">${v.risk}</span></td>
-        <td>${v.monopoly > 0 ? `<span class="badge-mono">${v.monopoly} flags</span>` : "—"}</td><td>${v.mps}</td><td>${v.states}</td></tr>`).join("");
-      document.querySelectorAll("[data-open-vendor]").forEach(r => r.addEventListener("click", () => openVendorDrawer(r.dataset.openVendor)));
+        <tr class="rowlink row-updated" data-open-vendor="${v.name}">
+          <td>
+            <div style="font-weight:600; color:var(--ink);">${v.name}</div>
+            ${v.aliases && v.aliases.length ? `<div style="font-size:10.5px; color:var(--ink-faint); margin-top:2px;">${v.aliases[0]}</div>` : ''}
+          </td>
+          <td class="mono">${v.contracts}</td>
+          <td class="mono" style="font-weight:600; color:var(--gold);">${v.sanctioned}</td>
+          <td><span class="risk-tag risk-${riskLabel(v.risk)}">${v.risk}</span></td>
+          <td>${v.monopoly > 0 ? `<span class="badge-mono" style="color:var(--crimson); border-color:rgba(226,104,92,0.4);">${v.monopoly} flags</span>` : '<span style="color:var(--ink-faint);">-</span>'}</td>
+          <td class="mono">${v.mps}</td>
+          <td class="mono">${v.states}</td>
+        </tr>`).join("");
+
+      tbody.querySelectorAll("[data-open-vendor]").forEach(r => {
+        r.addEventListener("click", () => openVendorDrawer(r.dataset.openVendor));
+      });
     }
   }
-  renderVendorTable("");
-
-  const vendorSearch = document.getElementById("vendorSearch");
-  if (vendorSearch) vendorSearch.addEventListener("input", e => renderVendorTable(e.target.value));
 
   const topNSlider = document.getElementById("topN");
-  if (topNSlider) topNSlider.addEventListener("input", function () {
-    const v = document.getElementById("topNVal");
-    if (v) v.textContent = this.value;
-  });
+  const vendorSearch = document.getElementById("vendorSearch");
 
-  function renderNetwork() {
-    const nodes = [
-      { x: 350, y: 65, r: 14, type: "mp", c: cssVar('--gold'), name: "MP Javed Ali", risk: 71, val: "₹9.8 Cr" },
-      { x: 160, y: 155, r: 14, type: "mp", c: cssVar('--gold'), name: "MP D. Saikia", risk: 48, val: "₹7.4 Cr" },
-      { x: 540, y: 155, r: 14, type: "mp", c: cssVar('--gold'), name: "MP K. Reddy", risk: 52, val: "₹8.1 Cr" },
-      { x: 250, y: 230, r: 13, type: "vendor", monopoly: true, c: cssVar('--crimson'), name: "Shree Infra Works", risk: 82, val: "₹41.2 Cr", contracts: 96 },
-      { x: 450, y: 230, r: 11, type: "vendor", monopoly: true, c: cssVar('--crimson'), name: "Rayalaseema Builders", risk: 79, val: "₹28.4 Cr", contracts: 74 },
-      { x: 350, y: 310, r: 10, type: "vendor", monopoly: true, c: cssVar('--crimson'), name: "Marwar Constructions", risk: 78, val: "₹24.1 Cr", contracts: 62 },
-      { x: 120, y: 270, r: 6, type: "sub", c: cssVar('--ink-faint'), name: "Sub-vendor A (Jodhpur Civil)", risk: 38 },
-      { x: 185, y: 315, r: 6, type: "sub", c: cssVar('--ink-faint'), name: "Sub-vendor B (Awadh Works)", risk: 42 },
-      { x: 275, y: 340, r: 6, type: "sub", c: cssVar('--ink-faint'), name: "Sub-vendor C (Purvanchal Road)", risk: 55 },
-      { x: 425, y: 340, r: 6, type: "sub", c: cssVar('--ink-faint'), name: "Sub-vendor D (Rayala Tech)", risk: 49 },
-      { x: 515, y: 315, r: 6, type: "sub", c: cssVar('--ink-faint'), name: "Sub-vendor E (Kurnool Cements)", risk: 39 },
-      { x: 580, y: 270, r: 6, type: "sub", c: cssVar('--ink-faint'), name: "Sub-vendor F (Deccan Aggregate)", risk: 31 },
-    ];
-    const edges = [
-      [0, 3], [0, 4], [1, 3], [2, 4], [0, 5],
-      [3, 6], [3, 7], [3, 8],
-      [4, 9], [4, 10], [4, 11],
-      [5, 8], [5, 9]
-    ];
+  function updateNexusViews() {
+    const limit = topNSlider ? parseInt(topNSlider.value) : 10;
+    const query = vendorSearch ? vendorSearch.value.trim() : "";
+    const vEl = document.getElementById("topNVal");
+    if (vEl) vEl.textContent = limit;
 
-    let s = `<defs>
+    renderVendorTable(query, limit);
+    renderNetwork(limit, query);
+  }
+
+  if (topNSlider) topNSlider.addEventListener("input", updateNexusViews);
+  if (vendorSearch) vendorSearch.addEventListener("input", updateNexusViews);
+
+  function renderNetwork(limit, query) {
+    if (limit === undefined) {
+      const s = document.getElementById("topN");
+      limit = s ? parseInt(s.value) : 10;
+    }
+    if (query === undefined) {
+      const q = document.getElementById("vendorSearch");
+      query = q ? q.value.trim() : "";
+    }
+
+    let activeVendors = vendorLeaderboard;
+    if (query) {
+      const qLow = query.toLowerCase();
+      activeVendors = activeVendors.filter(v => v.name.toLowerCase().includes(qLow) || (v.aliases && v.aliases.some(a => a.toLowerCase().includes(qLow))));
+    }
+    activeVendors = activeVendors.slice(0, limit);
+
+    const net = document.getElementById("netSvg");
+    if (!net) return;
+
+    if (activeVendors.length === 0) {
+      net.innerHTML = `<text x="470" y="230" text-anchor="middle" font-size="14" fill="var(--ink-faint)" font-family="IBM Plex Mono">No contractors match the current filter criteria</text>`;
+      return;
+    }
+
+    // Identify unique MPs
+    const mpMap = new Map();
+    activeVendors.forEach(v => {
+      (v.connectedMPs || []).forEach(mpName => {
+        if (!mpMap.has(mpName)) {
+          const mpObj = mps.find(m => m.name.toLowerCase() === mpName.toLowerCase());
+          mpMap.set(mpName, {
+            name: mpName,
+            state: mpObj ? mpObj.state : "State Allocation",
+            house: mpObj ? mpObj.house : "Lok Sabha"
+          });
+        }
+      });
+    });
+    const mpList = Array.from(mpMap.values());
+
+    // Identify unique sub-vendors
+    const subMap = new Map();
+    activeVendors.forEach((v, vIdx) => {
+      (v.subVendors || []).forEach(subName => {
+        if (!subMap.has(subName)) {
+          subMap.set(subName, { name: subName, parentIndices: [vIdx] });
+        } else {
+          subMap.get(subName).parentIndices.push(vIdx);
+        }
+      });
+    });
+    const subList = Array.from(subMap.values());
+
+    // Layout Canvas Dimensions
+    const W = 940, H = 460;
+
+    // Position MPs (Top Tier, y = 65)
+    const mpPadX = mpList.length > 5 ? 80 : 140;
+    const mpSpacing = mpList.length > 1 ? (W - 2 * mpPadX) / (mpList.length - 1) : 0;
+    const mpNodes = mpList.map((m, i) => ({
+      id: "mp_" + i,
+      name: m.name,
+      state: m.state,
+      house: m.house,
+      type: "mp",
+      x: mpList.length === 1 ? W / 2 : mpPadX + i * mpSpacing,
+      y: 65 + (i % 2 === 0 ? -6 : 8),
+      r: 15,
+      c: cssVar('--gold')
+    }));
+
+    // Position Vendors (Middle Tier, y = 220)
+    const vPadX = activeVendors.length > 12 ? 60 : 100;
+    const vSpacing = activeVendors.length > 1 ? (W - 2 * vPadX) / (activeVendors.length - 1) : 0;
+    const vendorNodes = activeVendors.map((v, i) => {
+      const isMonopoly = v.monopoly > 0;
+      const color = v.risk >= 70 ? cssVar('--crimson') : v.risk >= 50 ? cssVar('--amber') : cssVar('--teal');
+      return {
+        id: "v_" + i,
+        name: v.name,
+        contracts: v.contracts,
+        sanctioned: v.sanctioned,
+        risk: v.risk,
+        monopoly: isMonopoly,
+        flags: v.monopoly,
+        connectedMPs: v.connectedMPs || [],
+        subVendors: v.subVendors || [],
+        type: "vendor",
+        x: activeVendors.length === 1 ? W / 2 : vPadX + i * vSpacing,
+        y: 220 + (i % 2 === 0 ? -18 : 22),
+        r: Math.max(10, Math.min(18, 9 + Math.round(v.contracts / 9))),
+        c: color
+      };
+    });
+
+    // Position Sub-vendors (Bottom Tier, y = 390)
+    const sPadX = subList.length > 10 ? 50 : 110;
+    const sSpacing = subList.length > 1 ? (W - 2 * sPadX) / (subList.length - 1) : 0;
+    const subNodes = subList.map((s, i) => ({
+      id: "sub_" + i,
+      name: s.name,
+      parentIndices: s.parentIndices,
+      type: "sub",
+      x: subList.length === 1 ? W / 2 : sPadX + i * sSpacing,
+      y: 390 + (i % 2 === 0 ? -10 : 14),
+      r: 6,
+      c: cssVar('--ink-faint')
+    }));
+
+    // Generate Edges
+    const edges = [];
+    vendorNodes.forEach(vn => {
+      // Connect to MPs
+      vn.connectedMPs.forEach(mpName => {
+        const mpNode = mpNodes.find(m => m.name.toLowerCase() === mpName.toLowerCase());
+        if (mpNode) {
+          edges.push({
+            from: mpNode,
+            to: vn,
+            type: "mp-vendor",
+            stroke: vn.monopoly ? "var(--crimson)" : "var(--line)",
+            opacity: vn.monopoly ? 0.85 : 0.6,
+            width: vn.monopoly ? 2.2 : 1.4
+          });
+        }
+      });
+
+      // Connect to Sub-vendors
+      vn.subVendors.forEach(subName => {
+        const subNode = subNodes.find(s => s.name === subName);
+        if (subNode) {
+          edges.push({
+            from: vn,
+            to: subNode,
+            type: "vendor-sub",
+            stroke: "var(--line-soft)",
+            opacity: 0.45,
+            width: 1.1,
+            dashed: "3,3"
+          });
+        }
+      });
+    });
+
+    // Update Stats Badge in card title
+    const statsBadge = document.getElementById("nexusStatsBadge");
+    if (statsBadge) {
+      statsBadge.textContent = `Top ${activeVendors.length} Contractors · ${mpList.length} Connected MPs · ${edges.length} Collusion Ties`;
+    }
+
+    // Build SVG Content
+    let svgHtml = `<defs>
       <filter id="netGlowGold" x="-30%" y="-30%" width="160%" height="160%">
         <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#c9a24b" flood-opacity="0.8"/>
       </filter>
@@ -2764,68 +3213,111 @@
       </filter>
     </defs>`;
 
-    // Edges
-    s += edges.map(([a, b]) => `
-      <line x1="${nodes[a].x}" y1="${nodes[a].y}" x2="${nodes[b].x}" y2="${nodes[b].y}"
-        stroke="${cssVar('--line')}" stroke-width="1.6" stroke-opacity="0.75" />
+    // Render Edges
+    svgHtml += edges.map(e => `
+      <line class="net-edge"
+        x1="${e.from.x}" y1="${e.from.y}" x2="${e.to.x}" y2="${e.to.y}"
+        stroke="${e.stroke}" stroke-width="${e.width}" stroke-opacity="${e.opacity}"
+        ${e.dashed ? `stroke-dasharray="${e.dashed}"` : ''}
+        data-from="${e.from.id}" data-to="${e.to.id}" />
     `).join("");
 
-    // Nodes
-    s += nodes.map(n => {
-      let shapeHtml = "";
-      if (n.type === "mp") {
-        shapeHtml = `
-          <g style="cursor:pointer;" data-net-mp="${n.name}">
-            <circle cx="${n.x}" cy="${n.y}" r="${n.r + 5}" fill="none" stroke="${cssVar('--gold')}" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
-            <polygon points="${n.x},${n.y - n.r} ${n.x + n.r},${n.y} ${n.x},${n.y + n.r} ${n.x - n.r},${n.y}"
-              fill="${n.c}" filter="url(#netGlowGold)"/>
-            <title>${n.name} (Click to inspect MP 360° portfolio)</title>
-          </g>`;
-      } else if (n.type === "vendor") {
-        shapeHtml = `
-          <g style="cursor:pointer;" data-net-vendor="${n.name}">
-            ${n.monopoly ? `<circle cx="${n.x}" cy="${n.y}" r="${n.r + 6}" fill="none" stroke="${cssVar('--crimson')}" stroke-width="1.5" class="radar-ping-circle"/>` : ''}
-            <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.c}" filter="url(#netGlowCrit)" opacity="0.95"/>
-            <title>${n.name} — Risk: ${n.risk} · Outlay: ${n.val} (Click to open Vendor Drawer)</title>
-          </g>`;
-      } else {
-        shapeHtml = `
-          <g style="cursor:pointer;" data-net-vendor="${n.name}">
-            <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.c}" opacity="0.7"/>
-            <title>${n.name} (Subcontractor tier)</title>
-          </g>`;
-      }
+    // Render Sub-vendors
+    svgHtml += subNodes.map(sn => `
+      <g class="net-node-group" id="${sn.id}" data-node-type="sub" data-sub-name="${sn.name}" style="cursor:default;">
+        <circle cx="${sn.x}" cy="${sn.y}" r="${sn.r}" fill="${sn.c}" opacity="0.75"/>
+        <text x="${sn.x}" y="${sn.y + 14}" text-anchor="middle" font-size="8" fill="var(--ink-faint)" font-family="IBM Plex Mono" pointer-events="none">${sn.name.length > 18 ? sn.name.slice(0, 16) + '…' : sn.name}</text>
+        <title>Subcontractor: ${sn.name} (Secondary Beneficiary Entity)</title>
+      </g>`).join("");
 
+    // Render Vendors
+    svgHtml += vendorNodes.map(vn => {
+      const shortName = vn.name.length > 16 ? vn.name.slice(0, 14) + '…' : vn.name;
       return `
-        ${shapeHtml}
-        <text x="${n.x}" y="${n.y + n.r + 11}" text-anchor="middle" font-size="9" font-weight="${n.type !== 'sub' ? '600' : '400'}"
-          fill="${n.type === 'mp' ? cssVar('--gold') : n.type === 'vendor' ? '#ffffff' : cssVar('--ink-faint')}"
-          font-family="IBM Plex Mono" pointer-events="none">${n.name}</text>`;
+        <g class="net-node-group" id="${vn.id}" data-node-type="vendor" data-net-vendor="${vn.name}" style="cursor:pointer;">
+          ${vn.monopoly ? `<circle cx="${vn.x}" cy="${vn.y}" r="${vn.r + 7}" fill="none" stroke="var(--crimson)" stroke-width="1.5" class="radar-ping-circle"/>` : ''}
+          <circle cx="${vn.x}" cy="${vn.y}" r="${vn.r}" fill="${vn.c}" filter="${vn.monopoly ? 'url(#netGlowCrit)' : 'none'}" opacity="0.95"/>
+          <text x="${vn.x}" y="${vn.y + vn.r + 12}" text-anchor="middle" font-size="9" font-weight="600"
+            fill="${vn.monopoly ? 'var(--crimson)' : 'var(--ink)'}" font-family="IBM Plex Mono" pointer-events="none">${shortName}</text>
+          <title>${vn.name}\n• Outlay: ${vn.sanctioned} (${vn.contracts} works)\n• Audit Risk: ${vn.risk}/100\n• Monopoly Flags: ${vn.flags}\n• Connected MPs: ${vn.connectedMPs.join(', ')}\n(Click to open 360° Dossier)</title>
+        </g>`;
     }).join("");
 
-    const net = document.getElementById("netSvg");
-    if (net) {
-      net.innerHTML = s;
+    // Render MPs
+    svgHtml += mpNodes.map(mn => {
+      return `
+        <g class="net-node-group" id="${mn.id}" data-node-type="mp" data-net-mp="${mn.name}" style="cursor:pointer;">
+          <circle cx="${mn.x}" cy="${mn.y}" r="${mn.r + 6}" fill="none" stroke="var(--gold)" stroke-width="1" stroke-dasharray="3,3" opacity="0.65"/>
+          <polygon points="${mn.x},${mn.y - mn.r} ${mn.x + mn.r},${mn.y} ${mn.x},${mn.y + mn.r} ${mn.x - mn.r},${mn.y}"
+            fill="${mn.c}" filter="url(#netGlowGold)"/>
+          <text x="${mn.x}" y="${mn.y + mn.r + 12}" text-anchor="middle" font-size="9.5" font-weight="700"
+            fill="var(--gold)" font-family="IBM Plex Mono" pointer-events="none">${mn.name}</text>
+          <title>${mn.name} (${mn.house} · ${mn.state})\nClick to inspect MP 360° Portfolio</title>
+        </g>`;
+    }).join("");
 
-      // Bind node click handlers
-      net.querySelectorAll("[data-net-vendor]").forEach(el => {
-        el.addEventListener("click", () => {
-          const vName = el.dataset.netVendor;
-          openVendorDrawer(vName);
-          showToast(`Opened 360° intelligence profile for contractor: ${vName}`);
-        });
+    net.innerHTML = svgHtml;
+
+    // Interactive Node Click Handlers
+    net.querySelectorAll("[data-net-vendor]").forEach(el => {
+      el.addEventListener("click", () => {
+        const vName = el.dataset.netVendor;
+        openVendorDrawer(vName);
+        showToast(`Opened 360° intelligence profile for contractor: ${vName}`);
+      });
+    });
+
+    net.querySelectorAll("[data-net-mp]").forEach(el => {
+      el.addEventListener("click", () => {
+        const mpName = el.dataset.netMp;
+        const targetMp = mps.find(m => m.name.toLowerCase() === mpName.toLowerCase()) || mps[0];
+        setView("mp");
+        renderMP(targetMp);
+        showToast(`Drilled down to MP portfolio: ${targetMp.name}`);
+      });
+    });
+
+    // Interactive Hover Isolation: highlight connected nodes and edges
+    const allGroups = net.querySelectorAll(".net-node-group");
+    const allEdges = net.querySelectorAll(".net-edge");
+
+    function isolateNode(nodeId, type) {
+      allEdges.forEach(edge => {
+        const from = edge.dataset.from;
+        const to = edge.dataset.to;
+        if (from === nodeId || to === nodeId) {
+          edge.classList.add("net-highlighted");
+        } else {
+          edge.classList.add("net-dimmed");
+        }
       });
 
-      net.querySelectorAll("[data-net-mp]").forEach(el => {
-        el.addEventListener("click", () => {
-          const mpName = el.dataset.netMp;
-          const targetMp = mps.find(m => m.name.toLowerCase() === mpName.toLowerCase()) || mps[0];
-          setView("mp");
-          renderMP(targetMp);
-          showToast(`Drilled down to MP portfolio: ${targetMp.name}`);
-        });
+      const connectedNodeIds = new Set([nodeId]);
+      allEdges.forEach(edge => {
+        const from = edge.dataset.from;
+        const to = edge.dataset.to;
+        if (from === nodeId) connectedNodeIds.add(to);
+        if (to === nodeId) connectedNodeIds.add(from);
+      });
+
+      allGroups.forEach(g => {
+        if (!connectedNodeIds.has(g.id)) {
+          g.classList.add("net-dimmed");
+        } else {
+          g.classList.add("net-highlighted");
+        }
       });
     }
+
+    function resetIsolation() {
+      allEdges.forEach(e => e.classList.remove("net-highlighted", "net-dimmed"));
+      allGroups.forEach(g => g.classList.remove("net-highlighted", "net-dimmed"));
+    }
+
+    allGroups.forEach(g => {
+      g.addEventListener("mouseenter", () => isolateNode(g.id, g.dataset.nodeType));
+      g.addEventListener("mouseleave", resetIsolation);
+    });
   }
 
   /* Vendor Drawer with FIXED vendor-specific contract filtering */

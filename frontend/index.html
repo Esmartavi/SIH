@@ -741,20 +741,37 @@
         </div>
       </div>
       <div class="filters-panel">
-        <div class="filters-grid" style="grid-template-columns:2fr 1fr;">
-          <div class="field"><label>Search vendor</label><input id="vendorSearch" type="text"
-              placeholder="Vendor name…"></div>
-          <div class="field"><label>Top N contractors: <span id="topNVal">30</span></label><input type="range" id="topN"
-              min="10" max="100" value="30"></div>
+        <div class="filters-grid" style="grid-template-columns:2fr 1fr; align-items:center;">
+          <div class="field"><label>Search contractor / alias</label><input id="vendorSearch" type="text"
+              placeholder="Search contractor, syndicate or alias…"></div>
+          <div class="field"><label>Top N contractors: <span id="topNVal" style="color:var(--gold); font-weight:700;">10</span></label><input type="range" id="topN"
+              min="5" max="25" value="10" step="1"></div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title">Force-directed collusion graph</div>
-        <svg viewBox="0 0 700 320" class="chart-svg" id="netSvg"></svg>
+
+      <!-- Quick Intelligence Guide -->
+      <div class="nexus-guide-bar">
+        <div class="ng-item"><span style="color:var(--gold);">🔶</span> <b>Gold Diamonds</b>: MPs awarding funds</div>
+        <div class="ng-item"><span style="color:var(--crimson);">🔴</span> <b>Pulsing Crimson Nodes</b>: Cartels &amp; Monopolies</div>
+        <div class="ng-item"><span style="color:var(--teal);">🟢</span> <b>Teal Nodes</b>: Standard contractors</div>
+        <div class="ng-item"><span style="color:var(--ink-faint);">⚪</span> <b>Grey Dots</b>: Subcontractors / Shells</div>
+        <div class="ng-item"><span style="color:var(--ink-dim);">🔗</span> <b>Lines</b>: Direct fund flows</div>
+        <div class="ng-item hint">💡 Hover to isolate nexus · Click any node for 360° dossier</div>
+      </div>
+
+      <div class="card nexus-card-wrapper" style="overflow:hidden;">
+        <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Force-directed collusion graph</span>
+          <span class="card-sub-badge" id="nexusStatsBadge">Showing Top 10 Contractors</span>
+        </div>
+        <div style="width:100%; overflow-x:auto;">
+          <svg viewBox="0 0 940 460" class="chart-svg" id="netSvg" style="width:100%; min-width:720px; height:auto; display:block;"></svg>
+        </div>
         <div class="legend-row">
-          <span><span class="legend-dot" style="background:var(--gold);"></span>Member of Parliament</span>
-          <span><span class="legend-dot" style="background:var(--crimson);"></span>Flagged contractor</span>
-          <span><span class="legend-dot" style="background:var(--ink-faint);"></span>Vendor</span>
+          <span><span class="legend-dot" style="background:var(--gold);"></span>Member of Parliament (MP)</span>
+          <span><span class="legend-dot" style="background:var(--crimson);"></span>High-Risk Cartel (Monopoly)</span>
+          <span><span class="legend-dot" style="background:var(--teal);"></span>Standard Contractor</span>
+          <span><span class="legend-dot" style="background:var(--ink-faint);"></span>Subcontractor / Benami Shell</span>
         </div>
       </div>
       <div class="card" style="margin-top:16px; padding:0;">
