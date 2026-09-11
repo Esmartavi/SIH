@@ -3226,19 +3226,18 @@
     svgHtml += subNodes.map(sn => `
       <g class="net-node-group" id="${sn.id}" data-node-type="sub" data-sub-name="${sn.name}" style="cursor:default;">
         <circle cx="${sn.x}" cy="${sn.y}" r="${sn.r}" fill="${sn.c}" opacity="0.75"/>
-        <text x="${sn.x}" y="${sn.y + 14}" text-anchor="middle" font-size="8" fill="var(--ink-faint)" font-family="IBM Plex Mono" pointer-events="none">${sn.name.length > 18 ? sn.name.slice(0, 16) + '…' : sn.name}</text>
+        <text class="net-text-sub" x="${sn.x}" y="${sn.y + 15}" text-anchor="middle" pointer-events="none">${sn.name.length > 18 ? sn.name.slice(0, 16) + '…' : sn.name}</text>
         <title>Subcontractor: ${sn.name} (Secondary Beneficiary Entity)</title>
       </g>`).join("");
 
     // Render Vendors
     svgHtml += vendorNodes.map(vn => {
-      const shortName = vn.name.length > 16 ? vn.name.slice(0, 14) + '…' : vn.name;
+      const shortName = vn.name.length > 17 ? vn.name.slice(0, 15) + '…' : vn.name;
       return `
         <g class="net-node-group" id="${vn.id}" data-node-type="vendor" data-net-vendor="${vn.name}" style="cursor:pointer;">
           ${vn.monopoly ? `<circle cx="${vn.x}" cy="${vn.y}" r="${vn.r + 7}" fill="none" stroke="var(--crimson)" stroke-width="1.5" class="radar-ping-circle"/>` : ''}
           <circle cx="${vn.x}" cy="${vn.y}" r="${vn.r}" fill="${vn.c}" filter="${vn.monopoly ? 'url(#netGlowCrit)' : 'none'}" opacity="0.95"/>
-          <text x="${vn.x}" y="${vn.y + vn.r + 12}" text-anchor="middle" font-size="9" font-weight="600"
-            fill="${vn.monopoly ? 'var(--crimson)' : 'var(--ink)'}" font-family="IBM Plex Mono" pointer-events="none">${shortName}</text>
+          <text class="net-text-vendor" x="${vn.x}" y="${vn.y + vn.r + 13}" text-anchor="middle" pointer-events="none">${shortName}</text>
           <title>${vn.name}\n• Outlay: ${vn.sanctioned} (${vn.contracts} works)\n• Audit Risk: ${vn.risk}/100\n• Monopoly Flags: ${vn.flags}\n• Connected MPs: ${vn.connectedMPs.join(', ')}\n(Click to open 360° Dossier)</title>
         </g>`;
     }).join("");
@@ -3250,8 +3249,7 @@
           <circle cx="${mn.x}" cy="${mn.y}" r="${mn.r + 6}" fill="none" stroke="var(--gold)" stroke-width="1" stroke-dasharray="3,3" opacity="0.65"/>
           <polygon points="${mn.x},${mn.y - mn.r} ${mn.x + mn.r},${mn.y} ${mn.x},${mn.y + mn.r} ${mn.x - mn.r},${mn.y}"
             fill="${mn.c}" filter="url(#netGlowGold)"/>
-          <text x="${mn.x}" y="${mn.y + mn.r + 12}" text-anchor="middle" font-size="9.5" font-weight="700"
-            fill="var(--gold)" font-family="IBM Plex Mono" pointer-events="none">${mn.name}</text>
+          <text class="net-text-mp" x="${mn.x}" y="${mn.y + mn.r + 13}" text-anchor="middle" pointer-events="none">${mn.name}</text>
           <title>${mn.name} (${mn.house} · ${mn.state})\nClick to inspect MP 360° Portfolio</title>
         </g>`;
     }).join("");
@@ -3281,7 +3279,9 @@
     const allGroups = net.querySelectorAll(".net-node-group");
     const allEdges = net.querySelectorAll(".net-edge");
 
-    function isolateNode(nodeId, type) {
+    const defaultStatsText = `Top ${activeVendors.length} Contractors · ${mpList.length} Connected MPs · ${edges.length} Collusion Ties`;
+
+    function isolateNode(nodeId, type, nodeEl) {
       allEdges.forEach(edge => {
         const from = edge.dataset.from;
         const to = edge.dataset.to;
@@ -3307,15 +3307,32 @@
           g.classList.add("net-highlighted");
         }
       });
+
+      if (statsBadge) {
+        if (type === "vendor") {
+          const vName = nodeEl.dataset.netVendor;
+          const vObj = activeVendors.find(v => v.name === vName);
+          if (vObj) {
+            statsBadge.textContent = `🚨 ${vObj.name} · Outlay: ${vObj.sanctioned} (${vObj.contracts} works) · Risk: ${vObj.risk}/100 ${vObj.monopoly > 0 ? '· ' + vObj.monopoly + ' Monopoly Flags' : ''}`;
+          }
+        } else if (type === "mp") {
+          const mpName = nodeEl.dataset.netMp;
+          statsBadge.textContent = `🏛️ ${mpName} · Direct fund pipeline to highlighted contractor cartels`;
+        } else if (type === "sub") {
+          const sName = nodeEl.dataset.subName;
+          statsBadge.textContent = `📦 Subcontractor: ${sName} · Secondary Beneficiary Entity`;
+        }
+      }
     }
 
     function resetIsolation() {
       allEdges.forEach(e => e.classList.remove("net-highlighted", "net-dimmed"));
       allGroups.forEach(g => g.classList.remove("net-highlighted", "net-dimmed"));
+      if (statsBadge) statsBadge.textContent = defaultStatsText;
     }
 
     allGroups.forEach(g => {
-      g.addEventListener("mouseenter", () => isolateNode(g.id, g.dataset.nodeType));
+      g.addEventListener("mouseenter", () => isolateNode(g.id, g.dataset.nodeType, g));
       g.addEventListener("mouseleave", resetIsolation);
     });
   }

@@ -4930,7 +4930,7 @@ html[data-theme="light"] .msn-card:hover {
 }
 
 .net-node-group:hover {
-    filter: brightness(1.25);
+    filter: brightness(1.2);
 }
 
 .net-edge {
@@ -4941,18 +4941,79 @@ html[data-theme="light"] .msn-card:hover {
     opacity: 0.12 !important;
 }
 
-.net-highlighted {
+/* Isolate stroke to EDGES only so text is never smudged */
+.net-edge.net-highlighted {
     opacity: 1 !important;
     stroke: var(--gold) !important;
     stroke-width: 2.8 !important;
     stroke-opacity: 1 !important;
+    filter: drop-shadow(0 0 4px rgba(201, 162, 75, 0.6));
+}
+
+.net-node-group.net-highlighted {
+    opacity: 1 !important;
 }
 
 .net-node-group.net-highlighted circle,
 .net-node-group.net-highlighted polygon {
+    stroke: #ffffff !important;
     stroke-width: 2.5 !important;
-    filter: drop-shadow(0 0 8px rgba(201, 162, 75, 0.8)) !important;
+    filter: drop-shadow(0 0 10px rgba(201, 162, 75, 0.9)) !important;
 }
+
+/* Razor-sharp high-contrast text labels with dark halo behind letters */
+.net-node-group text {
+    font-family: var(--mono) !important;
+    paint-order: stroke fill !important;
+    stroke: #070a12 !important;
+    stroke-width: 3.2px !important;
+    stroke-linejoin: round !important;
+    stroke-linecap: round !important;
+    pointer-events: none !important;
+    letter-spacing: 0.25px;
+    font-weight: 600;
+}
+
+.net-node-group .net-text-mp {
+    fill: #ffcf40 !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+}
+
+.net-node-group .net-text-vendor {
+    fill: #ffffff !important;
+    font-size: 9.5px !important;
+    font-weight: 600 !important;
+}
+
+.net-node-group .net-text-sub {
+    fill: #94a3b8 !important;
+    font-size: 8.5px !important;
+    font-weight: 500 !important;
+}
+
+.net-node-group.net-highlighted text {
+    font-weight: 700 !important;
+}
+
+.net-node-group.net-highlighted .net-text-mp {
+    fill: #ffe066 !important;
+    stroke: #000000 !important;
+    stroke-width: 4px !important;
+}
+
+.net-node-group.net-highlighted .net-text-vendor {
+    fill: #ffffff !important;
+    stroke: #000000 !important;
+    stroke-width: 4px !important;
+}
+
+.net-node-group.net-highlighted .net-text-sub {
+    fill: #cbd5e1 !important;
+    stroke: #000000 !important;
+    stroke-width: 3.5px !important;
+}
+
 
 
 
