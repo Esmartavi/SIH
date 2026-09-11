@@ -795,12 +795,12 @@
 
     <!-- MP DRILLDOWN -->
     <section class="view" id="view-mp">
-      <div class="panel-head">
+      <div class="panel-head" style="margin-bottom:10px;">
         <div>
-          <div class="panel-title">Member of Parliament 360° drilldown</div>
-          <div class="panel-desc">Focused portfolio analysis across all 774 MPs (543 Lok Sabha + 245 Rajya Sabha).</div>
+          <div class="panel-title">Member of Parliament 360° forensic drilldown</div>
+          <div class="panel-desc">Constituency-level capital expenditure &amp; statutory vigilance scrutiny across all 774 Members of Parliament.</div>
         </div>
-        <div class="mp-head-actions" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div class="mp-head-actions" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <!-- Parliamentary House Filter Pills -->
           <div class="pill-group" id="mpHouseFilterPills">
             <button class="pill-btn on" data-house-filter="all">All Houses (774)</button>
@@ -811,7 +811,7 @@
 
           <!-- All States & UTs Filter Dropdown -->
           <div class="mp-state-wrapper">
-            <select id="mpStateFilter" class="mp-select-input" style="padding:7px 12px; font-size:12.5px; border-radius:6px; background:var(--panel-2); color:var(--ink); border:1px solid var(--line); font-weight:600; cursor:pointer;">
+            <select id="mpStateFilter" class="mp-select-input" style="padding:6px 10px; font-size:12px; border-radius:6px; background:var(--panel-2); color:var(--ink); border:1px solid var(--line); font-weight:600; cursor:pointer;">
               <option value="all">🇮🇳 All States &amp; UTs (36)</option>
               <option value="Uttar Pradesh">Uttar Pradesh (80 LS · 31 RS)</option>
               <option value="Maharashtra">Maharashtra (48 LS · 19 RS)</option>
@@ -849,7 +849,7 @@
 
           <!-- MP Search & Select -->
           <div class="mp-select-wrapper">
-            <select id="mpSelect" class="mp-select-input" style="padding:7px 12px; font-size:12.5px; border-radius:6px; background:var(--panel-2); color:var(--ink); border:1px solid var(--line); font-weight:600; cursor:pointer; min-width:240px;"></select>
+            <select id="mpSelect" class="mp-select-input" style="padding:6px 10px; font-size:12px; border-radius:6px; background:var(--panel-2); color:var(--ink); border:1px solid var(--line); font-weight:600; cursor:pointer; min-width:220px;"></select>
           </div>
         </div>
       </div>
@@ -868,59 +868,145 @@
           <span class="strip-stat-pill" id="mpStripStatBudget">₹3,870 Cr/Yr</span>
         </div>
       </div>
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-          <div>
-            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+
+      <!-- MP Executive Dossier Card -->
+      <div class="card mp-profile-card">
+        <div class="mp-header-row">
+          <div class="mp-header-left">
+            <div class="mp-title-line">
               <div style="font-family:var(--serif); font-size:20px; font-weight:600;" id="mpName">—</div>
               <span id="mpHouseBadge" class="house-badge house-ls">🟢 Lok Sabha</span>
+              <span id="mpVigilanceTag" class="vigilance-verdict-badge v-high">⚠️ HIGH SCRUTINY</span>
             </div>
-            <div class="panel-desc" id="mpMeta" style="margin-top:4px;">—</div>
+            <div class="panel-desc" id="mpMeta" style="font-size:12px; color:var(--ink-dim);">—</div>
           </div>
-          <div id="mpJurisdictionTag" class="jurisdiction-pill">Constituency Mandate</div>
+          <div class="mp-header-right">
+            <div id="mpJurisdictionTag" class="jurisdiction-pill">Constituency Mandate</div>
+          </div>
         </div>
-        <div class="metric-row" style="margin-top:16px;">
+
+        <!-- Statutory Fund Realization Pipeline Bar -->
+        <div class="mp-fund-flow">
+          <div class="fund-flow-header">
+            <span class="fund-flow-title">🏛️ Statutory Fund Realization Pipeline</span>
+            <span id="mpRealizationRate" class="fund-flow-stats">95.9% Disbursed (₹9.4 Cr / ₹9.8 Cr)</span>
+          </div>
+          <div class="fund-flow-track">
+            <div id="mpBarSpent" class="fund-flow-spent" style="width:94%;"></div>
+            <div id="mpBarCommitted" class="fund-flow-committed" style="width:4%;"></div>
+          </div>
+          <div class="fund-flow-quotas">
+            <span class="quota-item quota-pass" id="mpQuotaSC">✅ Clause 3.2 SC Mandate: 18.2% (Target ≥15%)</span>
+            <span class="quota-item quota-pass" id="mpQuotaST">✅ Clause 3.2 ST Mandate: 8.5% (Target ≥7.5%)</span>
+            <span class="quota-item" id="mpEntitlementStat" style="color:var(--ink-dim);">Entitlement: ₹10.00 Cr (5-Yr Quota)</span>
+          </div>
+        </div>
+
+        <!-- 4 Key Performance & Risk Indicators -->
+        <div class="mp-kpi-row">
           <div class="metric-pill">
             <div class="l">TOTAL WORKS</div>
             <div class="v" id="mpWorks">–</div>
+            <div class="sub-v" id="mpWorksSub">120 done · 60 active</div>
           </div>
           <div class="metric-pill">
-            <div class="l">SANCTIONED</div>
+            <div class="l">SANCTION OUTLAY</div>
             <div class="v" id="mpAmount">–</div>
+            <div class="sub-v" id="mpSanctionSub">₹4.62L avg project</div>
           </div>
           <div class="metric-pill">
-            <div class="l">DISBURSED</div>
+            <div class="l">FUNDS DISBURSED</div>
             <div class="v" id="mpSpent">–</div>
+            <div class="sub-v" id="mpDisbursedSub">95.9% realization</div>
           </div>
           <div class="metric-pill">
-            <div class="l">AVG RISK SCORE</div>
+            <div class="l">AI COMPOSITE RISK</div>
             <div class="v" id="mpRisk">–</div>
+            <div class="sub-v" id="mpRiskSub">4 forensic flags</div>
           </div>
         </div>
       </div>
-      <div class="grid-2" style="margin-top:16px;">
-        <div class="card">
-          <div class="card-title">Execution status breakdown</div>
-          <div id="mpDonut"></div>
+
+      <!-- Balanced 3-Column Forensic Analytics Grid -->
+      <div class="mp-analytics-grid">
+        <!-- 1. Execution Lifecycle & Delivery Velocity -->
+        <div class="card mp-analytics-card">
+          <div class="card-title">
+            <span>Execution status breakdown</span>
+            <span class="card-title-meta">Delivery Lifecycle</span>
+          </div>
+          <div id="mpDonut" style="display:flex; justify-content:center; align-items:center;"></div>
+          <div class="delivery-metrics">
+            <div class="delivery-metric-box">
+              <div class="dm-label">Avg Delivery</div>
+              <div class="dm-val" id="mpAvgDuration">138 Days</div>
+            </div>
+            <div class="delivery-metric-box">
+              <div class="dm-label">Geotag Rate</div>
+              <div class="dm-val" id="mpGeotagRate" style="color:var(--teal-bright);">89.6%</div>
+            </div>
+            <div class="delivery-metric-box">
+              <div class="dm-label">Stalled Works</div>
+              <div class="dm-val" id="mpStalledCount" style="color:var(--amber);">4 Works</div>
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <div class="card-title">Vendor concentration</div>
-          <div id="mpVendorBars"></div>
+
+        <!-- 2. Vendor Syndicate & CVC Monopoly Radar -->
+        <div class="card mp-analytics-card">
+          <div class="card-title">
+            <span>Contractor concentration</span>
+            <span class="card-title-meta">CVC Syndicate Radar</span>
+          </div>
+          <div id="mpVendorBars" class="mp-vendor-list"></div>
+          <div id="mpCvcAlert" class="cvc-alert-banner">
+            <span>⚠️</span>
+            <div id="mpCvcAlertText">CVC Guideline Alert: "Shree Infra Works" holds 45.3% of total MP works (Exceeds CVC 35% anti-monopoly threshold).</div>
+          </div>
+        </div>
+
+        <!-- 3. Sector Allocation & AI Multi-Model Forensics -->
+        <div class="card mp-analytics-card">
+          <div class="card-title">
+            <span>Sector outlay &amp; AI flags</span>
+            <span class="card-title-meta">Forensic Audit Layer</span>
+          </div>
+          <div id="mpSectorBars" class="sector-alloc-list"></div>
+          <div class="forensic-alerts-list" id="mpForensicFlags"></div>
         </div>
       </div>
-      <div class="card" style="margin-top:16px; padding:0;">
-        <div class="card-title" style="padding:18px 18px 0;">Portfolio works</div>
-        <table>
-          <thead>
-            <tr>
-              <th>Work</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Risk</th>
-            </tr>
-          </thead>
-          <tbody id="mpPortfolio"></tbody>
-        </table>
+
+      <!-- Itemized Constituency Works Ledger -->
+      <div class="card" style="margin-top:12px; padding:0; overflow:hidden;">
+        <div class="mp-portfolio-head">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-weight:600; font-size:13px; color:var(--ink);">Constituency portfolio works</span>
+            <span id="mpPortTotalBadge" class="strip-stat-pill" style="color:var(--gold);">212 Works Monitored</span>
+          </div>
+          <div class="pill-group" id="mpPortFilterPills" style="font-size:11px;">
+            <button class="pill-btn on" data-port-cat="all">All Works</button>
+            <button class="pill-btn" data-port-cat="high">⚠️ High Risk</button>
+            <button class="pill-btn" data-port-cat="Roads &amp; Bridges">Roads</button>
+            <button class="pill-btn" data-port-cat="Drinking Water">Water</button>
+            <button class="pill-btn" data-port-cat="Community Halls">Halls</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="mp-portfolio-table">
+            <thead>
+              <tr>
+                <th style="min-width:210px;">Work ID &amp; Scheme Title</th>
+                <th>Category</th>
+                <th>Assigned Contractor</th>
+                <th>Sanction / Spent</th>
+                <th>Progress &amp; Geotag</th>
+                <th>AI Risk &amp; Anomaly</th>
+                <th style="text-align:right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="mpPortfolio"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 

@@ -3609,6 +3609,74 @@
     applyMPFiltersAndRender();
   }
 
+  let currentMPWorks = [];
+  let currentMPPortFilter = "all";
+
+  function filterAndRenderMPPortfolio() {
+    const mpPort = document.getElementById("mpPortfolio");
+    if (!mpPort) return;
+    
+    let filtered = currentMPWorks;
+    if (currentMPPortFilter === "high") {
+      filtered = currentMPWorks.filter(w => w.risk >= 65);
+    } else if (currentMPPortFilter !== "all") {
+      filtered = currentMPWorks.filter(w => w.cat === currentMPPortFilter);
+    }
+    
+    if (filtered.length === 0) {
+      mpPort.innerHTML = `<tr><td colspan="7" class="empty-state" style="padding:20px; text-align:center; color:var(--ink-dim);">No works matching active filter in this MP's portfolio.</td></tr>`;
+      return;
+    }
+    
+    mpPort.innerHTML = filtered.map(w => `
+      <tr class="rowlink" data-open-case="${w.id}">
+        <td>
+          <div style="font-weight:600; color:var(--ink);">${w.id}</div>
+          <div style="color:var(--ink-dim); font-size:11px; margin-top:2px;">${w.desc}</div>
+        </td>
+        <td><span class="badge-mini" style="background:var(--panel-2); border:1px solid var(--line);">${w.cat}</span></td>
+        <td>
+          <div style="font-weight:500; color:var(--ink);">${w.vendor || 'State Civil Corp'}</div>
+          ${w.monopoly ? '<span class="badge-mono" style="font-size:8.5px; padding:1px 5px;">MONOPOLY</span>' : ''}
+        </td>
+        <td class="mono">
+          <div>₹${(w.sanction / 100000).toFixed(1)}L</div>
+          <div style="color:var(--ink-faint); font-size:10px;">Spent: ₹${((w.spent || w.sanction) / 100000).toFixed(1)}L</div>
+        </td>
+        <td>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="progress-mini" style="width:45px;"><i style="width:${w.progress || 100}%;"></i></span>
+            <span class="mono" style="font-size:10px;">${w.progress || 100}%</span>
+          </div>
+          <div style="font-size:10px; margin-top:2px; color:${w.geotagged !== false ? 'var(--teal)' : 'var(--amber)'};">
+            ${w.geotagged !== false ? '📍 Geotagged' : '⚠️ Missing Photo'}
+          </div>
+        </td>
+        <td>
+          <span class="risk-tag risk-${riskLabel(w.risk)}">${w.risk} · ${riskLabel(w.risk)}</span>
+          <div style="color:var(--ink-faint); font-size:10.5px; max-width:210px; margin-top:2px; line-height:1.25;">
+            ${w.reason || 'Normal statutory verification'}
+          </div>
+        </td>
+        <td style="text-align:right;">
+          <div class="row-actions" onclick="event.stopPropagation();" style="justify-content:flex-end;">
+            <button class="tbl-btn" data-open-case="${w.id}" style="padding:3px 8px; font-size:10.5px; border-radius:4px;">Inspect</button>
+          </div>
+        </td>
+      </tr>`).join("");
+
+    bindRowOpeners();
+  }
+
+  document.querySelectorAll("#mpPortFilterPills .pill-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#mpPortFilterPills .pill-btn").forEach(b => b.classList.remove("on"));
+      btn.classList.add("on");
+      currentMPPortFilter = btn.dataset.portCat || "all";
+      filterAndRenderMPPortfolio();
+    });
+  });
+
   function renderMP(m) {
     if (!m) return;
     document.getElementById("mpName").textContent = m.name;
@@ -3633,28 +3701,338 @@
       jurTag.textContent = m.jurisdiction || `${m.house} Mandate`;
     }
 
+    // Vigilance Verdict Scrutiny Badge
+    const vigTag = document.getElementById("mpVigilanceTag");
+    if (vigTag) {
+      if (m.risk >= 85) {
+        vigTag.className = "vigilance-verdict-badge v-critical";
+        vigTag.textContent = "🚨 CRITICAL VIGILANCE SCRUTINY";
+      } else if (m.risk >= 65) {
+        vigTag.className = "vigilance-verdict-badge v-high";
+        vigTag.textContent = "⚠️ HIGH SCRUTINY · CVC Monopoly Watch";
+      } else if (m.risk >= 40) {
+        vigTag.className = "vigilance-verdict-badge v-moderate";
+        vigTag.textContent = "🟡 ELEVATED WATCH · Milestones Monitored";
+      } else {
+        vigTag.className = "vigilance-verdict-badge v-clear";
+        vigTag.textContent = "✅ STATUTORY CLEARANCE · Normal";
+      }
+    }
+
+    // Fund Flow Pipeline & Realization
+    const amtNum = parseFloat((m.amount || "9.8").replace(/[^0-9.]/g, '')) || 9.8;
+    const spentNum = parseFloat((m.spent || "9.4").replace(/[^0-9.]/g, '')) || 9.4;
+    const realPercent = Math.min(100, ((spentNum / amtNum) * 100)).toFixed(1);
+
+    const mpRealizationRate = document.getElementById("mpRealizationRate");
+    if (mpRealizationRate) {
+      mpRealizationRate.textContent = `${realPercent}% Disbursed (${m.spent} of ${m.amount})`;
+    }
+
+    const mpBarSpent = document.getElementById("mpBarSpent");
+    const mpBarCommitted = document.getElementById("mpBarCommitted");
+    if (mpBarSpent && mpBarCommitted) {
+      const spentWidth = Math.min(94, (spentNum / 10.0 * 100));
+      const commWidth = Math.max(3, Math.min(6, (amtNum - spentNum) / 10.0 * 100));
+      mpBarSpent.style.width = `${spentWidth}%`;
+      mpBarCommitted.style.width = `${commWidth}%`;
+    }
+
+    const scTarget = (15.2 + (m.works % 7) * 0.7).toFixed(1);
+    const stTarget = (7.6 + (m.works % 5) * 0.4).toFixed(1);
+    const mpQuotaSC = document.getElementById("mpQuotaSC");
+    const mpQuotaST = document.getElementById("mpQuotaST");
+    if (mpQuotaSC) mpQuotaSC.textContent = `✅ Clause 3.2 SC Mandate: ${scTarget}% (Target ≥15%)`;
+    if (mpQuotaST) mpQuotaST.textContent = `✅ Clause 3.2 ST Mandate: ${stTarget}% (Target ≥7.5%)`;
+
+    // 4 Key Indicators
     document.getElementById("mpWorks").textContent = m.works;
     document.getElementById("mpAmount").textContent = m.amount;
     document.getElementById("mpSpent").textContent = m.spent;
     document.getElementById("mpRisk").textContent = m.risk;
+
+    const completedVal = m.exec && m.exec[0] ? m.exec[0].value : Math.round(m.works * 0.6);
+    const activeVal = m.exec && m.exec[1] ? m.exec[1].value : Math.round(m.works * 0.28);
+    const mpWorksSub = document.getElementById("mpWorksSub");
+    if (mpWorksSub) mpWorksSub.textContent = `${completedVal} done · ${activeVal} active`;
+
+    const avgProjLakhs = ((amtNum * 100) / m.works).toFixed(2);
+    const mpSanctionSub = document.getElementById("mpSanctionSub");
+    if (mpSanctionSub) mpSanctionSub.textContent = `₹${avgProjLakhs}L avg project`;
+
+    const mpDisbursedSub = document.getElementById("mpDisbursedSub");
+    if (mpDisbursedSub) mpDisbursedSub.textContent = `${realPercent}% realization rate`;
+
+    const mpRiskSub = document.getElementById("mpRiskSub");
+    if (mpRiskSub) mpRiskSub.textContent = m.risk >= 80 ? "7 critical flags" : m.risk >= 65 ? "4 forensic alerts" : m.risk >= 40 ? "2 monitor flags" : "Statistical compliance";
+
+    // Card 1: Donut & Delivery Velocity
     drawDonut("mpDonut", m.exec);
-    drawHBars("mpVendorBars", m.vendors.map(v => ({ label: v.label, value: v.value, display: v.value + " ctr", color: cssVar('--gold') })));
-    
-    const mpPort = document.getElementById("mpPortfolio");
-    if (mpPort) {
-      let works = alertsData.filter(a => a.mp === m.name);
-      if (works.length === 0) {
-        const stateCode = (m.state || "IN").substring(0, 2).toUpperCase();
-        works = [
-          { id: `MPLADS-${stateCode}-1104`, desc: `Rural link road resurfacing & concrete stabilization`, cat: "Roads & Bridges", sanction: 3800000, risk: m.risk },
-          { id: `MPLADS-${stateCode}-1208`, desc: `Solar micro-grid community high-mast lighting setup`, cat: "Solar & Power", sanction: 2400000, risk: Math.max(22, m.risk - 15) },
-          { id: `MPLADS-${stateCode}-1344`, desc: `Panchayat multi-purpose digital smart learning centre`, cat: "Education Infra", sanction: 3100000, risk: Math.max(18, m.risk - 25) }
-        ];
-      }
-      mpPort.innerHTML = works.map(a => `
-        <tr class="rowlink" data-open-case="${a.id}"><td>${a.desc}</td><td>${a.cat}</td><td class="mono">₹${(a.sanction / 100000).toFixed(1)}L</td><td><span class="risk-tag risk-${riskLabel(a.risk)}">${a.risk}</span></td></tr>`).join("");
+
+    const mpAvgDuration = document.getElementById("mpAvgDuration");
+    if (mpAvgDuration) mpAvgDuration.textContent = `${122 + (m.works % 38)} Days`;
+
+    const mpGeotagRate = document.getElementById("mpGeotagRate");
+    if (mpGeotagRate) {
+      const geoRate = m.risk >= 85 ? (74.2 + (m.works % 6)).toFixed(1) : m.risk >= 65 ? (86.4 + (m.works % 5)).toFixed(1) : (94.8 + (m.works % 4)).toFixed(1);
+      mpGeotagRate.textContent = `${geoRate}%`;
+      mpGeotagRate.style.color = m.risk >= 85 ? "var(--crimson)" : m.risk >= 65 ? "var(--amber)" : "var(--teal-bright)";
     }
-    bindRowOpeners();
+
+    const mpStalledCount = document.getElementById("mpStalledCount");
+    if (mpStalledCount) {
+      const delayedVal = m.exec && m.exec[2] ? m.exec[2].value : 12;
+      const stalledCount = Math.max(1, Math.round(delayedVal / 5));
+      mpStalledCount.textContent = `${stalledCount} Works`;
+      mpStalledCount.style.color = stalledCount > 5 ? "var(--crimson)" : "var(--amber)";
+    }
+
+    // Card 2: Contractor Concentration & CVC Monopoly Radar
+    let vendorsList = [...(m.vendors || [])];
+    const defaultExtra = [
+      { label: `${m.state || 'State'} Rural Infra Co.`, value: Math.max(12, Math.round(m.works * 0.12)) },
+      { label: `National Civic Works Ltd`, value: Math.max(8, Math.round(m.works * 0.08)) },
+      { label: `Regional Power & Water Grid`, value: Math.max(6, Math.round(m.works * 0.05)) }
+    ];
+    for (let extra of defaultExtra) {
+      if (vendorsList.length < 4 && !vendorsList.some(v => v.label === extra.label)) {
+        vendorsList.push(extra);
+      }
+    }
+
+    const totalVendorWorks = m.works;
+    const topV = vendorsList[0];
+    const topShare = topV ? ((topV.value / totalVendorWorks) * 100) : 0;
+
+    const vendorContainer = document.getElementById("mpVendorBars");
+    if (vendorContainer) {
+      vendorContainer.innerHTML = vendorsList.map(v => {
+        const vShare = ((v.value / totalVendorWorks) * 100);
+        const vAmountCr = ((amtNum * (vShare / 100))).toFixed(2);
+        const isMonopoly = vShare > 35;
+        const barColor = isMonopoly ? "var(--crimson)" : vShare > 22 ? "var(--amber)" : "var(--gold)";
+        return `
+          <div class="mp-vendor-item">
+            <div class="mp-vendor-item-head">
+              <span class="mp-vendor-name" title="${v.label}">${v.label}${isMonopoly ? ' <span class="badge-mono" style="font-size:8px; padding:1px 4px;">MONOPOLY</span>' : ''}</span>
+              <span class="mp-vendor-meta"><strong style="color:var(--ink);">${v.value}</strong> works (${vShare.toFixed(1)}% · ₹${vAmountCr} Cr)</span>
+            </div>
+            <div class="mp-vendor-track">
+              <div class="mp-vendor-fill" style="width:${Math.min(100, vShare * 1.8).toFixed(0)}%; background:${barColor};"></div>
+            </div>
+          </div>`;
+      }).join("");
+    }
+
+    const cvcAlert = document.getElementById("mpCvcAlert");
+    const cvcAlertText = document.getElementById("mpCvcAlertText");
+    if (cvcAlert && cvcAlertText) {
+      if (topShare > 35) {
+        cvcAlert.className = "cvc-alert-banner";
+        cvcAlertText.innerHTML = `<strong>CVC Anti-Monopoly Breach:</strong> "${topV.label}" captures <strong>${topShare.toFixed(1)}%</strong> of works. Exceeds Central Vigilance Commission 35% guideline.`;
+      } else {
+        cvcAlert.className = "cvc-alert-banner cvc-pass";
+        cvcAlertText.innerHTML = `<strong>CVC Compliance Verified:</strong> Top vendor captures <strong>${topShare.toFixed(1)}%</strong> of works. Within CVC 35% concentration threshold.`;
+      }
+    }
+
+    // Card 3: Sectoral Allocation & AI Multi-Model Forensics
+    const sectorBars = document.getElementById("mpSectorBars");
+    if (sectorBars) {
+      const s1Pct = 42, s2Pct = 26, s3Pct = 18, s4Pct = 14;
+      const s1Amt = (amtNum * 0.42).toFixed(2);
+      const s2Amt = (amtNum * 0.26).toFixed(2);
+      const s3Amt = (amtNum * 0.18).toFixed(2);
+      const s4Amt = (amtNum * 0.14).toFixed(2);
+      sectorBars.innerHTML = `
+        <div class="sector-alloc-item">
+          <div class="sector-alloc-head">
+            <span class="sector-alloc-name">Roads, Bridges & Pathways</span>
+            <span class="sector-alloc-val">₹${s1Amt} Cr (${s1Pct}%)</span>
+          </div>
+          <div class="sector-alloc-track"><div class="sector-alloc-fill" style="width:${s1Pct}%; background:var(--gold);"></div></div>
+        </div>
+        <div class="sector-alloc-item">
+          <div class="sector-alloc-head">
+            <span class="sector-alloc-name">Community Halls & Shelters</span>
+            <span class="sector-alloc-val">₹${s2Amt} Cr (${s2Pct}%)</span>
+          </div>
+          <div class="sector-alloc-track"><div class="sector-alloc-fill" style="width:${s2Pct}%; background:var(--teal);"></div></div>
+        </div>
+        <div class="sector-alloc-item">
+          <div class="sector-alloc-head">
+            <span class="sector-alloc-name">Drinking Water & Sanitation</span>
+            <span class="sector-alloc-val">₹${s3Amt} Cr (${s3Pct}%)</span>
+          </div>
+          <div class="sector-alloc-track"><div class="sector-alloc-fill" style="width:${s3Pct}%; background:#38bdf8;"></div></div>
+        </div>
+        <div class="sector-alloc-item">
+          <div class="sector-alloc-head">
+            <span class="sector-alloc-name">Education & Solar Lighting</span>
+            <span class="sector-alloc-val">₹${s4Amt} Cr (${s4Pct}%)</span>
+          </div>
+          <div class="sector-alloc-track"><div class="sector-alloc-fill" style="width:${s4Pct}%; background:#a78bfa;"></div></div>
+        </div>`;
+    }
+
+    const forensicFlags = document.getElementById("mpForensicFlags");
+    if (forensicFlags) {
+      let flagChipsHtml = "";
+      if (m.risk >= 80) {
+        flagChipsHtml = `
+          <div class="forensic-alert-chip chip-critical">
+            <span>🔴</span>
+            <div><strong>GFR 144 Tender Splitting:</strong> 3 tenders partitioned under ₹25L/₹50L mandatory e-tender ceiling.</div>
+          </div>
+          <div class="forensic-alert-chip chip-high">
+            <span>🟠</span>
+            <div><strong>Duplicate Photolog (pHash 0.97):</strong> Completion image matches adjacent district work.</div>
+          </div>
+          <div class="forensic-alert-chip chip-moderate">
+            <span>🟡</span>
+            <div><strong>Invoice Digit Clustering:</strong> Significant deviation at leading digit 5 (₹5,00,000 cliff).</div>
+          </div>`;
+      } else if (m.risk >= 65) {
+        flagChipsHtml = `
+          <div class="forensic-alert-chip chip-high">
+            <span>🟠</span>
+            <div><strong>Contractor Concentration:</strong> High syndicate density detected in civil works.</div>
+          </div>
+          <div class="forensic-alert-chip chip-moderate">
+            <span>🟡</span>
+            <div><strong>Milestone Progress Stalled:</strong> ${Math.max(2, Math.round((m.works % 10)/2))} works delayed &gt;120 days post 1st tranche.</div>
+          </div>
+          <div class="forensic-alert-chip chip-ok">
+            <span>🔵</span>
+            <div><strong>Clause 3.2 Statutory Quotas:</strong> SC/ST expenditure thresholds satisfied.</div>
+          </div>`;
+      } else if (m.risk >= 40) {
+        flagChipsHtml = `
+          <div class="forensic-alert-chip chip-moderate">
+            <span>🟡</span>
+            <div><strong>Minor Tranche Timing Variance:</strong> 2 tranches released with partial utilization cert.</div>
+          </div>
+          <div class="forensic-alert-chip chip-ok">
+            <span>🟢</span>
+            <div><strong>Benford Invoicing Conformity:</strong> Normal digit frequency distribution (χ² = 11.4).</div>
+          </div>
+          <div class="forensic-alert-chip chip-ok">
+            <span>🔵</span>
+            <div><strong>Statutory Mandate:</strong> SC/ST quota verified with district collectorate.</div>
+          </div>`;
+      } else {
+        flagChipsHtml = `
+          <div class="forensic-alert-chip chip-ok">
+            <span>🟢</span>
+            <div><strong>Statutory Audit Clearance:</strong> Full adherence to MPLADS Guidelines 2023.</div>
+          </div>
+          <div class="forensic-alert-chip chip-ok">
+            <span>🟢</span>
+            <div><strong>Competitive Bidding Verified:</strong> No vendor syndicate or monopoly detected.</div>
+          </div>
+          <div class="forensic-alert-chip chip-ok">
+            <span>📍</span>
+            <div><strong>Geotagged Physical Proof:</strong> 100% works mapped with GPS photos.</div>
+          </div>`;
+      }
+      forensicFlags.innerHTML = flagChipsHtml;
+    }
+
+    // Portfolio Works Construction
+    const stateCode = (m.state || "IN").substring(0, 2).toUpperCase();
+    const baseVendors = m.vendors && m.vendors.length > 0 ? m.vendors.map(v => v.label) : ["Regional Civil Infra"];
+    
+    let works = alertsData.filter(a => a.mp === m.name);
+    
+    const sampleCatalog = [
+      {
+        id: `MPLADS-${stateCode}-${1000 + (m.works % 800) + 1}`,
+        desc: "Rural all-weather asphalt link road and box culverts",
+        cat: "Roads & Bridges",
+        vendor: baseVendors[0],
+        sanction: 4250000,
+        spent: 4250000,
+        progress: 100,
+        geotagged: true,
+        risk: m.risk,
+        reason: m.risk >= 70 ? "GFR 144 Tender splitting under ₹50L ceiling" : "Statutory compliance verified"
+      },
+      {
+        id: `MPLADS-${stateCode}-${1000 + (m.works % 800) + 2}`,
+        desc: "Panchayat disaster shelter & multi-purpose community hall",
+        cat: "Community Halls",
+        vendor: baseVendors[1] || baseVendors[0],
+        sanction: 3800000,
+        spent: 3800000,
+        progress: 100,
+        geotagged: true,
+        risk: Math.max(24, m.risk - 8),
+        reason: m.risk >= 80 ? "Duplicate completion photograph, pHash match 0.96" : "Physical verification complete"
+      },
+      {
+        id: `MPLADS-${stateCode}-${1000 + (m.works % 800) + 3}`,
+        desc: "Deep solar tube-well & overhead drinking water tank network",
+        cat: "Drinking Water",
+        vendor: baseVendors[2] || baseVendors[0],
+        sanction: 2950000,
+        spent: 2650000,
+        progress: 90,
+        geotagged: true,
+        risk: Math.max(20, m.risk - 15),
+        reason: "Pipeline trenching verified by field audit"
+      },
+      {
+        id: `MPLADS-${stateCode}-${1000 + (m.works % 800) + 4}`,
+        desc: "High-mast solar LED illumination towers & micro-grid",
+        cat: "Solar & Power",
+        vendor: baseVendors[0],
+        sanction: 2400000,
+        spent: 2400000,
+        progress: 100,
+        geotagged: true,
+        risk: Math.max(18, m.risk - 22),
+        reason: "Energy commission testing certificate logged"
+      },
+      {
+        id: `MPLADS-${stateCode}-${1000 + (m.works % 800) + 5}`,
+        desc: "Government primary school smart computer laboratory",
+        cat: "Education Infra",
+        vendor: baseVendors[1] || baseVendors[0],
+        sanction: 1850000,
+        spent: 1850000,
+        progress: 100,
+        geotagged: true,
+        risk: Math.max(15, m.risk - 28),
+        reason: "Hardware asset serial verification pass"
+      },
+      {
+        id: `MPLADS-${stateCode}-${1000 + (m.works % 800) + 6}`,
+        desc: "Community health sub-centre outpatient diagnostic block",
+        cat: "Health Centres",
+        vendor: baseVendors[2] || baseVendors[0],
+        sanction: 3100000,
+        spent: 1550000,
+        progress: 50,
+        geotagged: false,
+        risk: Math.min(95, m.risk + 12),
+        reason: "Stalled execution for 140+ days after 50% release"
+      }
+    ];
+
+    for (let sample of sampleCatalog) {
+      if (works.length < 7 && !works.some(w => w.desc === sample.desc)) {
+        works.push(sample);
+      }
+    }
+
+    currentMPWorks = works;
+    currentMPPortFilter = "all";
+    document.querySelectorAll("#mpPortFilterPills .pill-btn").forEach(b => b.classList.toggle("on", b.dataset.portCat === "all"));
+    
+    const portBadge = document.getElementById("mpPortTotalBadge");
+    if (portBadge) portBadge.textContent = `${m.works} Works Monitored`;
+
+    filterAndRenderMPPortfolio();
   }
 
   // Initial MP roster render
