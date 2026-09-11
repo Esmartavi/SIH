@@ -14,6 +14,69 @@
     }, 4000);
   }
 
+  /* ---------- NUMERIC SMOOTH COUNTER HELPER ---------- */
+  function animateNumber(el, targetVal, duration = 550) {
+    if (!el) return;
+    if (typeof targetVal === "number") targetVal = String(targetVal);
+    targetVal = String(targetVal).trim();
+    const currentText = el.textContent.trim();
+    if (currentText === targetVal) return;
+
+    // Matches: "₹4,412 Cr", "98,649", "0.021", "41.2", "₹612 Cr", "1.1%", "238", "< 0.001"
+    const regex = /^([^\d\-+.]*?)([\d,]+(?:\.\d+)?)(.*)$/;
+    const targetMatch = targetVal.match(regex);
+    const currentMatch = currentText.match(regex);
+
+    if (!targetMatch || !currentMatch) {
+      el.textContent = targetVal;
+      return;
+    }
+
+    const prefix = targetMatch[1];
+    const suffix = targetMatch[3];
+    const targetNum = parseFloat(targetMatch[2].replace(/,/g, ''));
+    const startNum = parseFloat(currentMatch[2].replace(/,/g, ''));
+
+    if (isNaN(startNum) || isNaN(targetNum) || startNum === targetNum) {
+      el.textContent = targetVal;
+      return;
+    }
+
+    const hasCommas = targetMatch[2].includes(',');
+    const decimals = targetMatch[2].includes('.') ? (targetMatch[2].split('.')[1].length) : 0;
+
+    el.classList.remove("num-updating");
+    void el.offsetWidth;
+    el.classList.add("num-updating");
+    const startTime = performance.now();
+
+    function step(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      // Smooth cubic ease-out
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const val = startNum + (targetNum - startNum) * ease;
+
+      let formattedNum;
+      if (decimals > 0) {
+        formattedNum = val.toFixed(decimals);
+      } else if (hasCommas) {
+        formattedNum = Math.round(val).toLocaleString();
+      } else {
+        formattedNum = Math.round(val).toString();
+      }
+      el.textContent = prefix + formattedNum + suffix;
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = targetVal;
+        setTimeout(() => el.classList.remove("num-updating"), 120);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
   /* ---------- THEME ---------- */
   const html = document.documentElement;
   document.querySelectorAll("[data-theme-btn]").forEach(btn => {
@@ -128,26 +191,14 @@
     });
 
     if (role === "mp_ls") {
-      currentHouseFilter = "Lok Sabha";
-      updateNavbarHouseUI("Lok Sabha");
-      renderKPIs("Lok Sabha");
-      updateTickerForHouse("Lok Sabha");
+      switchParliamentaryHouse("Lok Sabha");
       setView("mp");
-      if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
     } else if (role === "mp_rs") {
-      currentHouseFilter = "Rajya Sabha";
-      updateNavbarHouseUI("Rajya Sabha");
-      renderKPIs("Rajya Sabha");
-      updateTickerForHouse("Rajya Sabha");
+      switchParliamentaryHouse("Rajya Sabha");
       setView("mp");
-      if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
     } else if (role === "mp_nom") {
-      currentHouseFilter = "Nominated";
-      updateNavbarHouseUI("Nominated");
-      renderKPIs("Nominated");
-      updateTickerForHouse("Nominated");
+      switchParliamentaryHouse("Nominated");
       setView("mp");
-      if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
     } else if (role === "state") {
       setView("geo");
     } else if (role === "district") {
@@ -180,7 +231,8 @@
       setTimeout(() => applyMPFiltersAndRender(), 60);
     }
     if (name === "overview") {
-      renderKPIs(currentHouseFilter);
+      renderKPIs(currentHouseFilter, false);
+      renderRiskDist(currentHouseFilter, false);
       updateTickerForHouse(currentHouseFilter);
     }
   }
@@ -188,7 +240,7 @@
   navLinks.forEach(link => link.addEventListener("click", () => setView(link.dataset.view)));
   document.querySelectorAll("[data-goto]").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.goto)));
 
-  /* ---------- CUSTOM PARLIAMENTARY HOUSE DROPDOWN ---------- */
+  /* ---------- CUSTOM PARLIAMENTARY HOUSE DROPDOWN & CENTRAL SWITCHER ---------- */
   const customRoleDropdown = document.getElementById("customRoleDropdown");
   const roleTriggerBtn = document.getElementById("roleTriggerBtn");
   const roleDropdownMenu = document.getElementById("roleDropdownMenu");
@@ -229,30 +281,63 @@
     });
   }
 
+  /* Central unified Parliamentary House state manager */
+  function switchParliamentaryHouse(houseVal) {
+    if (!houseVal) return;
+    currentHouseFilter = houseVal;
+    updateNavbarHouseUI(houseVal);
+
+    // 1. Dynamic latency badge feedback with subtle pulse
+    const statBadge = document.querySelector(".stat-badge");
+    if (statBadge) {
+      const dot = statBadge.querySelector(".stat-dot");
+      if (dot) dot.classList.add("updating");
+      const labelSpan = statBadge.querySelector("span:not(.stat-dot)");
+      const shortName = houseVal === "all" ? "National" : houseVal === "Nominated" ? "Nominated" : houseVal;
+      if (labelSpan) labelSpan.textContent = `SYNCING · ${shortName}...`;
+
+      setTimeout(() => {
+        if (dot) dot.classList.remove("updating");
+        if (labelSpan) labelSpan.textContent = `SYNCED · ${shortName} (${Math.floor(Math.random() * 5 + 13)}ms)`;
+      }, 320);
+    }
+
+    // 2. War Room KPIs, Risk Cards, and Ticker
+    renderKPIs(houseVal, true);
+    updateTickerForHouse(houseVal);
+    renderRiskDist(houseVal, true);
+
+    // 3. Synchronize MP 360 pills
+    document.querySelectorAll("#mpHouseFilterPills .pill-btn").forEach(b => {
+      b.classList.toggle("on", b.dataset.houseFilter === houseVal);
+    });
+
+    if (houseVal === "Nominated") {
+      currentStateFilter = "all";
+      const mpStateFilter = document.getElementById("mpStateFilter");
+      if (mpStateFilter) mpStateFilter.value = "all";
+    }
+    if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
+
+    // 4. Benford Forensics View
+    if (typeof renderBenford === "function") renderBenford();
+
+    // 5. Live Alerts Table
+    if (typeof renderAlerts === "function") renderAlerts();
+
+    // 6. Vendor Table
+    if (typeof renderVendorTable === "function") renderVendorTable("");
+
+    const m = houseMetricsData[houseVal] || houseMetricsData["all"];
+    const optTitle = houseVal === "all" ? "All Parliamentary Houses" : houseVal;
+    showToast(`🏛️ Filtered ${optTitle} (${m.works.toLocaleString()} works · ${m.sanctioned})`);
+  }
+
   if (roleDropdownMenu) {
     roleDropdownMenu.querySelectorAll(".role-option").forEach(opt => {
       opt.addEventListener("click", () => {
         const houseVal = opt.dataset.houseVal;
-        currentHouseFilter = houseVal;
-        updateNavbarHouseUI(houseVal);
-        renderKPIs(houseVal);
-        updateTickerForHouse(houseVal);
-
-        // Sync with the MP House Filter pills in MP 360 view
-        document.querySelectorAll("#mpHouseFilterPills .pill-btn").forEach(b => {
-          b.classList.toggle("on", b.dataset.houseFilter === houseVal);
-        });
-
-        if (houseVal === "Nominated") {
-          currentStateFilter = "all";
-          const mpStateFilter = document.getElementById("mpStateFilter");
-          if (mpStateFilter) mpStateFilter.value = "all";
-        }
-        if (typeof applyMPFiltersAndRender === "function") applyMPFiltersAndRender();
-        if (typeof renderAlerts === "function") renderAlerts();
-
-        const optTitle = opt.querySelector(".role-opt-title") ? opt.querySelector(".role-opt-title").textContent.trim() : houseVal;
-        showToast(`Filtered Parliamentary data for ${optTitle}`);
+        switchParliamentaryHouse(houseVal);
         toggleRoleDropdown(false);
       });
     });
@@ -318,7 +403,7 @@
     }
   }
 
-  function renderKPIs(house) {
+  function renderKPIs(house, animate = true) {
     const kpiGrid = document.getElementById("kpiGrid");
     if (!kpiGrid) return;
     const m = houseMetricsData[house] || houseMetricsData["all"];
@@ -333,6 +418,30 @@
       { label: "SPLIT-TENDER VIOLATIONS", value: String(m.splitTenders), sub: "partitioned below e-tender limits", risk: null, goto: null, trigger: "split_tender", icon: "✂️", theme: "purple" },
       { label: "PREMATURE TRANCHE RELEASES", value: String(m.premature), sub: "Clause 4.3 non-conformance", risk: null, goto: null, trigger: "premature_tranche", icon: "⏳", theme: "teal" },
     ];
+
+    const existingCards = kpiGrid.querySelectorAll(".kpi-card");
+    if (existingCards.length === cards.length) {
+      existingCards.forEach((cardEl, idx) => {
+        const k = cards[idx];
+        const valEl = cardEl.querySelector(".kpi-value");
+        const subEl = cardEl.querySelector(".kpi-sub");
+        if (animate && valEl) {
+          animateNumber(valEl, k.value, 600);
+        } else if (valEl) {
+          valEl.textContent = k.value;
+        }
+        if (subEl) subEl.textContent = k.sub;
+        cardEl.dataset.gotoRisk = k.goto || "";
+        cardEl.dataset.gotoTrigger = k.trigger || "";
+
+        if (animate) {
+          cardEl.classList.remove("data-updated-pulse");
+          void cardEl.offsetWidth;
+          setTimeout(() => cardEl.classList.add("data-updated-pulse"), idx * 30);
+        }
+      });
+      return;
+    }
 
     kpiGrid.innerHTML = cards.map(k => `
       <button class="kpi-card kpi-theme-${k.theme} ${k.risk === 'crit' ? 'risk-crit' : k.risk === 'high' ? 'risk-high' : ''}" data-goto-risk="${k.goto || ''}" data-goto-trigger="${k.trigger || ''}">
@@ -565,36 +674,99 @@
 
   function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
-  /* ================= SVG CHART HELPERS ================= */
+  /* ================= SVG CHART HELPERS (ANIMATED & INTERACTIVE) ================= */
+  let benfordTooltipEl = null;
+  function initBarTooltips(container) {
+    if (!benfordTooltipEl) {
+      benfordTooltipEl = document.createElement("div");
+      benfordTooltipEl.className = "benford-tooltip";
+      document.body.appendChild(benfordTooltipEl);
+    }
+    container.querySelectorAll(".chart-bar-rect").forEach(rect => {
+      rect.addEventListener("mouseenter", (e) => {
+        const cat = rect.dataset.cat;
+        const val = rect.dataset.val;
+        const series = rect.dataset.series;
+        benfordTooltipEl.innerHTML = `<strong>Digit ${cat}</strong><br/><span style="color:var(--ink-faint); font-size:11px;">${series}:</span> <strong style="color:var(--gold);">${val}%</strong>`;
+        benfordTooltipEl.classList.add("show");
+      });
+      rect.addEventListener("mousemove", (e) => {
+        benfordTooltipEl.style.left = (e.clientX + 14) + "px";
+        benfordTooltipEl.style.top = (e.clientY - 38) + "px";
+      });
+      rect.addEventListener("mouseleave", () => {
+        benfordTooltipEl.classList.remove("show");
+      });
+    });
+  }
+
   function drawGroupedBars(containerId, categories, series, opts) {
     opts = opts || {};
-    const W = opts.width || 620, H = opts.height || 230, padL = 34, padB = 28, padT = 14, padR = 10;
+    const W = opts.width || 580, H = opts.height || 172, padL = 32, padB = 24, padT = 12, padR = 10;
     const plotW = W - padL - padR, plotH = H - padT - padB;
-    const maxV = opts.max || Math.max(...series.flatMap(s => s.values)) * 1.15;
+    const maxValRaw = Math.max(...series.flatMap(s => s.values));
+    const maxV = opts.max || Math.max(12, Math.ceil(maxValRaw * 1.15));
     const groupW = plotW / categories.length;
-    const barW = Math.min(16, groupW / (series.length + 1.4));
+    const barW = Math.min(16, groupW / (series.length + 1.2));
+
+    const c = document.getElementById(containerId);
+    if (!c) return;
+
+    const existingBars = c.querySelectorAll(".chart-bar-rect");
+    const totalBarsNeeded = categories.length * series.length;
+
+    // Fluid smooth update of existing bars if structure matches
+    if (existingBars.length === totalBarsNeeded) {
+      let barIdx = 0;
+      categories.forEach((cat, i) => {
+        const gx = padL + i * groupW + groupW / 2 - (series.length * barW) / 2;
+        series.forEach((s, si) => {
+          const v = s.values[i] || 0;
+          const h = Math.max(3, (v / maxV) * plotH);
+          const x = gx + si * barW;
+          const y = padT + plotH - h;
+          const rect = existingBars[barIdx++];
+          if (rect) {
+            rect.setAttribute("y", y);
+            rect.setAttribute("height", h);
+            rect.setAttribute("fill", s.color);
+            rect.dataset.val = v;
+            rect.dataset.cat = cat;
+            rect.dataset.series = s.name;
+            const titleEl = rect.querySelector("title");
+            if (titleEl) titleEl.textContent = `Digit ${cat} · ${s.name}: ${v}%`;
+          }
+        });
+      });
+      return;
+    }
+
     let bars = "", grid = "";
     for (let g = 0; g <= 4; g++) {
       const y = padT + plotH - (g / 4) * plotH;
       grid += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="${cssVar('--line-soft')}" stroke-width="1"/>`;
-      grid += `<text x="${padL - 6}" y="${y + 3}" font-size="8.5" text-anchor="end" fill="${cssVar('--ink-faint')}" font-family="IBM Plex Mono">${Math.round(maxV * g / 4)}</text>`;
+      grid += `<text x="${padL - 5}" y="${y + 3}" font-size="8.5" text-anchor="end" fill="${cssVar('--ink-faint')}" font-family="IBM Plex Mono">${Math.round(maxV * g / 4)}%</text>`;
     }
+
     categories.forEach((cat, i) => {
       const gx = padL + i * groupW + groupW / 2 - (series.length * barW) / 2;
       series.forEach((s, si) => {
         const v = s.values[i] || 0;
-        const h = Math.max(2, (v / maxV) * plotH);
+        const h = Math.max(3, (v / maxV) * plotH);
         const x = gx + si * barW;
         const y = padT + plotH - h;
-        bars += `<rect x="${x}" y="${y}" width="${barW - 2}" height="${h}" fill="${s.color}" rx="1.5"><title>${cat} · ${s.name}: ${v}</title></rect>`;
+        bars += `<rect class="chart-bar-rect" x="${x}" y="${y}" width="${barW - 2}" height="${h}" fill="${s.color}" rx="2" data-val="${v}" data-cat="${cat}" data-series="${s.name}"><title>Digit ${cat} · ${s.name}: ${v}%</title></rect>`;
       });
-      bars += `<text x="${padL + i * groupW + groupW / 2}" y="${H - 8}" font-size="9" text-anchor="middle" fill="${cssVar('--ink-faint')}" font-family="IBM Plex Mono">${cat}</text>`;
+      bars += `<text x="${padL + i * groupW + groupW / 2}" y="${H - 6}" font-size="9" text-anchor="middle" fill="${cssVar('--ink-faint')}" font-family="IBM Plex Mono">${cat}</text>`;
     });
-    const c = document.getElementById(containerId);
-    if (c) {
-      c.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart-svg">${grid}${bars}</svg>
-        <div class="legend-row">${series.map(s => `<span><span class="legend-dot" style="background:${s.color};"></span>${s.name}</span>`).join("")}</div>`;
-    }
+
+    c.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" class="chart-svg" style="display:block; width:100%; height:auto;">${grid}${bars}</svg>
+      <div class="legend-row" style="margin-top:6px; justify-content:flex-end;">
+        ${series.map(s => `<span><span class="legend-dot" style="background:${s.color};"></span>${s.name}</span>`).join("")}
+      </div>`;
+
+    initBarTooltips(c);
   }
 
   function drawDonut(containerId, segments) {
@@ -626,120 +798,158 @@
   function drawHBars(containerId, items) {
     const max = Math.max(...items.map(i => i.value));
     const el = document.getElementById(containerId);
-    if (el) {
-      el.innerHTML = items.map(i => `
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-          <div style="width:120px; font-size:12px; color:var(--ink-dim); flex-shrink:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${i.label}</div>
-          <div class="score-track" style="flex:1;"><div class="score-fill" style="width:${(i.value / max * 100).toFixed(0)}%; background:${i.color || 'var(--gold)'};"></div></div>
-          <div class="mono" style="width:70px; text-align:right; font-size:11.5px; color:var(--ink-faint);">${i.display || i.value}</div>
-        </div>`).join("");
-    }
+    if (!el) return;
+
+    el.innerHTML = items.map(i => `
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;" class="hbar-item">
+        <div style="width:130px; font-size:11.5px; color:var(--ink-dim); flex-shrink:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${i.label}</div>
+        <div class="score-track" style="flex:1; height:7px;">
+          <div class="score-fill" style="width:0%; background:${i.color || 'var(--gold)'};" data-target-width="${(i.value / max * 100).toFixed(0)}%"></div>
+        </div>
+        <div class="mono hbar-val" style="width:65px; text-align:right; font-size:11px; color:var(--ink-faint);">${i.display || i.value}</div>
+      </div>`).join("");
+
+    requestAnimationFrame(() => {
+      el.querySelectorAll(".score-fill").forEach(f => {
+        f.style.width = f.dataset.targetWidth;
+      });
+    });
   }
 
   function drawGauge(containerId, value, max, label, status) {
-    const cx = 110, cy = 105, r = 82;
-    const frac = Math.min(value / max, 1);
-    const angle = Math.PI + frac * Math.PI;
-    const nx = cx + (r - 10) * Math.cos(angle), ny = cy + (r - 10) * Math.sin(angle);
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const cx = 100, cy = 76, r = 58;
+    const frac = Math.min(Math.max(value / max, 0), 1);
+    const deg = frac * 180;
+
     const zones = [
-      { from: 0, to: 0.4, color: cssVar('--teal') },
-      { from: 0.4, to: 0.7, color: cssVar('--amber') },
-      { from: 0.7, to: 1, color: cssVar('--crimson') },
+      { from: 0, to: 0.35, color: cssVar('--teal') },
+      { from: 0.35, to: 0.65, color: cssVar('--amber') },
+      { from: 0.65, to: 1, color: cssVar('--crimson') },
     ];
+    
     let arcs = zones.map(z => {
       const a0 = Math.PI + z.from * Math.PI, a1 = Math.PI + z.to * Math.PI;
-      const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0), x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
-      return `<path d="M ${x0} ${y0} A ${r} ${r} 0 0 1 ${x1} ${y1}" fill="none" stroke="${z.color}" stroke-width="14" opacity="0.85"/>`;
+      const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+      const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+      return `<path d="M ${x0} ${y0} A ${r} ${r} 0 0 1 ${x1} ${y1}" fill="none" stroke="${z.color}" stroke-width="10" stroke-linecap="round" opacity="0.88"/>`;
     }).join("");
-    const el = document.getElementById(containerId);
-    if (el) {
-      el.innerHTML = `
-        <svg viewBox="0 0 220 130" class="chart-svg">
-          ${arcs}
-          <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="${cssVar('--ink')}" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="${cx}" cy="${cy}" r="5" fill="${cssVar('--ink')}"/>
-          <text x="${cx}" y="${cy + 30}" text-anchor="middle" font-family="Source Serif 4" font-size="20" font-weight="600" fill="${cssVar('--ink')}">${value.toFixed(3)}</text>
-          <text x="${cx}" y="${cy + 45}" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="${cssVar('--ink-faint')}">${label}</text>
-        </svg>
-        <div style="text-align:center; margin-top:-6px;"><span class="risk-tag risk-${status.tag}">${status.text}</span></div>`;
+
+    const needleGroup = el.querySelector(".gauge-needle-group");
+    const scoreEl = el.querySelector(".gauge-score-val");
+    const statusWrap = el.querySelector(".gauge-status-wrap");
+
+    if (needleGroup && scoreEl && statusWrap) {
+      needleGroup.style.transform = `rotate(${deg}deg)`;
+      animateNumber(scoreEl, value.toFixed(3), 600);
+      statusWrap.innerHTML = `<span class="risk-tag risk-${status.tag}" style="font-size:10px; padding:3px 10px;">${status.text}</span>`;
+      return;
     }
+
+    el.innerHTML = `
+      <svg viewBox="0 0 200 128" class="chart-svg" style="max-width:205px; margin:0 auto; display:block;">
+        ${arcs}
+        <!-- Ticks -->
+        <line x1="${cx - r - 3}" y1="${cy}" x2="${cx - r + 3}" y2="${cy}" stroke="${cssVar('--ink-faint')}" stroke-width="1"/>
+        <line x1="${cx}" y1="${cy - r - 3}" x2="${cx}" y2="${cy - r + 3}" stroke="${cssVar('--ink-faint')}" stroke-width="1"/>
+        <line x1="${cx + r - 3}" y1="${cy}" x2="${cx + r + 3}" y2="${cy}" stroke="${cssVar('--ink-faint')}" stroke-width="1"/>
+        <!-- Needle Group with smooth elastic transition -->
+        <g class="gauge-needle-group" style="transform: rotate(${deg}deg); transform-origin: ${cx}px ${cy}px;">
+          <polygon points="${cx - 50},${cy} ${cx - 8},${cy - 3} ${cx + 7},${cy} ${cx - 8},${cy + 3}" fill="${cssVar('--ink')}"/>
+          <circle cx="${cx}" cy="${cy}" r="5" fill="${cssVar('--ink')}"/>
+          <circle cx="${cx}" cy="${cy}" r="1.5" fill="${cssVar('--panel')}"/>
+        </g>
+        <text class="gauge-score-val" x="${cx}" y="${cy + 24}" text-anchor="middle" font-family="Source Serif 4" font-size="20" font-weight="600" fill="${cssVar('--ink')}">${value.toFixed(3)}</text>
+        <text x="${cx}" y="${cy + 36}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" letter-spacing="1.2" fill="${cssVar('--ink-faint')}">${label}</text>
+      </svg>
+      <div class="gauge-status-wrap" style="text-align:center; margin-top:4px;">
+        <span class="risk-tag risk-${status.tag}" style="font-size:10px; padding:3px 10px;">${status.text}</span>
+      </div>`;
   }
 
   /* ---------- OVERVIEW VIEW RENDERING (EXECUTIVE DEFENSE WAR ROOM) ---------- */
-  function renderRiskDist() {
-    const tiers = [
-      {
-        tier: "CRITICAL",
-        label: "Critical Risk",
-        count: 1084,
-        amount: "₹842 Cr",
-        pct: "1.1%",
-        icon: "🚨",
-        action: "Immediate FIR / Freeze",
-        color: "var(--crimson)"
-      },
-      {
-        tier: "HIGH",
-        label: "High Risk",
-        count: 2217,
-        amount: "₹1,420 Cr",
-        pct: "2.3%",
-        icon: "⚠️",
-        action: "Audit Inquiry Notice",
-        color: "var(--amber)"
-      },
-      {
-        tier: "MEDIUM",
-        label: "Medium Watch",
-        count: 4310,
-        amount: "₹2,180 Cr",
-        pct: "4.4%",
-        icon: "📑",
-        action: "Desk Documentation",
-        color: "var(--yellow)"
-      },
-      {
-        tier: "LOW",
-        label: "Low / Verified",
-        count: 90938,
-        amount: "₹38,200 Cr",
-        pct: "92.2%",
-        icon: "🛡️",
-        action: "Automated Clearance",
-        color: "var(--teal)"
-      }
-    ];
+  const riskTiersData = {
+    all: [
+      { tier: "CRITICAL", label: "Critical Risk", count: 1084, amount: "₹842 Cr", pct: "1.1%", icon: "🚨", action: "Immediate FIR / Freeze", color: "var(--crimson)" },
+      { tier: "HIGH", label: "High Risk", count: 2217, amount: "₹1,420 Cr", pct: "2.3%", icon: "⚠️", action: "Audit Inquiry Notice", color: "var(--amber)" },
+      { tier: "MEDIUM", label: "Medium Watch", count: 4310, amount: "₹2,180 Cr", pct: "4.4%", icon: "📑", action: "Desk Documentation", color: "var(--yellow)" },
+      { tier: "LOW", label: "Low / Verified", count: 90938, amount: "₹38,200 Cr", pct: "92.2%", icon: "🛡️", action: "Automated Clearance", color: "var(--teal)" }
+    ],
+    "Lok Sabha": [
+      { tier: "CRITICAL", label: "Critical Risk", count: 762, amount: "₹582 Cr", pct: "1.1%", icon: "🚨", action: "Immediate FIR / Freeze", color: "var(--crimson)" },
+      { tier: "HIGH", label: "High Risk", count: 1540, amount: "₹980 Cr", pct: "2.3%", icon: "⚠️", action: "Audit Inquiry Notice", color: "var(--amber)" },
+      { tier: "MEDIUM", label: "Medium Watch", count: 2980, amount: "₹1,510 Cr", pct: "4.4%", icon: "📑", action: "Desk Documentation", color: "var(--yellow)" },
+      { tier: "LOW", label: "Low / Verified", count: 63138, amount: "₹26,450 Cr", pct: "92.2%", icon: "🛡️", action: "Automated Clearance", color: "var(--teal)" }
+    ],
+    "Rajya Sabha": [
+      { tier: "CRITICAL", label: "Critical Risk", count: 308, amount: "₹248 Cr", pct: "1.1%", icon: "🚨", action: "Immediate FIR / Freeze", color: "var(--crimson)" },
+      { tier: "HIGH", label: "High Risk", count: 645, amount: "₹415 Cr", pct: "2.3%", icon: "⚠️", action: "Audit Inquiry Notice", color: "var(--amber)" },
+      { tier: "MEDIUM", label: "Medium Watch", count: 1280, amount: "₹640 Cr", pct: "4.5%", icon: "📑", action: "Desk Documentation", color: "var(--yellow)" },
+      { tier: "LOW", label: "Low / Verified", count: 25907, amount: "₹11,200 Cr", pct: "92.1%", icon: "🛡️", action: "Automated Clearance", color: "var(--teal)" }
+    ],
+    "Nominated": [
+      { tier: "CRITICAL", label: "Critical Risk", count: 14, amount: "₹12 Cr", pct: "0.7%", icon: "🚨", action: "Immediate FIR / Freeze", color: "var(--crimson)" },
+      { tier: "HIGH", label: "High Risk", count: 32, amount: "₹25 Cr", pct: "1.5%", icon: "⚠️", action: "Audit Inquiry Notice", color: "var(--amber)" },
+      { tier: "MEDIUM", label: "Medium Watch", count: 50, amount: "₹30 Cr", pct: "2.4%", icon: "📑", action: "Desk Documentation", color: "var(--yellow)" },
+      { tier: "LOW", label: "Low / Verified", count: 1893, amount: "₹780 Cr", pct: "95.4%", icon: "🛡️", action: "Automated Clearance", color: "var(--teal)" }
+    ]
+  };
 
+  function renderRiskDist(house = "all", animate = true) {
+    const key = (house in riskTiersData) ? house : "all";
+    const tiers = riskTiersData[key];
     const el = document.getElementById("riskDistChart");
-    if (el) {
-      el.innerHTML = tiers.map(t => `
-        <div class="risk-card-fancy tier-${t.tier.toLowerCase()}" data-filter-tier="${t.tier}">
-          <div class="rc-header">
-            <div class="rc-tier-badge">
-              <span class="rc-dot"></span>
-              <span>${t.tier}</span>
-            </div>
-            <span class="rc-pct">${t.pct}</span>
-          </div>
-          <div class="rc-body">
-            <div class="rc-count mono">${t.count.toLocaleString()}</div>
-            <div class="rc-amount mono">${t.amount} flagged</div>
-          </div>
-          <div class="rc-footer">
-            <span class="rc-action">${t.action}</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>`).join("");
+    if (!el) return;
 
-      el.querySelectorAll("[data-filter-tier]").forEach(card => {
-        card.addEventListener("click", () => {
-          const t = card.dataset.filterTier;
-          setView("alerts");
-          const chip = document.querySelector(`[data-risk="${t}"]`);
-          if (chip) chip.click();
-        });
+    const existingCards = el.querySelectorAll(".risk-card-fancy");
+    if (existingCards.length === tiers.length) {
+      existingCards.forEach((card, idx) => {
+        const t = tiers[idx];
+        const countEl = card.querySelector(".rc-count");
+        const amountEl = card.querySelector(".rc-amount");
+        const pctEl = card.querySelector(".rc-pct");
+        if (animate && countEl) animateNumber(countEl, t.count.toLocaleString(), 550);
+        else if (countEl) countEl.textContent = t.count.toLocaleString();
+        if (amountEl) amountEl.textContent = `${t.amount} flagged`;
+        if (pctEl) pctEl.textContent = t.pct;
+
+        if (animate) {
+          card.classList.remove("data-updated-pulse");
+          void card.offsetWidth;
+          setTimeout(() => card.classList.add("data-updated-pulse"), idx * 40);
+        }
       });
+      return;
     }
+
+    el.innerHTML = tiers.map(t => `
+      <div class="risk-card-fancy tier-${t.tier.toLowerCase()}" data-filter-tier="${t.tier}">
+        <div class="rc-header">
+          <div class="rc-tier-badge">
+            <span class="rc-dot"></span>
+            <span>${t.tier}</span>
+          </div>
+          <span class="rc-pct">${t.pct}</span>
+        </div>
+        <div class="rc-body">
+          <div class="rc-count mono">${t.count.toLocaleString()}</div>
+          <div class="rc-amount mono">${t.amount} flagged</div>
+        </div>
+        <div class="rc-footer">
+          <span class="rc-action">${t.action}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>`).join("");
+
+    el.querySelectorAll("[data-filter-tier]").forEach(card => {
+      card.addEventListener("click", () => {
+        const t = card.dataset.filterTier;
+        setView("alerts");
+        const chip = document.querySelector(`[data-risk="${t}"]`);
+        if (chip) chip.click();
+      });
+    });
   }
 
   renderRiskDist();
@@ -1693,8 +1903,523 @@
     });
   }
 
-  /* ================= BENFORD'S LAW FORENSICS ================= */
+  /* ================= BENFORD'S LAW FORENSICS (MULTI-DIMENSIONAL & REACTIVE) ================= */
   let benfordState = { dataset: "sanction", digit: "D1", entity: "state" };
+
+  const benfordDataset = {
+    all: {
+      label: "National MPLADS Portfolio (543 LS + 245 RS + 12 Nominated)",
+      sampleSize: 98649,
+      sanction: {
+        D1: {
+          observed: [34.8, 19.2, 13.9, 6.2, 13.5, 4.8, 2.9, 2.6, 2.1],
+          mad: 0.021,
+          chi: "41.2",
+          pVal: "0.041",
+          status: { tag: "MEDIUM", text: "Acceptable variance" },
+          insight: "First-Digit (D1) Analysis: Statutory sanctions reveal artificial clustering at ₹10L and ₹50L thresholds (+5.6% spike at digit 5, GFR 144 split-tendering cliff).",
+          cliffs: [
+            ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 812 txns", "₹50–55L: 96 txns", "8.5x", true, "Statutory GFR 144 split-tender evasion suspected"],
+            ["₹25 Lakh (District Approval)", "₹22–24.99L: 340 txns", "₹25–27L: 88 txns", "3.9x", true, "Executive ceiling structuring under Rule 144"],
+            ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 210 txns", "₹10–11L: 174 txns", "1.2x", false, "Within normal procurement variance"],
+            ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 190 txns", "₹5–5.5L: 205 txns", "0.9x", false, "No artificial cliff detected"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 22, display: "22%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 31, display: "31%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 14, display: "14%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 33, display: "33%", color: "var(--teal)" }
+          ]
+        },
+        D2: {
+          observed: [21.4, 10.8, 9.6, 9.1, 8.7, 18.2, 7.9, 5.1, 4.8, 4.4],
+          mad: 0.034,
+          chi: "58.4",
+          pVal: "0.018",
+          status: { tag: "HIGH", text: "Round-Number Non-conforming" },
+          insight: "Second-Digit (D2) Analysis: Severe Round-Number Bias detected. Digits 0 and 5 account for 39.6% of contracts (vs 20.4% theoretical baseline).",
+          cliffs: [
+            ["₹49.x Lakh vs ₹50.x Lakh", "₹49.0–49.99L: 642 txns", "₹50.0–50.99L: 68 txns", "9.4x", true, "Second digit '9' clustering under ₹50L e-tender ceiling"],
+            ["₹24.x Lakh vs ₹25.x Lakh", "₹24.0–24.99L: 284 txns", "₹25.0–25.99L: 72 txns", "3.9x", true, "Second digit '4' clustering under ₹25L approval"],
+            ["₹19.x Lakh vs ₹20.x Lakh", "₹19.0–19.99L: 198 txns", "₹20.0–20.99L: 110 txns", "1.8x", false, "Moderate threshold elevation"],
+            ["₹9.x Lakh vs ₹10.x Lakh", "₹9.0–9.99L: 182 txns", "₹10.0–10.99L: 134 txns", "1.4x", false, "Minor quotation boundary clustering"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 26, display: "26%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 36, display: "36%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 17, display: "17%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 21, display: "21%", color: "var(--teal)" }
+          ]
+        },
+        D1D2: {
+          observed: [8.4, 6.2, 5.9, 7.1, 3.2, 1.8, 4.9, 0.8, 0.5],
+          mad: 0.042,
+          chi: "72.6",
+          pVal: "0.003",
+          status: { tag: "CRITICAL", text: "Threshold Structuring Detected" },
+          insight: "First-Two Digits (D1D2) Analysis: Anomalous clusters at ₹49.5L, ₹48.9L, and ₹19.8L — systematic evasions of e-procurement thresholds.",
+          cliffs: [
+            ["₹49 Lakhs (D1D2: 49 vs 50)", "₹49.5–49.99L: 512 txns", "₹50.0–50.5L: 41 txns", "12.5x", true, "Extreme ₹49.8L clustering across 52 districts"],
+            ["₹24 Lakhs (D1D2: 24 vs 25)", "₹24.5–24.99L: 218 txns", "₹25.0–25.5L: 48 txns", "4.5x", true, "Concentrated ₹24.9L technical sanction bypass"],
+            ["₹19 Lakhs (D1D2: 19 vs 20)", "₹19.5–19.99L: 164 txns", "₹20.0–20.5L: 62 txns", "2.6x", true, "Tier-2 executive threshold structuring"],
+            ["₹09 Lakhs (D1D2: 09 vs 10)", "₹9.5–9.99L: 154 txns", "₹10.0–10.5L: 92 txns", "1.7x", false, "Within acceptable quotation band"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 24, display: "24%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 38, display: "38%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 19, display: "19%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 19, display: "19%", color: "var(--teal)" }
+          ]
+        }
+      },
+      vendor: {
+        D1: {
+          observed: [41.2, 21.0, 11.2, 5.1, 12.8, 3.2, 2.1, 1.8, 1.6],
+          mad: 0.048,
+          chi: "88.7",
+          pVal: "< 0.001",
+          status: { tag: "CRITICAL", text: "Statutory Non-conforming" },
+          insight: "Vendor Disbursements D1: Extreme digit-1 inflation (+11.1% over Benford expectation). Contractor billing patterns show multi-firm invoice synchronization.",
+          cliffs: [
+            ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 1,248 bills", "₹50–55L: 94 bills", "13.3x", true, "Contractor syndicate multi-invoice structuring"],
+            ["₹25 Lakh (District Approval)", "₹22–24.99L: 586 bills", "₹25–27L: 104 bills", "5.6x", true, "Repeated sub-threshold milestone bills"],
+            ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 492 bills", "₹10–11L: 156 bills", "3.2x", true, "Quotation splitting among sister firms"],
+            ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 384 bills", "₹5–5.5L: 320 bills", "1.2x", false, "Routine petty contractor vouchers"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 28, display: "28%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 34, display: "34%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 21, display: "21%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 17, display: "17%", color: "var(--teal)" }
+          ]
+        },
+        D2: {
+          observed: [24.8, 9.4, 8.8, 8.2, 8.0, 21.1, 6.8, 4.9, 4.2, 3.8],
+          mad: 0.056,
+          chi: "104.2",
+          pVal: "< 0.001",
+          status: { tag: "CRITICAL", text: "Severe Invoicing Collusion" },
+          insight: "Vendor Disbursements D2: 45.9% of vendor disbursements end with round '00,000' or '50,000' figures, indicating arbitrary lump-sum milestone claims.",
+          cliffs: [
+            ["₹49.x Lakh vs ₹50.x Lakh", "₹49.0–49.99L: 980 bills", "₹50.0–50.99L: 72 bills", "13.6x", true, "Systemic ₹49.5L milestone payment draws"],
+            ["₹24.x Lakh vs ₹25.x Lakh", "₹24.0–24.99L: 462 bills", "₹25.0–25.99L: 78 bills", "5.9x", true, "Arbitrary flat contractor bill submissions"],
+            ["₹19.x Lakh vs ₹20.x Lakh", "₹19.0–19.99L: 374 bills", "₹20.0–20.99L: 96 bills", "3.9x", true, "Executive voucher splitting in 38 districts"],
+            ["₹9.x Lakh vs ₹10.x Lakh", "₹9.0–9.99L: 412 bills", "₹10.0–10.99L: 140 bills", "2.9x", true, "Split supplies to bypass GeM verification"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 31, display: "31%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 37, display: "37%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 20, display: "20%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 12, display: "12%", color: "var(--teal)" }
+          ]
+        },
+        D1D2: {
+          observed: [11.2, 7.8, 6.9, 8.4, 2.8, 1.4, 5.8, 0.6, 0.4],
+          mad: 0.061,
+          chi: "119.5",
+          pVal: "< 0.001",
+          status: { tag: "CRITICAL", text: "Systemic Syndicate Invoicing" },
+          insight: "Vendor Disbursements D1D2: Vendor syndicates in UP and Bihar show repeated matching bill pairs right below audit thresholds.",
+          cliffs: [
+            ["₹49 Lakhs (D1D2: 49 vs 50)", "₹49.5–49.99L: 814 bills", "₹50.0–50.5L: 46 bills", "17.7x", true, "Severe syndicate collusion: 17.7x billing cliff"],
+            ["₹24 Lakhs (D1D2: 24 vs 25)", "₹24.5–24.99L: 390 bills", "₹25.0–25.5L: 52 bills", "7.5x", true, "Direct bypass of State PWD audit scrutiny"],
+            ["₹19 Lakhs (D1D2: 19 vs 20)", "₹19.5–19.99L: 298 bills", "₹20.0–20.5L: 68 bills", "4.4x", true, "Identical twin bills submitted within 48h"],
+            ["₹09 Lakhs (D1D2: 09 vs 10)", "₹9.5–9.99L: 346 bills", "₹10.0–10.5L: 88 bills", "3.9x", true, "Repeated quotation splitting by same contractor"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 32, display: "32%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 39, display: "39%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 20, display: "20%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 9, display: "9%", color: "var(--teal)" }
+          ]
+        }
+      }
+    },
+    "Lok Sabha": {
+      label: "Lok Sabha (543 Directly Elected MP Constituencies)",
+      sampleSize: 68420,
+      sanction: {
+        D1: {
+          observed: [36.2, 19.8, 14.1, 5.8, 14.2, 4.2, 2.4, 2.0, 1.3],
+          mad: 0.026,
+          chi: "49.8",
+          pVal: "0.012",
+          status: { tag: "MEDIUM", text: "Constituency Split Risk" },
+          insight: "Lok Sabha D1: Constituency civil works show notable +6.3% clustering around digit 5 (₹45L–₹49.9L works structured to bypass CPWD manual review).",
+          cliffs: [
+            ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 614 txns", "₹50–55L: 62 txns", "9.9x", true, "Severe GFR 144 evasion in 48 constituencies"],
+            ["₹25 Lakh (District Approval)", "₹22–24.99L: 254 txns", "₹25–27L: 58 txns", "4.4x", true, "Executive threshold cliff in rural works"],
+            ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 162 txns", "₹10–11L: 124 txns", "1.3x", false, "Moderate threshold elevation"],
+            ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 142 txns", "₹5–5.5L: 148 txns", "1.0x", false, "Normal statistical spread"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 24, display: "24%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 34, display: "34%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 16, display: "16%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 26, display: "26%", color: "var(--teal)" }
+          ]
+        },
+        D2: {
+          observed: [23.1, 10.2, 9.1, 8.8, 8.3, 19.4, 7.2, 5.0, 4.6, 4.3],
+          mad: 0.038,
+          chi: "66.2",
+          pVal: "0.007",
+          status: { tag: "HIGH", text: "Severe Constituency Rounding" },
+          insight: "Lok Sabha D2: Over 42.5% of approved constituency road & community works end with round lakhs, signaling lack of itemized Schedule of Rates (SoR).",
+          cliffs: [
+            ["₹49.x Lakh vs ₹50.x Lakh", "₹49.0–49.99L: 488 txns", "₹50.0–50.99L: 44 txns", "11.1x", true, "Critical 11.1x cliff in constituency road tenders"],
+            ["₹24.x Lakh vs ₹25.x Lakh", "₹24.0–24.99L: 212 txns", "₹25.0–25.99L: 46 txns", "4.6x", true, "Constituency water/hall project splits"],
+            ["₹19.x Lakh vs ₹20.x Lakh", "₹19.0–19.99L: 154 txns", "₹20.0–20.99L: 74 txns", "2.1x", true, "DRDA executive threshold evasion"],
+            ["₹9.x Lakh vs ₹10.x Lakh", "₹9.0–9.99L: 138 txns", "₹10.0–10.99L: 96 txns", "1.4x", false, "Minor rural quotation clustering"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 28, display: "28%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 38, display: "38%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 18, display: "18%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 16, display: "16%", color: "var(--teal)" }
+          ]
+        },
+        D1D2: {
+          observed: [9.2, 6.8, 6.2, 7.9, 3.1, 1.6, 5.2, 0.7, 0.4],
+          mad: 0.048,
+          chi: "81.4",
+          pVal: "< 0.001",
+          status: { tag: "CRITICAL", text: "Critical Tender Clustering" },
+          insight: "Lok Sabha D1D2: 614 works concentrated specifically in the ₹49.0L–₹49.9L window across 48 identified parliamentary constituencies.",
+          cliffs: [
+            ["₹49 Lakhs (D1D2: 49 vs 50)", "₹49.5–49.99L: 410 txns", "₹50.0–50.5L: 28 txns", "14.6x", true, "Severe ₹49.9L structuring across 48 LS seats"],
+            ["₹24 Lakhs (D1D2: 24 vs 25)", "₹24.5–24.99L: 172 txns", "₹25.0–25.5L: 32 txns", "5.4x", true, "District Collector direct approval boundary"],
+            ["₹19 Lakhs (D1D2: 19 vs 20)", "₹19.5–19.99L: 128 txns", "₹20.0–20.5L: 42 txns", "3.0x", true, "Tier-2 rural works structuring"],
+            ["₹09 Lakhs (D1D2: 09 vs 10)", "₹9.5–9.99L: 118 txns", "₹10.0–10.5L: 64 txns", "1.8x", false, "Within normal quotation band"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 26, display: "26%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 41, display: "41%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 20, display: "20%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 13, display: "13%", color: "var(--teal)" }
+          ]
+        }
+      },
+      vendor: {
+        D1: {
+          observed: [43.1, 21.6, 10.8, 4.7, 13.6, 2.9, 1.8, 1.5, 0.0],
+          mad: 0.052,
+          chi: "94.2",
+          pVal: "< 0.001",
+          status: { tag: "CRITICAL", text: "Syndicate Concentration Flag" },
+          insight: "Lok Sabha Vendor D1: 43.1% first-digit 1 frequency represents massive abnormal deviation; contractor syndicates dominate constituency work lots.",
+          cliffs: [
+            ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 940 bills", "₹50–55L: 64 bills", "14.7x", true, "Lok Sabha contractor syndicate collusion"],
+            ["₹25 Lakh (District Approval)", "₹22–24.99L: 432 bills", "₹25–27L: 68 bills", "6.4x", true, "Multiple sub-contractor bill splitting"],
+            ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 384 bills", "₹10–11L: 108 bills", "3.6x", true, "Direct quotation cap evasion in MP constituencies"],
+            ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 294 bills", "₹5–5.5L: 218 bills", "1.3x", false, "Standard small civil vouchers"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 30, display: "30%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 36, display: "36%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 22, display: "22%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 12, display: "12%", color: "var(--teal)" }
+          ]
+        },
+        D2: {
+          observed: [26.2, 9.1, 8.4, 8.0, 7.8, 22.4, 6.2, 4.6, 3.9, 3.4],
+          mad: 0.062,
+          chi: "112.8",
+          pVal: "< 0.001",
+          status: { tag: "CRITICAL", text: "Syndicate Rounding Flag" },
+          insight: "Lok Sabha Vendor D2: Spikes at 0 and 5 aggregate to 48.6%, reflecting lump-sum contractor disbursement draws.",
+          cliffs: [
+            ["₹49.x Lakh vs ₹50.x Lakh", "₹49.0–49.99L: 746 bills", "₹50.0–50.99L: 48 bills", "15.5x", true, "Widespread ₹49.5L milestone payment fraud"],
+            ["₹24.x Lakh vs ₹25.x Lakh", "₹24.0–24.99L: 342 bills", "₹25.0–25.99L: 52 bills", "6.6x", true, "Milestone bill splitting to avoid vigilance audit"],
+            ["₹19.x Lakh vs ₹20.x Lakh", "₹19.0–19.99L: 284 bills", "₹20.0–20.99L: 64 bills", "4.4x", true, "Executive voucher splitting across constituencies"],
+            ["₹9.x Lakh vs ₹10.x Lakh", "₹9.0–9.99L: 310 bills", "₹10.0–10.99L: 94 bills", "3.3x", true, "Collusive contractor quoting right under limit"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 33, display: "33%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 39, display: "39%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 21, display: "21%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 7, display: "7%", color: "var(--teal)" }
+          ]
+        },
+        D1D2: {
+          observed: [12.4, 8.2, 7.1, 9.1, 2.5, 1.2, 6.4, 0.5, 0.3],
+          mad: 0.068,
+          chi: "128.4",
+          pVal: "< 0.001",
+          status: { tag: "CRITICAL", text: "High Collusion Index" },
+          insight: "Lok Sabha Vendor D1D2: Syndicate contractor clusters in UP, Bihar, and Rajasthan show coordinated under-threshold billing.",
+          cliffs: [
+            ["₹49 Lakhs (D1D2: 49 vs 50)", "₹49.5–49.99L: 628 bills", "₹50.0–50.5L: 32 bills", "19.6x", true, "Critical 19.6x syndicate cliff in UP/Bihar/RJ"],
+            ["₹24 Lakhs (D1D2: 24 vs 25)", "₹24.5–24.99L: 294 bills", "₹25.0–25.5L: 34 bills", "8.6x", true, "Systemic avoid-audit structuring"],
+            ["₹19 Lakhs (D1D2: 19 vs 20)", "₹19.5–19.99L: 236 bills", "₹20.0–20.5L: 46 bills", "5.1x", true, "Twin bills issued by affiliated entities"],
+            ["₹09 Lakhs (D1D2: 09 vs 10)", "₹9.5–9.99L: 268 bills", "₹10.0–10.5L: 58 bills", "4.6x", true, "Split material procurement vouchers"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 34, display: "34%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 42, display: "42%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 20, display: "20%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 4, display: "4%", color: "var(--teal)" }
+          ]
+        }
+      }
+    },
+    "Rajya Sabha": {
+      label: "Rajya Sabha (245 Council of States Nominees / UT Reps)",
+      sampleSize: 28140,
+      sanction: {
+        D1: {
+          observed: [32.1, 18.2, 13.2, 7.1, 11.8, 5.6, 4.1, 4.0, 3.9],
+          mad: 0.016,
+          chi: "31.4",
+          pVal: "0.082",
+          status: { tag: "LOW", text: "Close conformity" },
+          insight: "Rajya Sabha D1: State-wide allocations exhibit significantly closer conformity to Benford's Law (MAD 0.016, p=0.082) with lower contractor capture.",
+          cliffs: [
+            ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 184 txns", "₹50–55L: 32 txns", "5.8x", true, "Moderate e-tender cliff in state works"],
+            ["₹25 Lakh (District Approval)", "₹22–24.99L: 82 txns", "₹25–27L: 28 txns", "2.9x", true, "Executive threshold cliff in colleges/hospitals"],
+            ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 44 txns", "₹10–11L: 46 txns", "1.0x", false, "Normal statistical spread"],
+            ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 44 txns", "₹5–5.5L: 52 txns", "0.8x", false, "No artificial cliff detected"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 18, display: "18%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 26, display: "26%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 11, display: "11%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 45, display: "45%", color: "var(--teal)" }
+          ]
+        },
+        D2: {
+          observed: [17.8, 11.4, 10.4, 9.8, 9.2, 15.6, 8.8, 6.2, 5.6, 5.2],
+          mad: 0.024,
+          chi: "42.1",
+          pVal: "0.054",
+          status: { tag: "MEDIUM", text: "Moderate Rounding" },
+          insight: "Rajya Sabha D2: Institutional hospital/university grants show higher technical estimation precision, though minor round-number bias persists.",
+          cliffs: [
+            ["₹49.x Lakh vs ₹50.x Lakh", "₹49.0–49.99L: 142 txns", "₹50.0–50.99L: 22 txns", "6.5x", true, "Medical equipment order clustering below ₹50L"],
+            ["₹24.x Lakh vs ₹25.x Lakh", "₹24.0–24.99L: 68 txns", "₹25.0–25.99L: 24 txns", "2.8x", true, "University lab grant structuring"],
+            ["₹19.x Lakh vs ₹20.x Lakh", "₹19.0–19.99L: 42 txns", "₹20.0–20.99L: 34 txns", "1.2x", false, "Normal institutional variation"],
+            ["₹9.x Lakh vs ₹10.x Lakh", "₹9.0–9.99L: 38 txns", "₹10.0–10.99L: 36 txns", "1.1x", false, "Standard procurement curve"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 20, display: "20%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 28, display: "28%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 13, display: "13%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 39, display: "39%", color: "var(--teal)" }
+          ]
+        },
+        D1D2: {
+          observed: [6.8, 5.1, 4.8, 5.4, 3.4, 2.1, 3.8, 1.2, 0.8],
+          mad: 0.028,
+          chi: "49.6",
+          pVal: "0.022",
+          status: { tag: "MEDIUM", text: "Moderate Cliff Clustering" },
+          insight: "Rajya Sabha D1D2: 184 projects recorded near the ₹50L boundary, primarily in state capital institutional supplies.",
+          cliffs: [
+            ["₹49 Lakhs (D1D2: 49 vs 50)", "₹49.5–49.99L: 98 txns", "₹50.0–50.5L: 12 txns", "8.2x", true, "Specialized equipment packages structured at ₹49.8L"],
+            ["₹24 Lakhs (D1D2: 24 vs 25)", "₹24.5–24.99L: 44 txns", "₹25.0–25.5L: 14 txns", "3.1x", true, "State nodal agency ceiling structuring"],
+            ["₹19 Lakhs (D1D2: 19 vs 20)", "₹19.5–19.99L: 32 txns", "₹20.0–20.5L: 18 txns", "1.8x", false, "Minor variance in library grants"],
+            ["₹09 Lakhs (D1D2: 09 vs 10)", "₹9.5–9.99L: 32 txns", "₹10.0–10.5L: 26 txns", "1.2x", false, "Standard quotation range"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 21, display: "21%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 31, display: "31%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 14, display: "14%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 34, display: "34%", color: "var(--teal)" }
+          ]
+        }
+      },
+      vendor: {
+        D1: {
+          observed: [37.4, 19.8, 12.1, 6.2, 10.9, 4.1, 3.2, 3.1, 3.2],
+          mad: 0.038,
+          chi: "64.1",
+          pVal: "0.004",
+          status: { tag: "HIGH", text: "Moderate Vendor Anomaly" },
+          insight: "Rajya Sabha Vendor D1: Specialized medical/infra vendors display moderate digit-1 clustering, lower syndicate overlap than Lok Sabha.",
+          cliffs: [
+            ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 286 bills", "₹50–55L: 28 bills", "10.2x", true, "Medical/infra vendor e-tender boundary bills"],
+            ["₹25 Lakh (District Approval)", "₹22–24.99L: 144 bills", "₹25–27L: 34 bills", "4.2x", true, "Multiple milestone claims across districts"],
+            ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 102 bills", "₹10–11L: 44 bills", "2.3x", true, "State institutional supply splits"],
+            ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 86 bills", "₹5–5.5L: 96 bills", "0.9x", false, "Clean statutory spread"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 23, display: "23%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 30, display: "30%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 17, display: "17%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 30, display: "30%", color: "var(--teal)" }
+          ]
+        },
+        D2: {
+          observed: [21.8, 10.2, 9.6, 8.8, 8.4, 18.2, 7.8, 5.8, 5.0, 4.4],
+          mad: 0.044,
+          chi: "78.2",
+          pVal: "0.001",
+          status: { tag: "HIGH", text: "Vendor Milestone Clustering" },
+          insight: "Rajya Sabha Vendor D2: Milestone payments clustered at 0 and 5 reflect state government agency milestone release norms.",
+          cliffs: [
+            ["₹49.x Lakh vs ₹50.x Lakh", "₹49.0–49.99L: 220 bills", "₹50.0–50.99L: 22 bills", "10.0x", true, "Specialized medical vendor ₹49.5L draws"],
+            ["₹24.x Lakh vs ₹25.x Lakh", "₹24.0–24.99L: 114 bills", "₹25.0–25.99L: 24 bills", "4.8x", true, "State nodal lab equipment bills"],
+            ["₹19.x Lakh vs ₹20.x Lakh", "₹19.0–19.99L: 86 bills", "₹20.0–20.99L: 30 bills", "2.9x", true, "Milestone releases under ₹20L"],
+            ["₹9.x Lakh vs ₹10.x Lakh", "₹9.0–9.99L: 96 bills", "₹10.0–10.99L: 42 bills", "2.3x", true, "Institutional IT hardware split quotes"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 25, display: "25%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 34, display: "34%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 18, display: "18%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 23, display: "23%", color: "var(--teal)" }
+          ]
+        },
+        D1D2: {
+          observed: [8.8, 6.6, 5.8, 6.8, 3.4, 1.9, 4.4, 1.0, 0.7],
+          mad: 0.046,
+          chi: "84.1",
+          pVal: "0.001",
+          status: { tag: "HIGH", text: "Multi-District Capture" },
+          insight: "Rajya Sabha Vendor D1D2: Select equipment suppliers win repetitive ₹45L+ contracts across multiple districts in the same state.",
+          cliffs: [
+            ["₹49 Lakhs (D1D2: 49 vs 50)", "₹49.5–49.99L: 174 bills", "₹50.0–50.5L: 14 bills", "12.4x", true, "Multi-district medical supplier capture"],
+            ["₹24 Lakhs (D1D2: 24 vs 25)", "₹24.5–24.99L: 92 bills", "₹25.0–25.5L: 18 bills", "5.1x", true, "Identical equipment consignments below limit"],
+            ["₹19 Lakhs (D1D2: 19 vs 20)", "₹19.5–19.99L: 60 bills", "₹20.0–20.5L: 22 bills", "2.7x", true, "State university works milestone splits"],
+            ["₹09 Lakhs (D1D2: 09 vs 10)", "₹9.5–9.99L: 74 bills", "₹10.0–10.5L: 28 bills", "2.6x", true, "IT maintenance contract splits"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 27, display: "27%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 36, display: "36%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 18, display: "18%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 19, display: "19%", color: "var(--teal)" }
+          ]
+        }
+      }
+    },
+    "Nominated": {
+      label: "Nominated Members (12 Pan-India Presidential Portfolios)",
+      sampleSize: 2089,
+      sanction: {
+        D1: {
+          observed: [31.2, 17.9, 12.8, 9.2, 8.6, 6.9, 5.2, 4.4, 3.8],
+          mad: 0.011,
+          chi: "16.5",
+          pVal: "0.224",
+          status: { tag: "LOW", text: "Close conformity / High Integrity" },
+          insight: "Nominated D1: Presidential Nominee projects demonstrate the highest mathematical fidelity to Benford's Law (MAD 0.011, p=0.224), with zero systemic cliffs.",
+          cliffs: [
+            ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 14 txns", "₹50–55L: 12 txns", "1.2x", false, "Low aggregate volume (14 txns), no anomaly"],
+            ["₹25 Lakh (District Approval)", "₹22–24.99L: 6 txns", "₹25–27L: 8 txns", "0.8x", false, "Statistically normal spread"],
+            ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 6 txns", "₹10–11L: 8 txns", "0.8x", false, "No artificial cliff detected"],
+            ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 4 txns", "₹5–5.5L: 5 txns", "0.8x", false, "Clear statutory spread"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 12, display: "12%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 19, display: "19%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 8, display: "8%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 61, display: "61%", color: "var(--teal)" }
+          ]
+        },
+        D2: {
+          observed: [14.2, 11.8, 10.8, 10.2, 9.8, 12.4, 9.4, 8.6, 6.8, 6.0],
+          mad: 0.018,
+          chi: "22.4",
+          pVal: "0.131",
+          status: { tag: "LOW", text: "Normal Estimation Variance" },
+          insight: "Nominated D2: Detailed engineering estimates with precise Scheduled Rates (SoR) accounting for 62% of works.",
+          cliffs: [
+            ["₹49.x Lakh vs ₹50.x Lakh", "₹49.0–49.99L: 12 txns", "₹50.0–50.99L: 10 txns", "1.2x", false, "Conforming distribution across national bodies"],
+            ["₹24.x Lakh vs ₹25.x Lakh", "₹24.0–24.99L: 6 txns", "₹25.0–25.99L: 6 txns", "1.0x", false, "Engineering estimate compliance"],
+            ["₹19.x Lakh vs ₹20.x Lakh", "₹19.0–19.99L: 4 txns", "₹20.0–20.99L: 5 txns", "0.8x", false, "No structuring observed"],
+            ["₹9.x Lakh vs ₹10.x Lakh", "₹9.0–9.99L: 4 txns", "₹10.0–10.99L: 6 txns", "0.7x", false, "Legitimate standard rates"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 14, display: "14%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 21, display: "21%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 9, display: "9%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 56, display: "56%", color: "var(--teal)" }
+          ]
+        },
+        D1D2: {
+          observed: [4.8, 3.2, 2.4, 2.0, 1.6, 1.2, 1.1, 0.8, 0.7],
+          mad: 0.019,
+          chi: "26.8",
+          pVal: "0.082",
+          status: { tag: "LOW", text: "Minimal Structuring" },
+          insight: "Nominated D1D2: Only 14 works near the ₹50L boundary across all 12 nationwide portfolios.",
+          cliffs: [
+            ["₹49 Lakhs (D1D2: 49 vs 50)", "₹49.5–49.99L: 8 txns", "₹50.0–50.5L: 6 txns", "1.3x", false, "National trust grants within normal bounds"],
+            ["₹24 Lakhs (D1D2: 24 vs 25)", "₹24.5–24.99L: 4 txns", "₹25.0–25.5L: 4 txns", "1.0x", false, "Zero cliff detected"],
+            ["₹19 Lakhs (D1D2: 19 vs 20)", "₹19.5–19.99L: 2 txns", "₹20.0–20.5L: 4 txns", "0.5x", false, "Statistically non-anomalous"],
+            ["₹09 Lakhs (D1D2: 09 vs 10)", "₹9.5–9.99L: 2 txns", "₹10.0–10.5L: 4 txns", "0.5x", false, "Normal distribution"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 14, display: "14%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 22, display: "22%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 9, display: "9%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 55, display: "55%", color: "var(--teal)" }
+          ]
+        }
+      },
+      vendor: {
+        D1: {
+          observed: [33.8, 18.5, 12.4, 8.6, 9.2, 6.2, 4.8, 3.8, 2.7],
+          mad: 0.019,
+          chi: "28.3",
+          pVal: "0.042",
+          status: { tag: "LOW", text: "Acceptable Variance" },
+          insight: "Nominated Vendor D1: Nationwide vendors with negligible local syndicate concentration.",
+          cliffs: [
+            ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 22 bills", "₹50–55L: 16 bills", "1.4x", false, "Low volume PSU/trust vendor disbursements"],
+            ["₹25 Lakh (District Approval)", "₹22–24.99L: 10 bills", "₹25–27L: 12 bills", "0.8x", false, "Transparent central agency bills"],
+            ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 8 bills", "₹10–11L: 10 bills", "0.8x", false, "Normal institutional supply bills"],
+            ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 6 bills", "₹5–5.5L: 8 bills", "0.8x", false, "Standard small vouchers"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 14, display: "14%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 22, display: "22%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 9, display: "9%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 55, display: "55%", color: "var(--teal)" }
+          ]
+        },
+        D2: {
+          observed: [16.2, 11.2, 10.4, 9.8, 9.4, 14.1, 8.8, 7.8, 6.4, 5.9],
+          mad: 0.026,
+          chi: "36.2",
+          pVal: "0.021",
+          status: { tag: "MEDIUM", text: "Minor Rounding" },
+          insight: "Nominated Vendor D2: Low rate of arbitrary round milestone disbursements.",
+          cliffs: [
+            ["₹49.x Lakh vs ₹50.x Lakh", "₹49.0–49.99L: 16 bills", "₹50.0–50.99L: 12 bills", "1.3x", false, "Negligible boundary skew"],
+            ["₹24.x Lakh vs ₹25.x Lakh", "₹24.0–24.99L: 8 bills", "₹25.0–25.99L: 8 bills", "1.0x", false, "Itemized contractor measurement books"],
+            ["₹19.x Lakh vs ₹20.x Lakh", "₹19.0–19.99L: 6 bills", "₹20.0–20.99L: 6 bills", "1.0x", false, "Normal curve across institutions"],
+            ["₹9.x Lakh vs ₹10.x Lakh", "₹9.0–9.99L: 6 bills", "₹10.0–10.99L: 8 bills", "0.8x", false, "No quotation evasion"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 15, display: "15%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 24, display: "24%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 10, display: "10%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 51, display: "51%", color: "var(--teal)" }
+          ]
+        },
+        D1D2: {
+          observed: [5.6, 3.8, 2.9, 2.6, 1.8, 1.4, 1.5, 0.9, 0.7],
+          mad: 0.027,
+          chi: "39.4",
+          pVal: "0.018",
+          status: { tag: "LOW", text: "Low Syndicate Risk" },
+          insight: "Nominated Vendor D1D2: Transparent vendor distribution across central PSUs and national trusts.",
+          cliffs: [
+            ["₹49 Lakhs (D1D2: 49 vs 50)", "₹49.5–49.99L: 12 bills", "₹50.0–50.5L: 8 bills", "1.5x", false, "Low volume (12 bills), verified items"],
+            ["₹24 Lakhs (D1D2: 24 vs 25)", "₹24.5–24.99L: 6 bills", "₹25.0–25.5L: 6 bills", "1.0x", false, "Standard central PSU billing"],
+            ["₹19 Lakhs (D1D2: 19 vs 20)", "₹19.5–19.99L: 4 bills", "₹20.0–20.5L: 4 bills", "1.0x", false, "Transparent disbursement timeline"],
+            ["₹09 Lakhs (D1D2: 09 vs 10)", "₹9.5–9.99L: 4 bills", "₹10.0–10.5L: 6 bills", "0.7x", false, "Statistically clean"]
+          ],
+          roundBias: [
+            { label: "Ends in ₹50,000", value: 16, display: "16%", color: "var(--gold)" },
+            { label: "Ends in ₹1,00,000", value: 25, display: "25%", color: "var(--amber)" },
+            { label: "Ends in ₹5,00,000", value: 10, display: "10%", color: "var(--crimson)" },
+            { label: "Irregular Precision", value: 49, display: "49%", color: "var(--teal)" }
+          ]
+        }
+      }
+    }
+  };
 
   document.querySelectorAll("#datasetPills .pill-btn").forEach(b => b.addEventListener("click", () => {
     document.querySelectorAll("#datasetPills .pill-btn").forEach(x => x.classList.remove("on"));
@@ -1718,72 +2443,261 @@
   }));
 
   function renderBenford() {
-    let digits = [], expected = [], observed = [];
+    const houseKey = (currentHouseFilter in benfordDataset) ? currentHouseFilter : "all";
+    const hData = benfordDataset[houseKey];
+    const dData = hData[benfordState.dataset] || hData.sanction;
+    const modeData = dData[benfordState.digit] || dData.D1;
+
+    let digits = [], expected = [];
     if (benfordState.digit === "D1") {
       digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
       expected = [30.1, 17.6, 12.5, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6];
-      if (benfordState.dataset === "sanction") {
-        observed = [34.8, 19.2, 13.9, 6.2, 13.5, 4.8, 2.9, 2.6, 2.1];
-      } else {
-        observed = [41.2, 21.0, 11.2, 5.1, 12.8, 3.2, 2.1, 1.8, 1.6];
-      }
     } else if (benfordState.digit === "D2") {
       digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
       expected = [12.0, 11.4, 10.9, 10.4, 10.0, 9.7, 9.3, 9.0, 8.8, 8.5];
-      observed = [21.4, 10.8, 9.6, 9.1, 8.7, 18.2, 7.9, 5.1, 4.8, 4.4]; // Spike at 0 and 5 shows rounding
     } else {
-      // D1D2 (First two digits sample 10, 15, 20, 25, 30, 40, 50, 75, 90)
+      // D1D2 (Sample first two digits)
       digits = [10, 15, 20, 25, 30, 40, 50, 60, 75];
       expected = [4.1, 2.8, 2.1, 1.7, 1.4, 1.1, 0.9, 0.7, 0.6];
-      observed = [8.4, 6.2, 5.9, 7.1, 3.2, 1.8, 4.9, 0.8, 0.5];
     }
 
+    const observed = modeData.observed;
+
+    // Update Scope Badge in header
+    const scopeLabel = document.getElementById("benfordScopeLabel");
+    if (scopeLabel) {
+      const shortName = houseKey === "all" ? "All Houses" : houseKey;
+      scopeLabel.textContent = `${shortName} · ${hData.sampleSize.toLocaleString()} Works`;
+    }
+
+    // Update Insight Banner
+    const insightEl = document.getElementById("benfordInsightText");
+    if (insightEl) {
+      insightEl.style.opacity = "0";
+      setTimeout(() => {
+        insightEl.textContent = modeData.insight;
+        insightEl.style.opacity = "1";
+      }, 150);
+    }
+
+    // Update Chart Card Scope Badge
+    const chartScope = document.getElementById("benfordChartScopeBadge");
+    if (chartScope) chartScope.textContent = `${houseKey === 'all' ? 'National' : houseKey} (n=${hData.sampleSize.toLocaleString()})`;
+
+    // Draw Grouped Bars with smooth transition
     drawGroupedBars("benfordChart", digits, [
       { name: "Observed Audit", color: cssVar('--gold'), values: observed },
       { name: "Expected (Benford)", color: cssVar('--teal'), values: expected }
-    ], { max: Math.max(...observed, ...expected) * 1.2 });
+    ], { max: Math.max(...observed, ...expected) * 1.18 });
 
-    const mad = benfordState.dataset === "sanction" ? (benfordState.digit === "D1" ? 0.021 : 0.034) : 0.048;
-    const status = mad < 0.015 ? { tag: "LOW", text: "Close conformity" } : mad < 0.03 ? { tag: "MEDIUM", text: "Acceptable variance" } : { tag: "CRITICAL", text: "Statutory Non-conforming" };
-    drawGauge("gaugeChart", mad, 0.06, "MAD SCORE", status);
+    // Draw Gauge with smooth needle rotation
+    drawGauge("gaugeChart", modeData.mad, 0.06, "MAD CONFORMITY", modeData.status);
 
-    const chi = benfordState.dataset === "sanction" ? (benfordState.digit === "D1" ? "41.2" : "58.4") : "88.7";
-    const pVal = benfordState.dataset === "sanction" ? (benfordState.digit === "D1" ? "0.041" : "0.018") : "< 0.001";
-    const chiEl = document.getElementById("chiVal"), pEl = document.getElementById("pVal");
-    if (chiEl) chiEl.textContent = chi;
-    if (pEl) pEl.textContent = pVal;
+    // Update Chi-Square and P-Value with counter animation
+    const chiEl = document.getElementById("chiVal");
+    const pEl = document.getElementById("pVal");
+    if (chiEl) animateNumber(chiEl, modeData.chi, 500);
+    if (pEl) animateNumber(pEl, modeData.pVal, 500);
 
+    // Dynamic GFR 144 Threshold Cliffs and Scope Badge
+    const activeCliffs = modeData.cliffs || dData.cliffs || hData.cliffs;
+    const cliffsBadge = document.getElementById("benfordCliffsScopeBadge");
+    if (cliffsBadge) {
+      const dsTitle = benfordState.dataset === "vendor" ? "Vendor Invoices" : "Sanction Orders";
+      const houseTitle = houseKey === "all" ? "National" : houseKey;
+      cliffsBadge.textContent = `${dsTitle} · ${benfordState.digit} (${houseTitle})`;
+    }
     const cliffs = document.getElementById("cliffsBody");
-    if (cliffs) {
-      cliffs.innerHTML = [
-        ["₹50 Lakh (e-Tender Limit)", "₹45–49.99L: 812 txns", "₹50–55L: 96 txns", "8.4x", true, "Statutory GFR 144 evasion suspected"],
-        ["₹25 Lakh (District Approval)", "₹22–24.99L: 340 txns", "₹25–27L: 88 txns", "3.9x", true, "Executive threshold cliff"],
-        ["₹10 Lakh (Direct Quotation)", "₹9–9.99L: 210 txns", "₹10–11L: 174 txns", "1.2x", false, "Within normal variance"],
-        ["₹5 Lakh (Gram Panchayat)", "₹4.5–4.99L: 190 txns", "₹5–5.5L: 205 txns", "0.9x", false, "No artificial cliff detected"],
-      ].map(r => `<tr><td>${r[0]}</td><td class="mono">${r[1]}</td><td class="mono">${r[2]}</td><td class="mono">${r[3]}</td><td><span class="risk-tag risk-${r[4] ? 'CRITICAL' : 'LOW'}">${r[4] ? 'CLIFF DETECTED' : 'CLEAR'}</span><div style="font-size:10.5px; color:var(--ink-faint); margin-top:3px;">${r[5]}</div></td></tr>`).join("");
+    if (cliffs && activeCliffs) {
+      cliffs.innerHTML = activeCliffs.map(r => `
+        <tr class="row-updated">
+          <td style="font-weight:500;">${r[0]}</td>
+          <td class="mono">${r[1]}</td>
+          <td class="mono">${r[2]}</td>
+          <td class="mono" style="font-weight:600; color:${r[4] ? 'var(--crimson)' : 'var(--teal)'};">${r[3]}</td>
+          <td>
+            <span class="risk-tag risk-${r[4] ? 'CRITICAL' : 'LOW'}">${r[4] ? 'CLIFF DETECTED' : 'CLEAR'}</span>
+            <div style="font-size:10.5px; color:var(--ink-faint); margin-top:3px;">${r[5]}</div>
+          </td>
+        </tr>`).join("");
     }
 
-    drawHBars("roundBiasChart", [
-      { label: "Ends in ₹50,000", value: 22, display: "22%", color: cssVar('--gold') },
-      { label: "Ends in ₹1,00,000", value: 31, display: "31%", color: cssVar('--amber') },
-      { label: "Ends in ₹5,00,000", value: 14, display: "14%", color: cssVar('--crimson') },
-      { label: "Irregular Precision", value: 33, display: "33%", color: cssVar('--teal') }
-    ]);
+    // Dynamic Round Bias Chart and Scope Badge
+    const activeRoundBias = modeData.roundBias || dData.roundBias || hData.roundBias;
+    const biasBadge = document.getElementById("benfordBiasScopeBadge");
+    if (biasBadge) {
+      const dsTitle = benfordState.dataset === "vendor" ? "Vendor Invoices" : "Sanction Orders";
+      const houseTitle = houseKey === "all" ? "National" : houseKey;
+      biasBadge.textContent = `${dsTitle} Precision (${houseTitle})`;
+    }
+    if (activeRoundBias) {
+      drawHBars("roundBiasChart", activeRoundBias);
+    }
+
+    // Update Entity Board dynamically connected to dataset & house
     renderEntityBoard();
+
+    // Pulse cards to give tactile feedback that data updated
+    ["benfordBarsCard", "benfordGaugeCard", "benfordCliffsCard", "benfordBiasCard"].forEach(id => {
+      const card = document.getElementById(id);
+      if (card) {
+        card.classList.remove("data-updated-pulse");
+        void card.offsetWidth;
+        card.classList.add("data-updated-pulse");
+      }
+    });
   }
 
   function renderEntityBoard() {
+    const isLS = currentHouseFilter === "Lok Sabha";
+    const isRS = currentHouseFilter === "Rajya Sabha";
+    const isNom = currentHouseFilter === "Nominated";
+    const isVendor = benfordState.dataset === "vendor";
+
+    let stateList, districtList, mpList, vendorList;
+
+    if (isVendor) {
+      stateList = isRS ? [
+        ["Uttar Pradesh (Disbursements)", 6240, 0.048, "NON-CONFORMING"],
+        ["Bihar (Disbursements)", 4810, 0.039, "ACCEPTABLE"],
+        ["Assam (Disbursements)", 2940, 0.016, "CLOSE CONFORMITY"],
+        ["Maharashtra (Disbursements)", 4120, 0.014, "CLOSE CONFORMITY"]
+      ] : isNom ? [
+        ["Pan-India Central Trust Grants", 640, 0.014, "CLOSE CONFORMITY"],
+        ["Delhi NCR (Apex Institutions)", 410, 0.012, "CLOSE CONFORMITY"],
+        ["Jammu & Kashmir (Restoration)", 280, 0.011, "CLOSE CONFORMITY"],
+        ["Assam Heritage Foundation", 190, 0.013, "CLOSE CONFORMITY"]
+      ] : [
+        ["Uttar Pradesh (Disbursements)", 18450, 0.058, "NON-CONFORMING"],
+        ["Bihar (Disbursements)", 12890, 0.046, "NON-CONFORMING"],
+        ["Rajasthan (Disbursements)", 9640, 0.039, "ACCEPTABLE"],
+        ["Maharashtra (Disbursements)", 11200, 0.018, "CLOSE CONFORMITY"]
+      ];
+
+      districtList = isRS ? [
+        ["Lucknow Metro (Vendor Bills)", 780, 0.044, "NON-CONFORMING"],
+        ["Patna HQ (Vendor Bills)", 620, 0.036, "ACCEPTABLE"],
+        ["Guwahati Urban (Vendor Bills)", 490, 0.018, "CLOSE CONFORMITY"],
+        ["Nagpur Division (Vendor Bills)", 510, 0.013, "CLOSE CONFORMITY"]
+      ] : isNom ? [
+        ["New Delhi (Central PSUs)", 220, 0.014, "CLOSE CONFORMITY"],
+        ["Srinagar (Heritage Projects)", 140, 0.012, "CLOSE CONFORMITY"],
+        ["Guwahati (Cultural Centres)", 110, 0.011, "CLOSE CONFORMITY"],
+        ["Varanasi (Art Preservation)", 95, 0.013, "CLOSE CONFORMITY"]
+      ] : [
+        ["Pilibhit (Vendor Invoices)", 1420, 0.068, "NON-CONFORMING"],
+        ["Gaya (Vendor Invoices)", 1180, 0.054, "NON-CONFORMING"],
+        ["Barabanki (Vendor Invoices)", 1050, 0.042, "NON-CONFORMING"],
+        ["Kamrup Metro (Vendor Invoices)", 890, 0.018, "CLOSE CONFORMITY"]
+      ];
+
+      mpList = isRS ? [
+        ["MP Javed Ali (RS - Vendor Draws)", 248, 0.062, "NON-CONFORMING"],
+        ["MP D. Saikia (RS - Vendor Draws)", 192, 0.024, "ACCEPTABLE"],
+        ["MP K. Reddy (RS - Vendor Draws)", 164, 0.015, "CLOSE CONFORMITY"],
+        ["MP S. Patil (RS - Vendor Draws)", 188, 0.012, "CLOSE CONFORMITY"]
+      ] : isNom ? [
+        ["Nominated MP 01 (National Trust)", 58, 0.012, "CLOSE CONFORMITY"],
+        ["Nominated MP 04 (Sports Grants)", 44, 0.014, "CLOSE CONFORMITY"],
+        ["Nominated MP 07 (Cultural Inst)", 38, 0.010, "CLOSE CONFORMITY"],
+        ["Nominated MP 11 (Science Research)", 42, 0.009, "CLOSE CONFORMITY"]
+      ] : [
+        ["MP Ramesh Chandra (LS - Contractor Draws)", 314, 0.074, "NON-CONFORMING"],
+        ["MP D. Saikia (LS - Contractor Draws)", 242, 0.026, "ACCEPTABLE"],
+        ["MP K. Reddy (LS - Contractor Draws)", 218, 0.016, "CLOSE CONFORMITY"],
+        ["MP S. Patil (LS - Contractor Draws)", 264, 0.013, "CLOSE CONFORMITY"]
+      ];
+
+      vendorList = [
+        ["Shree Infra Works (Disbursements)", 142, 0.088, "NON-CONFORMING"],
+        ["Marwar Constructions (Disbursements)", 94, 0.078, "NON-CONFORMING"],
+        ["Rayalaseema Builders (Disbursements)", 112, 0.048, "ACCEPTABLE"],
+        ["Ganga Civil Contractors (Disbursements)", 82, 0.016, "CLOSE CONFORMITY"]
+      ];
+    } else {
+      // Sanction mode
+      stateList = isRS ? [
+        ["Uttar Pradesh (RS Sanctions)", 4820, 0.024, "ACCEPTABLE"],
+        ["Maharashtra (RS Sanctions)", 3940, 0.014, "CLOSE CONFORMITY"],
+        ["Bihar (RS Sanctions)", 3110, 0.019, "ACCEPTABLE"],
+        ["Tamil Nadu (RS Sanctions)", 3240, 0.011, "CLOSE CONFORMITY"]
+      ] : isNom ? [
+        ["National Heritage Portfolios", 880, 0.011, "CLOSE CONFORMITY"],
+        ["Delhi Central Institutions", 520, 0.012, "CLOSE CONFORMITY"],
+        ["Pan-India Cultural Centres", 380, 0.010, "CLOSE CONFORMITY"],
+        ["North-East Tribal Grants", 309, 0.013, "CLOSE CONFORMITY"]
+      ] : [
+        ["Uttar Pradesh", 14210, 0.041, "NON-CONFORMING"],
+        ["Bihar", 9880, 0.026, "ACCEPTABLE"],
+        ["Assam", 6120, 0.012, "CLOSE CONFORMITY"],
+        ["Maharashtra", 8900, 0.011, "CLOSE CONFORMITY"]
+      ];
+
+      districtList = isRS ? [
+        ["Lucknow (State Sanctions)", 540, 0.028, "ACCEPTABLE"],
+        ["Patna (State Sanctions)", 460, 0.022, "ACCEPTABLE"],
+        ["Guwahati (State Sanctions)", 380, 0.014, "CLOSE CONFORMITY"],
+        ["Nagpur (State Sanctions)", 410, 0.011, "CLOSE CONFORMITY"]
+      ] : isNom ? [
+        ["National Capital Region", 310, 0.012, "CLOSE CONFORMITY"],
+        ["Srinagar District", 180, 0.011, "CLOSE CONFORMITY"],
+        ["Kamrup Metropolitan", 140, 0.010, "CLOSE CONFORMITY"],
+        ["Varanasi Heritage Zone", 120, 0.012, "CLOSE CONFORMITY"]
+      ] : [
+        ["Pilibhit", 980, 0.052, "NON-CONFORMING"],
+        ["Barabanki", 860, 0.038, "ACCEPTABLE"],
+        ["Nagaon", 710, 0.015, "CLOSE CONFORMITY"],
+        ["Pune", 720, 0.009, "CLOSE CONFORMITY"]
+      ];
+
+      mpList = isRS ? [
+        ["MP Javed Ali (RS)", 182, 0.054, "NON-CONFORMING"],
+        ["MP D. Saikia (RS)", 140, 0.019, "ACCEPTABLE"],
+        ["MP K. Reddy (RS)", 124, 0.012, "CLOSE CONFORMITY"],
+        ["MP S. Patil (RS)", 155, 0.009, "CLOSE CONFORMITY"]
+      ] : isNom ? [
+        ["Nominated MP 01", 62, 0.011, "CLOSE CONFORMITY"],
+        ["Nominated MP 04", 48, 0.012, "CLOSE CONFORMITY"],
+        ["Nominated MP 07", 40, 0.009, "CLOSE CONFORMITY"],
+        ["Nominated MP 11", 45, 0.008, "CLOSE CONFORMITY"]
+      ] : [
+        ["MP Ramesh Chandra (LS)", 212, 0.061, "NON-CONFORMING"],
+        ["MP D. Saikia (LS)", 180, 0.021, "ACCEPTABLE"],
+        ["MP K. Reddy (LS)", 164, 0.014, "CLOSE CONFORMITY"],
+        ["MP S. Patil (LS)", 195, 0.011, "CLOSE CONFORMITY"]
+      ];
+
+      vendorList = [
+        ["Shree Infra Works", 96, 0.071, "NON-CONFORMING"],
+        ["Rayalaseema Builders", 74, 0.033, "ACCEPTABLE"],
+        ["Marwar Constructions", 62, 0.064, "NON-CONFORMING"],
+        ["Ganga Civil Contractors", 58, 0.011, "CLOSE CONFORMITY"]
+      ];
+    }
+
     const data = {
-      state: [["Uttar Pradesh", 14210, 0.041, "NON-CONFORMING"], ["Bihar", 9880, 0.026, "ACCEPTABLE"], ["Assam", 6120, 0.012, "CLOSE CONFORMITY"], ["Maharashtra", 8900, 0.011, "CLOSE CONFORMITY"]],
-      district: [["Pilibhit", 980, 0.052, "NON-CONFORMING"], ["Barabanki", 860, 0.038, "ACCEPTABLE"], ["Nagaon", 710, 0.015, "CLOSE CONFORMITY"], ["Pune", 720, 0.009, "CLOSE CONFORMITY"]],
-      mp: [["MP Javed Ali", 212, 0.061, "NON-CONFORMING"], ["MP D. Saikia", 180, 0.021, "ACCEPTABLE"], ["MP K. Reddy", 164, 0.014, "CLOSE CONFORMITY"], ["MP S. Patil", 195, 0.011, "CLOSE CONFORMITY"]],
-      vendor: [["Shree Infra Works", 96, 0.071, "NON-CONFORMING"], ["Rayalaseema Builders", 74, 0.033, "ACCEPTABLE"], ["Marwar Constructions", 62, 0.064, "NON-CONFORMING"], ["Ganga Civil Contractors", 58, 0.011, "CLOSE CONFORMITY"]],
-    }[benfordState.entity];
+      state: stateList,
+      district: districtList,
+      mp: mpList,
+      vendor: vendorList,
+    }[benfordState.entity] || [];
+
     const el = document.getElementById("entityBody");
     if (el) {
       el.innerHTML = data.map(r => `
-        <tr><td>${r[0]}</td><td class="mono">${r[1]}</td><td class="mono">${r[2]}</td>
-        <td><span class="risk-tag risk-${r[3] === 'NON-CONFORMING' ? 'CRITICAL' : r[3] === 'ACCEPTABLE' ? 'MEDIUM' : 'LOW'}">${r[3]}</span></td></tr>`).join("");
+        <tr class="row-updated">
+          <td>${r[0]}</td>
+          <td class="mono">${r[1].toLocaleString()}</td>
+          <td class="mono">${r[2].toFixed(3)}</td>
+          <td><span class="risk-tag risk-${r[3] === 'NON-CONFORMING' ? 'CRITICAL' : r[3] === 'ACCEPTABLE' ? 'MEDIUM' : 'LOW'}">${r[3]}</span></td>
+        </tr>`).join("");
+    }
+
+    const lCard = document.getElementById("benfordLeaderboardCard");
+    if (lCard) {
+      lCard.classList.remove("data-updated-pulse");
+      void lCard.offsetWidth;
+      lCard.classList.add("data-updated-pulse");
     }
   }
 
@@ -2152,21 +3066,7 @@
   // House Filter pill clicks
   document.querySelectorAll("#mpHouseFilterPills .pill-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll("#mpHouseFilterPills .pill-btn").forEach(b => b.classList.remove("on"));
-      btn.classList.add("on");
-      currentHouseFilter = btn.dataset.houseFilter;
-
-      if (currentHouseFilter === "Nominated") {
-        currentStateFilter = "all";
-        if (mpStateFilter) mpStateFilter.value = "all";
-      }
-
-      updateNavbarHouseUI(currentHouseFilter);
-      renderKPIs(currentHouseFilter);
-      updateTickerForHouse(currentHouseFilter);
-      if (typeof renderAlerts === "function") renderAlerts();
-      applyMPFiltersAndRender();
-      showToast(`Switched Parliamentary Context to ${btn.textContent.trim()}`);
+      switchParliamentaryHouse(btn.dataset.houseFilter);
     });
   });
 

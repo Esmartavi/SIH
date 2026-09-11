@@ -607,47 +607,87 @@
 
     <!-- BENFORD -->
     <section class="view" id="view-benford">
-      <div class="panel-head">
+      <div class="panel-head" style="margin-bottom:10px;">
         <div>
-          <div class="panel-title">Benford's Law forensic intelligence</div>
-          <div class="panel-desc">Statistical audit engine for invoice manipulation &amp; tender-splitting cliffs.</div>
+          <div class="panel-title" style="font-size:18px;">Benford's Law Forensic Intelligence</div>
+          <div class="panel-desc" style="font-size:12px;">Statistical audit engine for invoice manipulation, round-number bias &amp; tender-splitting cliffs.</div>
         </div>
-        <button class="btn btn-ghost btn-sm" id="recomputeBtn">Recompute engine</button>
-      </div>
-      <div class="filter-row" style="margin-bottom:16px;">
-        <div class="pill-group" id="datasetPills">
-          <button class="pill-btn on" data-dataset="sanction">Sanction amounts</button>
-          <button class="pill-btn" data-dataset="vendor">Vendor disbursements</button>
-        </div>
-        <div class="pill-group" id="digitPills" style="margin-left:16px;">
-          <button class="pill-btn on" data-digit="D1">First digit (D1)</button>
-          <button class="pill-btn" data-digit="D2">Second digit (D2)</button>
-          <button class="pill-btn" data-digit="D1D2">First two (D1D2)</button>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div class="benford-context-badge" id="benfordScopeBadge">
+            <span class="pulse-dot"></span>
+            <span id="benfordScopeLabel">All Houses · 98,649 Works</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="recomputeBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Recompute
+          </button>
         </div>
       </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">Digit distribution — observed vs theoretical</div>
+
+      <!-- Unified Toolbar: Filters & Concise Insight in one line -->
+      <div class="benford-toolbar-unified">
+        <div class="bt-filters-wrap">
+          <div class="bt-group">
+            <span class="bt-label">DATASET:</span>
+            <div class="pill-group" id="datasetPills" style="display:flex; gap:5px; flex-wrap:nowrap;">
+              <button class="pill-btn on" data-dataset="sanction">Sanction amounts</button>
+              <button class="pill-btn" data-dataset="vendor">Vendor disbursements</button>
+            </div>
+          </div>
+          <div class="bt-divider"></div>
+          <div class="bt-group">
+            <span class="bt-label">DIGIT LEVEL:</span>
+            <div class="pill-group" id="digitPills" style="display:flex; gap:5px; flex-wrap:nowrap;">
+              <button class="pill-btn on" data-digit="D1">First digit (D1)</button>
+              <button class="pill-btn" data-digit="D2">Second digit (D2)</button>
+              <button class="pill-btn" data-digit="D1D2">First two (D1D2)</button>
+            </div>
+          </div>
+        </div>
+        <div class="bt-insight-pill" id="benfordInsightBanner" title="Forensic Detection Summary">
+          <span class="insight-icon">🔍</span>
+          <span class="insight-text" id="benfordInsightText">First-Digit (D1) Analysis: Statutory sanctions reveal artificial clustering at ₹10L and ₹50L thresholds (+5.6% spike at digit 5, GFR 144 split-tendering cliff).</span>
+        </div>
+      </div>
+
+      <div class="grid-2 benford-primary-grid">
+        <div class="card benford-chart-card" id="benfordBarsCard">
+          <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span>Digit distribution — observed vs theoretical</span>
+            <span class="card-sub-badge" id="benfordChartScopeBadge">n = 98,649</span>
+          </div>
           <div id="benfordChart"></div>
         </div>
-        <div class="card">
-          <div class="card-title">MAD conformity gauge</div>
-          <div id="gaugeChart"></div>
-          <div class="metric-row">
-            <div class="metric-pill">
-              <div class="l">CHI-SQUARE</div>
-              <div class="v" id="chiVal">–</div>
+        <div class="card benford-gauge-card" id="benfordGaugeCard">
+          <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span>MAD conformity gauge</span>
+            <span class="card-sub-badge" id="benfordGaugeScopeBadge">95% Conf</span>
+          </div>
+          <div class="gauge-layout">
+            <div class="gauge-visual-col">
+              <div id="gaugeChart"></div>
             </div>
-            <div class="metric-pill">
-              <div class="l">P-VALUE</div>
-              <div class="v" id="pVal">–</div>
+            <div class="gauge-metrics-col">
+              <div class="gauge-stat-box">
+                <div class="gs-label">CHI-SQUARE (χ²)</div>
+                <div class="gs-value" id="chiVal">41.2</div>
+                <div class="gs-sub">Critical threshold: 15.51</div>
+              </div>
+              <div class="gauge-stat-box">
+                <div class="gs-label">P-VALUE (SIG)</div>
+                <div class="gs-value" id="pVal">0.041</div>
+                <div class="gs-sub">p &lt; 0.05 anomalous</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="grid-2" style="margin-top:16px;">
-        <div class="card">
-          <div class="card-title">GFR 144 split-tender threshold cliffs</div>
+      <div class="grid-2" style="margin-top:12px;">
+        <div class="card" id="benfordCliffsCard">
+          <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>GFR 144 split-tender threshold cliffs</span>
+            <span class="card-sub-badge" id="benfordCliffsScopeBadge">Statutory GFR Evidences</span>
+          </div>
           <table>
             <thead>
               <tr>
@@ -661,12 +701,15 @@
             <tbody id="cliffsBody"></tbody>
           </table>
         </div>
-        <div class="card">
-          <div class="card-title">Round-number estimation bias</div>
+        <div class="card" id="benfordBiasCard">
+          <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>Round-number estimation bias</span>
+            <span class="card-sub-badge" id="benfordBiasScopeBadge">Distribution</span>
+          </div>
           <div id="roundBiasChart"></div>
         </div>
       </div>
-      <div class="card" style="margin-top:16px;">
+      <div class="card" id="benfordLeaderboardCard" style="margin-top:16px;">
         <div class="card-title">Entity MAD ranking leaderboard
           <div class="pill-group" id="entityPills">
             <button class="pill-btn on" data-entity="state">By state</button>
